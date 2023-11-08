@@ -2,7 +2,7 @@ import { validateWCInitOptions } from './validation.js'
 import type { WalletInit } from '@web3-onboard/common'
 import walletConnect from './walletConnect.js'
 
-import type { WalletConnectOptions } from 'types.js'
+import type { WalletConnectOptions } from './types.js'
 
 export const isHexString = (value: string | number) => {
   if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {

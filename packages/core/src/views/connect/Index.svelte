@@ -115,16 +115,16 @@
 
   // ==== SELECT WALLET ==== //
   async function selectWallet({
-    label,
-    icon,
-    getInterface
-  }: WalletWithLoadingIcon): Promise<void> {
+                                label,
+                                icon,
+                                getInterface,
+                                type
+                              }: WalletWithLoadingIcon): Promise<void> {
     connectingWalletLabel = label
-
     try {
       const existingWallet = state
-        .get()
-        .wallets.find(wallet => wallet.label === label)
+              .get()
+              .wallets.find(wallet => wallet.label === label)
 
       if (existingWallet) {
         // set as first wallet
@@ -135,6 +135,7 @@
 
         return
       }
+
 
       const { chains } = state.get()
 
@@ -150,10 +151,11 @@
       selectedWallet = {
         label,
         icon: loadedIcon,
+        type,
         provider,
         instance,
         accounts: [],
-        chains: [{ namespace: 'evm', id: '0x1' }]
+        chains: [{ namespace: type, id: type === 'evm' ? '0x1' : '91b171bb158e2d3848fa23a9f1c25182' }]
       }
 
       connectingErrorMessage = ''
@@ -200,17 +202,18 @@
   async function connectWallet() {
     connectionRejected = false
 
-    const { provider, label } = selectedWallet
-
+    const { provider, label , type } = selectedWallet
     cancelPreviousConnect$.next()
-
     try {
-      const [address] = await Promise.race([
+      const { address, signer } = await Promise.race([
         // resolved account
-        requestAccounts(provider),
+        type === 'evm' ? await requestAccounts(provider as EIP1193Provider) : await enable(provider as SubstrateProvider) ,
         // or connect wallet is called again whilst waiting for response
-        firstValueFrom(cancelPreviousConnect$.pipe(mapTo([])))
+        firstValueFrom(cancelPreviousConnect$.pipe(mapTo<WalletConnectState>({
+          address : undefined
+        })))
       ])
+
 
       // canceled previous request
       if (!address) {
@@ -219,24 +222,24 @@
 
       // store last connected wallet
       if (
-        state.get().connect.autoConnectLastWallet ||
-        state.get().connect.autoConnectAllPreviousWallet
+              state.get().connect.autoConnectLastWallet ||
+              state.get().connect.autoConnectAllPreviousWallet
       ) {
-        let labelsList: string | Array<String> = getLocalStore(
-          STORAGE_KEYS.LAST_CONNECTED_WALLET
+        let labelsList: string | Array<string> = getLocalStore(
+                STORAGE_KEYS.LAST_CONNECTED_WALLET
         )
 
         try {
-          let labelsListParsed: Array<String> = JSON.parse(labelsList)
+          let labelsListParsed: Array<string> = JSON.parse(labelsList)
           if (labelsListParsed && Array.isArray(labelsListParsed)) {
             const tempLabels = labelsListParsed
             labelsList = [...new Set([label, ...tempLabels])]
           }
         } catch (err) {
           if (
-            err instanceof SyntaxError &&
-            labelsList &&
-            typeof labelsList === 'string'
+                  err instanceof SyntaxError &&
+                  labelsList &&
+                  typeof labelsList === 'string'
           ) {
             const tempLabel = labelsList
             labelsList = [tempLabel]
@@ -247,36 +250,42 @@
 
         if (!labelsList) labelsList = [label]
         setLocalStore(
-          STORAGE_KEYS.LAST_CONNECTED_WALLET,
-          JSON.stringify(labelsList)
+                STORAGE_KEYS.LAST_CONNECTED_WALLET,
+                JSON.stringify(labelsList)
         )
       }
 
-      const chain = await getChainId(provider)
+      let chain = selectedWallet.chains[0].id;
+      if( type === 'evm'){
+        chain = await getChainId((provider as EIP1193Provider))
 
-      if (state.get().notify.enabled) {
-        const sdk = await getBNMulitChainSdk()
+        if (state.get().notify.enabled) {
+          const sdk = await getBNMulitChainSdk()
 
-        if (sdk) {
-          try {
-            sdk.subscribe({
-              id: address,
-              chainId: chain,
-              type: 'account'
-            })
-          } catch (error) {
-            // unsupported network for transaction events
+          if (sdk) {
+            try {
+              sdk.subscribe({
+                id: address[0],
+                chainId: chain,
+                type: 'account'
+              })
+            } catch (error) {
+              // unsupported network for transaction events
+            }
           }
         }
       }
 
-      const update: Pick<WalletState, 'accounts' | 'chains'> = {
-        accounts: [{ address, ens: null, uns: null, balance: null }],
-        chains: [{ namespace: 'evm', id: chain }]
+
+      const update: Pick<WalletState, 'accounts' | 'chains' | 'signer'> = {
+        accounts: address.map((address) =>
+                ({ address, ens: null, uns: null, balance: null })),
+        chains: [{ namespace: type, id: chain }],
+        signer : signer
       }
 
       addWallet({ ...selectedWallet, ...update })
-      trackWallet(provider, label)
+      trackWallet( provider, label , type)
       updateSelectedWallet(update)
       setStep('connectedWallet')
       scrollToTop()
@@ -309,14 +318,15 @@
         listenAccountsChanged({
           provider: selectedWallet.provider,
           disconnected$: connectWallet$.pipe(
-            filter(({ inProgress }) => !inProgress),
-            mapTo('')
-          )
+                  filter(({ inProgress }) => !inProgress),
+                  mapTo('')
+          ),
+          type
         })
-          .pipe(take(1))
-          .subscribe(([account]) => {
-            account && connectWallet()
-          })
+                .pipe(take(1))
+                .subscribe(([account]) => {
+                  account && connectWallet()
+                })
 
         return
       }
@@ -325,95 +335,69 @@
 
   // ==== CONNECTED WALLET ==== //
   async function updateAccountDetails() {
-    const { accounts, chains: selectedWalletChains } = selectedWallet
+    const { accounts, chains: selectedWalletChains, type } = selectedWallet
     const appChains = state.get().chains
     const [connectedWalletChain] = selectedWalletChains
 
     const appChain = appChains.find(
-      ({ namespace, id }) =>
-        namespace === connectedWalletChain.namespace &&
-        id === connectedWalletChain.id
+            ({ namespace, id }) =>
+                    namespace === connectedWalletChain.namespace &&
+                    id === connectedWalletChain.id
     )
-
+    if(!accounts && accounts.length === 0) return ;
     const { address } = accounts[0]
-    let { balance, ens, uns, secondaryTokens } = accounts[0]
+    let { balance, secondaryTokens } = accounts[0]
 
     if (balance === null) {
-      getBalance(address, appChain).then(balance => {
+      await getBalance(address, appChain, type).then(balance => {
         updateAccount(selectedWallet.label, address, {
           balance
         })
       })
     }
     if (
-      appChain &&
-      !secondaryTokens &&
-      Array.isArray(appChain.secondaryTokens) &&
-      appChain.secondaryTokens.length
+            appChain &&
+            !secondaryTokens &&
+            Array.isArray(appChain.secondaryTokens) &&
+            appChain.secondaryTokens.length
     ) {
       updateSecondaryTokens(selectedWallet, address, appChain).then(
-        secondaryTokens => {
-          updateAccount(selectedWallet.label, address, {
-            secondaryTokens
-          })
-        }
+              secondaryTokens => {
+                updateAccount(selectedWallet.label, address, {
+                  secondaryTokens
+                })
+              }
       )
     }
+    if(type === 'evm'){
+      await Promise.all(
+              accounts.map(({ ens, uns, address }) => {
+                if (ens === null && validEnsChain(connectedWalletChain.id)) {
+                  const ensChain = chains.find(
+                          ({ id }) =>
+                                  id === validEnsChain(connectedWalletChain.id)
+                  )
 
-    if (ens === null && validEnsChain(connectedWalletChain.id)) {
-      const ensChain = chains.find(
-        ({ id }) => id === validEnsChain(connectedWalletChain.id)
+                  getEns(address, ensChain).then(ens => {
+                    updateAccount(selectedWallet.label, address, {
+                      ens
+                    })
+                  })
+                }
+
+                if (uns === null && unstoppableResolution) {
+                  getUns(address, appChain).then(uns => {
+                    updateAccount(selectedWallet.label, address, {
+                      uns
+                    })
+                  })
+                }
+              })
       )
 
-      getEns(address, ensChain).then(ens => {
-        updateAccount(selectedWallet.label, address, {
-          ens
-        })
-      })
+      setTimeout(() => connectWallet$.next({ inProgress: false }), 1500)
     }
-
-    if (uns === null && unstoppableResolution) {
-      getUns(address, appChain).then(uns => {
-        updateAccount(selectedWallet.label, address, {
-          uns
-        })
-      })
-    }
-
-    setTimeout(() => connectWallet$.next({ inProgress: false }), 1500)
   }
-
-  modalStep$.pipe(takeUntil(onDestroy$)).subscribe(step => {
-    switch (step) {
-      case 'selectingWallet': {
-        if (autoSelect.label) {
-          const walletToAutoSelect = walletModules.find(
-            ({ label }) =>
-              label.toLowerCase() === autoSelect.label.toLowerCase()
-          )
-
-          if (walletToAutoSelect) {
-            autoSelectWallet(walletToAutoSelect)
-          } else if (autoSelect.disableModals) {
-            connectWallet$.next({ inProgress: false })
-          }
-        } else {
-          connectingWalletLabel = ''
-          loadWalletsForSelection()
-        }
-        break
-      }
-      case 'connectingWallet': {
-        connectWallet()
-        break
-      }
-      case 'connectedWallet': {
-        connectingWalletLabel = ''
-        updateAccountDetails()
-        break
-      }
-    }
-  })
 
   function setStep(update: keyof i18n['connect']) {
     cancelPreviousConnect$.next()

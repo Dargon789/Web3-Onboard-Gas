@@ -17,6 +17,7 @@ function ledger(
 ): WalletInit {
   return () => {
     return {
+      type: 'evm',
       label: 'Ledger',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains, EventEmitter }: GetInterfaceHelpers) => {
@@ -64,8 +65,11 @@ function ledger(
           public connector: InstanceType<typeof WalletConnect>
           public chains: Chain[]
           public disconnect: EIP1193Provider['disconnect']
+          // @ts-ignore
           public emit: typeof EventEmitter['emit']
+          // @ts-ignore
           public on: typeof EventEmitter['on']
+          // @ts-ignore
           public removeListener: typeof EventEmitter['removeListener']
 
           private disconnected$: InstanceType<typeof Subject>

@@ -50,6 +50,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
   return () => {
     return {
       label: 'WalletConnect',
+      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains, EventEmitter, appMetadata }) => {
         const { ProviderRpcError, ProviderRpcErrorCode } = await import(
