@@ -5,36 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e76172f-bb00-4546-b604-09723b806b3e" name="Changes" comment="issues 3# Intergrate Substrate Wallet Connect Wallets">
-      <change afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/signMessage.svelte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/core/src/views/connect/QrCode.svelte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/qrConnect/.eslintrc.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/qrConnect/.prettierrc.cjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/qrConnect/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/qrConnect/src/constants.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/qrConnect/src/icon.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/qrConnect/src/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/qrConnect/src/listNetwork.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/qrConnect/src/types.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/qrConnect/src/utils.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/qrConnect/tsconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/qrConnect/yarn.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/provider.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/provider.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/themes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/themes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/utils.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/Index.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/Index.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/account-center/AccountCenterPanel.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/AccountCenterPanel.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/account-center/SecondaryTokenTable.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/SecondaryTokenTable.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/account-center/WalletRow.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/WalletRow.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/chain/SwitchChain.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/chain/SwitchChain.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/SelectingWallet.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/SelectingWallet.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/Sidebar.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/Sidebar.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/notify/Index.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/notify/Index.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/notify/Notification.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/notify/Notification.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/shared/NetworkSelector.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/shared/NetworkSelector.svelte" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +69,7 @@
       <updated>1699428102112</updated>
       <workItem from="1699428103562" duration="71000" />
       <workItem from="1699428187155" duration="2323000" />
-      <workItem from="1699430835147" duration="1176000" />
+      <workItem from="1699430835147" duration="1874000" />
     </task>
     <servers />
   </component>
