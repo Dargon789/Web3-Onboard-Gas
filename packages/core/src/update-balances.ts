@@ -2,8 +2,8 @@ import { state } from './store/index.js'
 import { getBalance } from './provider.js'
 import { updateAllWallets } from './store/actions.js'
 import { ethers } from 'ethers'
-import type { AccountAddress, Chain, EIP1193Provider } from '@web3-onboard/common'
-import { weiToEth } from '@web3-onboard/common';
+import type { AccountAddress, Chain, EIP1193Provider } from '@subwallet_connect/common'
+import { weiToEth } from '@subwallet_connect/common';
 import type { SecondaryTokenBalances, WalletState } from './types'
 
 async function updateBalances(addresses?: string[]): Promise<void> {
@@ -55,7 +55,7 @@ export const updateSecondaryTokens = async (
         return
 
     const ethersProvider = new ethers.providers.Web3Provider(
-        ( wallet.provider as EIP1193Provider),
+       ( wallet.provider as EIP1193Provider),
         'any'
     )
     const signer = ethersProvider.getSigner()

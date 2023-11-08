@@ -1,4 +1,4 @@
-import { WalletInit, createEIP1193Provider } from '@web3-onboard/common'
+import { WalletInit, createEIP1193Provider } from '@subwallet_connect/common'
 
 function phantom(): WalletInit {
   if (typeof window === 'undefined') return () => null

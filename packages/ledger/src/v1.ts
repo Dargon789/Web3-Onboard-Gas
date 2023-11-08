@@ -6,28 +6,31 @@ import {
   ProviderAccounts,
   ChainId,
   AccountAddress
-} from '@web3-onboard/common'
-import type { EthereumProvider } from '@ledgerhq/connect-kit/dist/umd/index.js'
+} from '@subwallet_connect/common'
+import type { EthereumProvider } from '@ledgerhq/connect-kit-loader'
 import type { StaticJsonRpcProvider as StaticJsonRpcProviderType } from '@ethersproject/providers'
 import WalletConnect from '@walletconnect/client'
 import { isHexString, LedgerOptionsWCv1 } from './index.js'
 
-function ledger(
-  options: LedgerOptionsWCv1 = { walletConnectVersion: 1 }
-): WalletInit {
+function ledger(options: LedgerOptionsWCv1 = { walletConnectVersion: 1 }): WalletInit {
   return () => {
     return {
       type: 'evm',
       label: 'Ledger',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains, EventEmitter }: GetInterfaceHelpers) => {
-        const connectKit = await import('@ledgerhq/connect-kit/dist/umd')
+        const {
+          loadConnectKit,
+          SupportedProviders,
+          SupportedProviderImplementations
+        } = await import('@ledgerhq/connect-kit-loader')
 
+        const connectKit = await loadConnectKit()
         if (options.enableDebugLogs) {
           connectKit.enableDebugLogs()
         }
         const checkSupportResult = connectKit.checkSupport({
-          providerType: connectKit.SupportedProviders.Ethereum,
+          providerType: SupportedProviders.Ethereum,
           chainId: options?.chainId,
           infuraId: options?.infuraId,
           rpc: options?.rpc
@@ -40,7 +43,7 @@ function ledger(
         // return the Ledger Extension provider
         if (
           checkSupportResult.providerImplementation ===
-          connectKit.SupportedProviderImplementations.LedgerConnect
+            SupportedProviderImplementations.LedgerConnect
         ) {
           return {
             provider: instance
@@ -52,7 +55,7 @@ function ledger(
           '@ethersproject/providers'
         )
         const { ProviderRpcError, ProviderRpcErrorCode } = await import(
-          '@web3-onboard/common'
+          '@subwallet_connect/common'
         )
         const { default: WalletConnect } = await import('@walletconnect/client')
         const { Subject, fromEvent } = await import('rxjs')
@@ -137,18 +140,14 @@ function ledger(
                 },
                 error: console.warn
               })
-            
-              // @ts-ignore
+
             this.disconnect = () => this.connector.killSession()
 
             this.request = async ({ method, params }) => {
               if (method === 'eth_chainId') {
-                // @ts-ignore
                 return isHexString(this.connector.chainId)
-                  ? // @ts-ignore
-                    this.connector.chainId
-                  : // @ts-ignore
-                    `0x${this.connector.chainId.toString(16)}`
+                  ? this.connector.chainId
+                  : `0x${this.connector.chainId.toString(16)}`
               }
 
               if (method === 'eth_requestAccounts') {
@@ -181,11 +180,9 @@ function ledger(
                     })
 
                   // Check if connection is already established
-                  // @ts-ignore
                   if (!this.connector.connected) {
                     resolve(instance.request({ method, params }))
                   } else {
-                    // @ts-ignore
                     const { accounts, chainId } = this.connector.session
                     const hexChainId = isHexString(chainId)
                       ? chainId
@@ -226,7 +223,6 @@ function ledger(
                     message: `The Provider requires a chainId to be passed in as an argument`
                   })
                 }
-                // @ts-ignore
                 return this.connector.sendCustomRequest({
                   method: 'wallet_switchEthereumChain',
                   params: [
@@ -268,7 +264,6 @@ function ledger(
               }
 
               if (method === 'eth_accounts') {
-                // @ts-ignore
                 return this.connector.sendCustomRequest({
                   id: 1337,
                   jsonrpc: '2.0',

@@ -1,6 +1,6 @@
 {
-  "name": "@web3-onboard/gas",
-  "version": "2.1.8",
+  "name": "@subwallet_connect/gas",
+  "version": "1.0.1",
   "description": "Estimate the gas prices needed to get a transaction in to the next block for Ethereum Mainnet and Polygon Matic Mainnet.",
   "keywords": [
     "gas",
@@ -9,11 +9,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/blocknative/web3-onboard.git",
+    "url": "git+https://github.com/Koniverse/web3-onboard.git",
     "directory": "packages/gas"
   },
   "homepage": "https://onboard.blocknative.com",
-  "bugs": "https://github.com/blocknative/web3-onboard/issues",
+  "bugs": {
+    "url": "https://github.com/blocknative/web3-onboard/issues"
+  },
   "module": "dist/index.js",
   "typings": "dist/index.d.ts",
   "browser": "dist/index.js",
@@ -29,11 +31,12 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^4.5.5"
+    "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@web3-onboard/common": "^2.3.3",
+    "@subwallet_connect/common": "^1.0.0",
     "rxjs": "^7.5.2",
     "joi": "17.8.1"
-  }
+  },
+  "author": ""
 }

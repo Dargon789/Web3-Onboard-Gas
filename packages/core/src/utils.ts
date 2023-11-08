@@ -10,7 +10,7 @@ import type {
   WalletInit,
   WalletModule,
   ChainWithDecimalId
-} from '@web3-onboard/common'
+} from '@subwallet_connect/common'
 
 import {
   hourglass,
@@ -70,7 +70,7 @@ export function getDevice(): Device | DeviceNotBrowser {
 }
 
 export const notNullish = <T>(value: T | null | undefined): value is T =>
-    value != null
+  value != null
 
 export function validEnsChain(chainId: ChainId): ChainId | null {
   // return L2s as Eth for ens resolution
@@ -101,8 +101,8 @@ export function shortenAddress(add: string): string {
 
 export function shortenDomain(domain: string): string {
   return domain.length > 11
-      ? `${domain.slice(0, 4)}…${domain.slice(-6)}`
-      : domain
+    ? `${domain.slice(0, 4)}…${domain.slice(-6)}`
+    : domain
 }
 
 export async function copyWalletAddress(text: string): Promise<void> {
@@ -115,7 +115,7 @@ export async function copyWalletAddress(text: string): Promise<void> {
 }
 
 export const toHexString = (val: number | string): string =>
-    typeof val === 'number' ? `0x${val.toString(16)}` : val
+  typeof val === 'number' ? `0x${val.toString(16)}` : val
 
 export function chainIdToHex(chains: (Chain | ChainWithDecimalId)[]): Chain[] {
   return chains.map(({ id, ...rest }) => {
@@ -306,19 +306,19 @@ export function getDefaultChainStyles(chainId: string): ChainStyle | undefined {
 }
 
 export function connectedToValidAppChain(
-    walletConnectedChain: ConnectedChain,
-    chains: Chain[]
+  walletConnectedChain: ConnectedChain,
+  chains: Chain[]
 ): boolean {
   return !!chains.find(
-      ({ id, namespace }) =>
-          id === walletConnectedChain.id &&
-          namespace === walletConnectedChain.namespace
+    ({ id, namespace }) =>
+      id === walletConnectedChain.id &&
+      namespace === walletConnectedChain.namespace
   )
 }
 
 export function initializeWalletModules(
-    modules: WalletInit[],
-    device: Device
+  modules: WalletInit[],
+  device: Device
 ): WalletModule[] {
   return modules.reduce((acc, walletInit) => {
     const initialized = walletInit({ device })
@@ -357,7 +357,7 @@ export const defaultNotifyEventStyles: Record<string, NotifyEventStyles> = {
 }
 
 export const wait = (time: number): Promise<void> =>
-    new Promise(resolve => setTimeout(resolve, time))
+  new Promise(resolve => setTimeout(resolve, time))
 
 export function getLocalStore(key: string): string | null {
   try {
@@ -396,11 +396,11 @@ export interface  clientAxiosProps {
 
 
 export async function getBalanceSubstrate({ url, data } : clientAxiosProps){
-  if(url === '') return
-  const urlResult = baseURL.replace('*', url);
-  return await axios.post(urlResult, data)
-      .then( data_ => {
-        return data_.data.data ? data_.data.data.native[0].balance : '0';
-      })
+    if(url === '') return
+    const urlResult = baseURL.replace('*', url);
+    return await axios.post(urlResult, data)
+        .then( data_ => {
+          return data_.data.data ? data_.data.data.native[0].balance : '0';
+        })
 
 }

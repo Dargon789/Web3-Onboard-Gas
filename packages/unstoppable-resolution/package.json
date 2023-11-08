@@ -1,6 +1,6 @@
 {
-  "name": "@web3-onboard/unstoppable-resolution",
-  "version": "2.0.2",
+  "name": "@subwallet_connect/unstoppable-resolution",
+  "version": "1.0.1",
   "description": "Adds Unstoppable Domain resolution for a wallet address, similar to ENS resolution",
   "keywords": [
     "Unstoppable Domain",
@@ -9,11 +9,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/blocknative/web3-onboard.git",
+    "url": "git+https://github.com/blocknative/web3-onboard.git",
     "directory": "packages/unstoppable-resolution"
   },
   "homepage": "https://onboard.blocknative.com",
-  "bugs": "https://github.com/blocknative/web3-onboard/issues",
+  "bugs": {
+    "url": "https://github.com/blocknative/web3-onboard/issues"
+  },
   "module": "dist/index.js",
   "typings": "dist/index.d.ts",
   "browser": "dist/index.js",
@@ -29,10 +31,11 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@web3-onboard/common": "^2.3.3",
-    "typescript": "^4.5.5"
+    "@subwallet_connect/common": "^1.0.0",
+    "typescript": "^5.2.2"
   },
   "dependencies": {
     "@unstoppabledomains/resolution": "^8.0"
-  }
+  },
+  "author": ""
 }

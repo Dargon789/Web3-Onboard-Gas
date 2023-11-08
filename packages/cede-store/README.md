@@ -1,4 +1,4 @@
-# @web3-onboard/cede-store
+# @subwallet_connect/cede-store
 
 CEX module for connecting cede.store through web3-onboard. Check out the [cede.store Wallet Developer Docs](https://docs.cede.store) for more information.
 
@@ -7,13 +7,13 @@ As cede.store is not a traditional 1193 wallet behavior is a little different fr
 
 ### Install
 
-`npm i @web3-onboard/cede-store`
+`npm i @subwallet_connect/cede-store`
 
 ## Usage
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import cedeStoreWalletModule from '@web3-onboard/cede-store'
+import Onboard from '@subwallet_connect/core'
+import cedeStoreWalletModule from '@subwallet_connect/cede-store'
 
 const cedeStoreWallet = cedeStoreWalletModule()
 

@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Subject } from 'rxjs'
-  import { weiToEth } from '@web3-onboard/common'
+  import { weiToEth } from '@subwallet_connect/common'
   import { fade } from 'svelte/transition'
   import CloseButton from '../elements/CloseButton.svelte'
   import AddressTable from '../elements/AddressTable.svelte'

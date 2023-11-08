@@ -1,20 +1,20 @@
-# @web3-onboard/mew-wallet
+# @subwallet_connect/mew-wallet
 
 ## Wallet module for connecting Mew wallet through web3-onboard
 
 ### Install
 
 **NPM**
-`npm i @web3-onboard/core @web3-onboard/mew-wallet`
+`npm i @subwallet_connect/core @subwallet_connect/mew-wallet`
 
 **Yarn**
-`yarn add @web3-onboard/core @web3-onboard/mew-wallet`
+`yarn add @subwallet_connect/core @subwallet_connect/mew-wallet`
 
 ## Usage
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import mewWallet from '@web3-onboard/mew-wallet'
+import Onboard from '@subwallet_connect/core'
+import mewWallet from '@subwallet_connect/mew-wallet'
 
 const mewWalletModule = mewWallet()
 

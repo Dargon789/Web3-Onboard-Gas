@@ -1,6 +1,6 @@
 import { Chain, WindowProvider } from "@wagmi/core";
 import { BehaviorSubject } from "rxjs";
-import { Chain as Chain_ } from '@web3-onboard/common';
+import { Chain as Chain_ } from '@subwallet_connect/common';
 
 
 export type Tokens = Record<CaipNetworkId, Token>

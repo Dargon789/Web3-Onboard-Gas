@@ -1,4 +1,4 @@
-import type { WalletInit, EIP1193Provider } from '@web3-onboard/common'
+import type { WalletInit, EIP1193Provider } from '@subwallet_connect/common'
 import { openInfinityWallet } from '@infinitywallet/infinity-connector'
 import { CustomWindow } from './types.js'
 declare const window: CustomWindow

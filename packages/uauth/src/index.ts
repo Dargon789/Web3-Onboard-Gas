@@ -10,9 +10,9 @@ import type {
   ProviderAccounts,
   WalletInit,
   EIP1193Provider
-} from '@web3-onboard/common'
+} from '@subwallet_connect/common'
 import { validateUauthInitOptions } from './validation.js'
-import { createEIP1193Provider } from '@web3-onboard/common'
+import { createEIP1193Provider } from '@subwallet_connect/common'
 
 const isHexString = (value: string | number) => {
   if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
@@ -46,6 +46,7 @@ function uauth(options: UauthInitOptions): WalletInit {
 
     return {
       label: 'Unstoppable',
+      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains, EventEmitter, appMetadata }) => {
         const UAuth = await import('@uauth/js')
@@ -108,7 +109,7 @@ function uauth(options: UauthInitOptions): WalletInit {
             'eth_signTypedData_v4'
           ]
           const { ProviderRpcError, ProviderRpcErrorCode } = await import(
-            '@web3-onboard/common'
+            '@subwallet_connect/common'
           )
 
           const { default: EthereumProvider } = await import(

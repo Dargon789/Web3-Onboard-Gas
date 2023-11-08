@@ -1,6 +1,6 @@
 <script lang="ts">
   import { BehaviorSubject, merge } from 'rxjs'
-  import type { Chain } from '@web3-onboard/common'
+  import type { Chain } from '@subwallet_connect/common'
   import { chainIdToLabel, connectedToValidAppChain } from '../../utils.js'
   import setChain from '../../chain.js'
   import { wallets$ } from '../../streams.js'

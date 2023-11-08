@@ -1,4 +1,4 @@
-import { WalletInit } from '@web3-onboard/common'
+import { WalletInit } from '@subwallet_connect/common'
 
 function coinbaseWallet({
   darkMode = false

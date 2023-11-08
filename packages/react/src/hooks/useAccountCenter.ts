@@ -1,4 +1,4 @@
-import type { AccountCenter } from '@web3-onboard/core'
+import type { AccountCenter } from '@subwallet_connect/core'
 import { useWeb3Onboard } from '../context.js'
 
 export const useAccountCenter = (): ((

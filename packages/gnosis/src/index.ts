@@ -1,4 +1,4 @@
-import type { WalletInit } from '@web3-onboard/common'
+import { WalletInit } from '@subwallet_connect/common'
 
 type GnosisOptions = {
   whitelistedDomains: RegExp[]
@@ -8,8 +8,7 @@ function gnosis(options?: GnosisOptions): WalletInit {
   const {
     whitelistedDomains = [
       /^https:\/\/app\.safe\.global$/,
-      /^https:\/\/safe\.global$/,
-      /^https:\/\/.*\.blockscout\.com$/
+      /^https:\/\/safe\.global$/
     ]
   } = options || {}
 
@@ -31,7 +30,7 @@ function gnosis(options?: GnosisOptions): WalletInit {
             )
 
             const { createEIP1193Provider } = await import(
-              '@web3-onboard/common'
+              '@subwallet_connect/common'
             )
 
             const SafeAppProviderConstructor =
@@ -39,7 +38,7 @@ function gnosis(options?: GnosisOptions): WalletInit {
               SafeAppsSDK.default || SafeAppsSDK
 
             const opts = {
-              allowedDomains: whitelistedDomains
+              whitelistedDomains
             }
 
             const appsSdk = new SafeAppProviderConstructor(opts)

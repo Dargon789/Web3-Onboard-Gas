@@ -1,5 +1,5 @@
 {
-  "name": "@web3-onboard/qr_code",
+  "name": "@subwallet_connect/qr_code",
   "version": "1.0.3",
   "description": "KeepKey hardware wallet module for connecting to Web3-Onboard. Web3-Onboard makes it simple to connect Ethereum hardware and software wallets to your dapp. Features standardised spec compliant web3 providers for all supported wallets, framework agnostic modern javascript UI with code splitting, CSS customization, multi-chain and multi-account support, reactive wallet state subscriptions and real-time transaction state change notifications.",
   "keywords": [
@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "@stablelib/random": "^1.0.2",
-    "@web3-onboard/common": "^1.0.0",
+    "@subwallet_connect/common": "^1.0.0",
     "@typescript-eslint/eslint-plugin": "^6.8.0",
     "@typescript-eslint/parser": "^6.8.0",
     "@wagmi/chains": "^1.8.0",

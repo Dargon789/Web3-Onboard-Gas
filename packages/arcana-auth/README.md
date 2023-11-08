@@ -1,4 +1,4 @@
-# @web3-onboard/arcana-auth
+# @subwallet_connect/arcana-auth
 
 ## Wallet module for connecting Arcana Wallet SDK to web3-onboard
 
@@ -10,13 +10,13 @@ To ensure proper functionality of the embedded Arcana wallet in the Arcana Auth 
 
 ### Install
 
-`npm install @web3-onboard/core @web3-onboard/arcana-auth`
+`npm install @subwallet_connect/core @subwallet_connect/arcana-auth`
 
 ## Usage
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import arcanaAuthModule from '@web3-onboard/arcana-auth'
+import Onboard from '@subwallet_connect/core'
+import arcanaAuthModule from '@subwallet_connect/arcana-auth'
 
 // initialize the module
 const arcanaAuth = arcanaAuthModule({

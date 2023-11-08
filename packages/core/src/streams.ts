@@ -1,4 +1,4 @@
-import type { Chain } from '@web3-onboard/common'
+import type { Chain } from '@subwallet_connect/common'
 import { onDestroy, onMount, beforeUpdate, afterUpdate } from 'svelte'
 import { Observable, Subject, defer, BehaviorSubject } from 'rxjs'
 import {
@@ -14,6 +14,11 @@ import { state } from './store/index.js'
 
 import type { WalletState, ConnectOptions } from './types.js'
 import type { EthereumTransactionData } from 'bnc-sdk'
+import { QrConnect } from '@subwallet_connect/qr_code';
+import { mainnet, type Chain as Chain_ } from '@wagmi/core';
+import type { URI } from '@subwallet_connect/qr_code/dist/types';
+import type { AccountQrConnect } from '@subwallet_connect/qr_code/dist/types';
+
 
 export const reset$ = new Subject<void>()
 export const disconnectWallet$ = new Subject<WalletState['label']>()
@@ -29,7 +34,7 @@ export const switchChainModal$ = new BehaviorSubject<null | {
 }>(null)
 
 export const wallets$ = (
-  state.select('wallets') as Observable<WalletState[]>
+    state.select('wallets') as Observable<WalletState[]>
 ).pipe(shareReplay(1))
 
 // reset logic
@@ -52,7 +57,7 @@ export function updateTransaction(tx: EthereumTransactionData): void {
 
   if (txIndex !== -1) {
     const updatedTransactions = currentTransactions.map((val, i) =>
-      i === txIndex ? tx : val
+        i === txIndex ? tx : val
     )
 
     transactions$.next(updatedTransactions)
@@ -97,3 +102,30 @@ export const beforeUpdate$ = defer(() => {
   })
   return subject.asObservable().pipe(takeUntil(onDestroy$))
 })
+
+
+
+
+export const uri$ = new BehaviorSubject<URI>({
+  polkadot : '',
+  eth : ''
+})
+
+export const AccountQrConnect$ = new BehaviorSubject<AccountQrConnect[]>([])
+
+
+export  const qrConnect$ = new BehaviorSubject( new QrConnect({
+  chains : [ mainnet as Chain_],
+  chainsPolkadot : [{
+    id: '91b171bb158e2d3848fa23a9f1c25182',
+    namespace: 'substrate',
+    token: 'DOT',
+    label: 'Polkadot',
+    rpcUrl: `polkadot.api.subscan.io`,
+    decimal: 10
+  }],
+  projectId : 'f6bd6e2911b56f5ac3bc8b2d0e2d7ad5',
+  url : '',
+  uri : uri$ ,
+  accountState : AccountQrConnect$
+}))

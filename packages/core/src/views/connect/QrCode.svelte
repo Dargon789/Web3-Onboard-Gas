@@ -1,6 +1,7 @@
 <script lang="ts">
     import { QRCodeImage } from 'svelte-qrcode-image';
     import { fade } from 'svelte/transition'
+    import { customNotification } from "../../store/actions";
 
 
     export let uriPolkadot: string;
@@ -8,7 +9,6 @@
 
     export let uriEth : string;
 
-    console.log(uriEth, uriPolkadot)
 
 
 
@@ -23,6 +23,14 @@
     async function  onCopyUri  (){
         await navigator.clipboard.
         writeText(choiceTypeConnect ? uriEth : uriPolkadot)
+        await navigator.clipboard.
+        writeText(choiceTypeConnect ? uriEth : uriPolkadot)
+        customNotification({
+            type: 'success',
+            message:
+                'Link copied',
+            autoDismiss: 1000
+        })
     }
 
 </script>

@@ -1,4 +1,4 @@
-import type { Chain, AccountAddress } from '@web3-onboard/common'
+import type { Chain, AccountAddress } from '@subwallet_connect/common'
 import type { BigNumber } from 'ethers'
 
 export interface CustomNetwork {

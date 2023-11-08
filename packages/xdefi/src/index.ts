@@ -1,5 +1,5 @@
-import type { WalletInit } from '@web3-onboard/common'
-import { createEIP1193Provider } from '@web3-onboard/common'
+import type { WalletInit } from '@subwallet_connect/common'
+import { createEIP1193Provider } from '@subwallet_connect/common'
 import { CustomWindow } from './types.js'
 declare const window: CustomWindow
 

@@ -1,131 +1,74 @@
-import type { Chain } from '@web3-onboard/common'
-import { onDestroy, onMount, beforeUpdate, afterUpdate } from 'svelte'
-import { Observable, Subject, defer, BehaviorSubject } from 'rxjs'
-import {
-  take,
-  takeUntil,
-  withLatestFrom,
-  pluck,
-  shareReplay
-} from 'rxjs/operators'
+import { fromEvent, takeUntil } from 'rxjs'
+import { reset$ } from './streams'
+import type { BuiltInThemes, Theme, ThemingMap } from './types'
 
-import { resetStore } from './store/actions.js'
-import { state } from './store/index.js'
-
-import type { WalletState, ConnectOptions } from './types.js'
-import type { EthereumTransactionData } from 'bnc-sdk'
-import { QrConnect } from '@web3-onboard/qr_code';
-import { mainnet, type Chain as Chain_ } from '@wagmi/core';
-import type { URI } from '@web3-onboard/qr_code/dist/types';
-import type { AccountQrConnect } from '@web3-onboard/qr_code/dist/types';
-
-
-export const reset$ = new Subject<void>()
-export const disconnectWallet$ = new Subject<WalletState['label']>()
-
-export const connectWallet$ = new BehaviorSubject<{
-  autoSelect?: ConnectOptions['autoSelect']
-  actionRequired?: string
-  inProgress: boolean
-}>({ inProgress: false, actionRequired: '' })
-
-export const switchChainModal$ = new BehaviorSubject<null | {
-  chain: Chain
-}>(null)
-
-export const wallets$ = (
-    state.select('wallets') as Observable<WalletState[]>
-).pipe(shareReplay(1))
-
-// reset logic
-reset$.pipe(withLatestFrom(wallets$), pluck('1')).subscribe(wallets => {
-  // disconnect all wallets
-  wallets.forEach(({ label }) => {
-    disconnectWallet$.next(label)
-  })
-
-  resetStore()
-})
-
-// keep transactions for all notifications for replacement actions
-export const transactions$ = new BehaviorSubject<EthereumTransactionData[]>([])
-
-export function updateTransaction(tx: EthereumTransactionData): void {
-  const currentTransactions = transactions$.getValue()
-
-  const txIndex = currentTransactions.findIndex(({ hash }) => hash === tx.hash)
-
-  if (txIndex !== -1) {
-    const updatedTransactions = currentTransactions.map((val, i) =>
-        i === txIndex ? tx : val
-    )
-
-    transactions$.next(updatedTransactions)
-  } else {
-    transactions$.next([...currentTransactions, tx])
+export const themes = {
+  default: {
+    '--w3o-background-color': 'unset',
+    '--w3o-foreground-color': 'unset',
+    '--w3o-text-color': 'unset',
+    '--w3o-border-color': 'unset',
+    '--w3o-action-color': 'unset',
+    '--w3o-border-radius': 'unset',
+    '--w3o-font-family': 'inherit'
+  },
+  light: {
+    '--w3o-background-color': '#ffffff',
+    '--w3o-foreground-color': '#EFF1FC',
+    '--w3o-text-color': '#1a1d26',
+    '--w3o-border-color': '#d0d4f7',
+    '--w3o-action-color': '#6370E5',
+    '--w3o-border-radius': '16px',
+    '--w3o-font-family': 'inherit'
+  },
+  dark: {
+    '--w3o-background-color': '#1A1D26',
+    '--w3o-foreground-color': '#242835',
+    '--w3o-text-color': '#EFF1FC',
+    '--w3o-border-color': '#33394B',
+    '--w3o-action-color': '#929bed',
+    '--w3o-border-radius': '16px',
+    '--w3o-font-family': 'inherit'
   }
 }
 
-export function removeTransaction(hash: string): void {
-  const currentTransactions = transactions$.getValue()
-  transactions$.next(currentTransactions.filter(tx => tx.hash !== hash))
+export const returnTheme = (theme: Theme): void | ThemingMap => {
+  if (typeof theme === 'string' && theme === 'system') {
+    return watchForSystemThemeChange()
+  }
+  return returnThemeMap(theme)
 }
 
-export const onMount$ = defer(() => {
-  const subject = new Subject<void>()
-  onMount(() => {
-    subject.next()
+export const returnThemeMap = (theme: Theme): void | ThemingMap => {
+  if (typeof theme === 'string' && theme in themes) {
+    return themes[theme as BuiltInThemes]
+  }
+  if (typeof theme === 'object') {
+    return theme
+  }
+}
+
+export const handleThemeChange = (update: ThemingMap): void => {
+  Object.keys(update).forEach(targetStyle => {
+    document.documentElement.style.setProperty(
+      targetStyle,
+      update[targetStyle as keyof ThemingMap]
+    )
   })
-  return subject.asObservable().pipe(take(1))
-})
+}
 
-export const onDestroy$ = defer(() => {
-  const subject = new Subject<void>()
-  onDestroy(() => {
-    subject.next()
-  })
-  return subject.asObservable().pipe(take(1))
-})
+export const watchForSystemThemeChange = (): void => {
+  const systemThemeDark = window.matchMedia('(prefers-color-scheme: dark)')
+  systemThemeDark.matches
+    ? handleThemeChange(themes['dark'])
+    : handleThemeChange(themes['light'])
 
-export const afterUpdate$ = defer(() => {
-  const subject = new Subject<void>()
-  afterUpdate(() => {
-    subject.next()
-  })
-  return subject.asObservable().pipe(takeUntil(onDestroy$))
-})
-
-export const beforeUpdate$ = defer(() => {
-  const subject = new Subject<void>()
-  beforeUpdate(() => {
-    subject.next()
-  })
-  return subject.asObservable().pipe(takeUntil(onDestroy$))
-})
-
-
-
-
-export const uri$ = new BehaviorSubject<URI>({
-  polkadot : '',
-  eth : ''
-})
-
-export const AccountQrConnect$ = new BehaviorSubject<AccountQrConnect[]>([])
-
-
-export  const qrConnect$ = new BehaviorSubject( new QrConnect({
-  chains : [ mainnet as Chain_],
-  chainsPolkadot : [{
-    id: '91b171bb158e2d3848fa23a9f1c25182',
-    namespace: 'substrate',
-    token: 'DOT',
-    label: 'Polkadot',
-    rpcUrl: `polkadot.api.subscan.io`,
-    decimal: 10
-  }],
-  projectId : 'f6bd6e2911b56f5ac3bc8b2d0e2d7ad5',
-  url : '',
-  uri : uri$ ,
-  accountState : AccountQrConnect$
-}))
+  fromEvent(systemThemeDark, 'change')
+    .pipe(takeUntil(reset$))
+    .subscribe((changes: Event) => {
+      const themeChange = changes as MediaQueryListEvent
+      themeChange.matches
+        ? handleThemeChange(themes['dark'])
+        : handleThemeChange(themes['light'])
+    })
+}

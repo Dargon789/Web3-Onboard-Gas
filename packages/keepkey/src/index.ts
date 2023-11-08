@@ -1,4 +1,4 @@
-import type { Chain, Platform, WalletInit } from '@web3-onboard/common'
+import type { Chain, Platform, WalletInit } from '@subwallet_connect/common'
 import type { StaticJsonRpcProvider } from '@ethersproject/providers'
 import type { ETHAccountPath } from '@shapeshiftoss/hdwallet-core'
 import type { KeepKeyHDWallet } from '@shapeshiftoss/hdwallet-keepkey'
@@ -7,7 +7,7 @@ import type {
   ScanAccountsOptions,
   Account,
   Asset
-} from '@web3-onboard/hw-common'
+} from '@subwallet_connect/hw-common'
 
 const DEFAULT_PATH = `m/44'/60'/0'/0/0`
 
@@ -78,15 +78,15 @@ function keepkey({
         } = await import('@shapeshiftoss/hdwallet-core')
 
         const { createEIP1193Provider, ProviderRpcError } = await import(
-          '@web3-onboard/common'
+          '@subwallet_connect/common'
         )
 
         const { accountSelect, entryModal } = await import(
-          '@web3-onboard/hw-common'
+          '@subwallet_connect/hw-common'
         )
 
         const { bigNumberFieldsToStrings, getHardwareWalletProvider } =
-          await import('@web3-onboard/hw-common')
+          await import('@subwallet_connect/hw-common')
 
         const { utils } = await import('ethers')
 

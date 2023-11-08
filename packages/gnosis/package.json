@@ -1,6 +1,6 @@
 {
-  "name": "@web3-onboard/gnosis",
-  "version": "2.2.1",
+  "name": "@subwallet_connect/gnosis",
+  "version": "1.0.1",
   "description": "Safe module for connecting to Web3-Onboard. Web3-Onboard makes it simple to connect Ethereum hardware and software wallets to your dapp. Features standardised spec compliant web3 providers for all supported wallets, framework agnostic modern javascript UI with code splitting, CSS customization, multi-chain and multi-account support, reactive wallet state subscriptions and real-time transaction state change notifications.",
   "keywords": [
     "Ethereum",
@@ -33,7 +33,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/blocknative/web3-onboard.git",
+    "url": "https://github.com/Koniverse/web3-onboard.git",
     "directory": "packages/gnosis"
   },
   "homepage": "https://onboard.blocknative.com",
@@ -53,13 +53,13 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "17.0.19",
-    "typescript": "^4.5.5",
-    "@safe-global/safe-apps-provider": "^0.17.1",
+    "@types/node": "20.8.10",
+    "typescript": "^5.2.2",
+    "@safe-global/safe-apps-provider": "^0.18.0",
     "@safe-global/safe-apps-sdk": "^8.0.0"
   },
   "dependencies": {
-    "@web3-onboard/common": "^2.3.3"
+    "@subwallet_connect/common": "^1.0.0"
   },
   "peerDependencies": {
     "@safe-global/safe-apps-provider": "^0.17.1",

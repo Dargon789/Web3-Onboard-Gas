@@ -1,4 +1,4 @@
-import Web3Onboard from '@web3-onboard/core'
+import Web3Onboard from '@subwallet_connect/core'
 import type {
   InitOptions,
   OnboardAPI,
@@ -6,10 +6,10 @@ import type {
   DisconnectOptions,
   WalletState,
   ConnectedChain
-} from '@web3-onboard/core'
+} from '@subwallet_connect/core'
 
 // Not sure why it can't be imported directly without passing for dist
-import type { AppState } from '@web3-onboard/core/dist/types'
+import type { AppState } from '@subwallet_connect/core/dist/types'
 
 // We use vue-demi to automatically use the correct reactivity API for both Vue 2 and Vue 3
 import { ref, computed, readonly, shallowRef } from 'vue-demi'

@@ -44,7 +44,7 @@ import {
     ProviderRpcError,
     ProviderRpcErrorCode,
     SubstrateProvider, WalletModule
-} from "@web3-onboard/common";
+} from "@subwallet_connect/common";
 
 import { caipNetworkIdToNumber, fetchIdentity } from "./utils.js";
 import { BehaviorSubject } from "rxjs";
@@ -593,8 +593,6 @@ export class QrConnect {
 
 
                         }
-
-
 
                      // @ts-expect-error
                         return this.connector.request<Promise<any>>({

@@ -4071,9 +4071,9 @@
     "@walletconnect/window-getters" "^1.0.1"
     tslib "1.14.1"
 
-"@web3-onboard/common@^2.3.3":
+"@subwallet_connect/common@^2.3.3":
   version "2.3.3"
-  resolved "https://registry.yarnpkg.com/@web3-onboard/common/-/common-2.3.3.tgz#02096e967dbed272c0637cda955902b96a0fce06"
+  resolved "https://registry.yarnpkg.com/@subwallet_connect/common/-/common-2.3.3.tgz#02096e967dbed272c0637cda955902b96a0fce06"
   integrity sha512-Ytppszqe77VY8WglRdr/Lfx+HmcZ2hXQEkBA23JaVYmzKvP/mC6j+sjGUD8CgXDpRRxyKoiRj6nz95GRABie6Q==
   dependencies:
     bignumber.js "^9.1.0"

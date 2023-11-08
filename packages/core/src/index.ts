@@ -35,9 +35,9 @@ import {
   updateTheme,
   updateAppMetadata
 } from './store/actions.js'
-import type { PatchedEIP1193Provider } from '@web3-onboard/transaction-preview'
+import type { PatchedEIP1193Provider } from '@subwallet_connect/transaction-preview'
 import { getBlocknativeSdk } from './services.js'
-import { QrConnect } from '@web3-onboard/qr_code';
+import { QrConnect } from '@subwallet_connect/qr_code';
 
 
 
@@ -81,7 +81,7 @@ export type {
   Theme
 } from './types.js'
 
-export type { EIP1193Provider } from '@web3-onboard/common'
+export type { EIP1193Provider } from '@subwallet_connect/common'
 
 function init(options: InitOptions): OnboardAPI {
   if (typeof window === 'undefined') return API
@@ -317,7 +317,7 @@ const fontFamilyExternallyDefined = (
 }
 
 const importInterFont = async (): Promise<void> => {
-  const { InterVar } = await import('@web3-onboard/common')
+  const { InterVar } = await import('@subwallet_connect/common')
   // Add Fonts to main page
   const styleEl = document.createElement('style')
 

@@ -1,10 +1,10 @@
-# @web3-onboard/ledger
+# @subwallet_connect/ledger
 
 ## Wallet module for connecting Ledger hardware wallets to web3-onboard
 
 ### Install
 
-`npm i @web3-onboard/core @web3-onboard/ledger`
+`npm i @subwallet_connect/core @subwallet_connect/ledger`
 
 ### Options
 
@@ -52,8 +52,8 @@ type LedgerOptions = LedgerOptionsWCv1 | LedgerOptionsWCv2
 ### Usage
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import ledgerModule from '@web3-onboard/ledger'
+import Onboard from '@subwallet_connect/core'
+import ledgerModule from '@subwallet_connect/ledger'
 
 const ledger = ledgerModule({
   /**
@@ -83,8 +83,8 @@ console.log(connectedWallets)
 You may decide that on certain platforms you do not want to display this wallet as a selectable option. To do that you can use the `filter` init option which is an array of platforms that you would like this wallet to **not** be displayed to the end user:
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import ledgerModule from '@web3-onboard/ledger'
+import Onboard from '@subwallet_connect/core'
+import ledgerModule from '@subwallet_connect/ledger'
 
 const ledger = ledgerModule({
   /**

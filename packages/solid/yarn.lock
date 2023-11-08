@@ -1410,21 +1410,21 @@
   resolved "https://registry.yarnpkg.com/@solid-primitives/utils/-/utils-6.2.1.tgz#320fb2180743031622b40fc43b0e63bf55686cfb"
   integrity sha512-TsecNzxiO5bLfzqb4OOuzfUmdOROcssuGqgh5rXMMaasoFZ3GoveUgdY1wcf17frMJM7kCNGNuK34EjErneZkg==
 
-"@web3-onboard/common@^2.3.3":
+"@subwallet_connect/common@^2.3.3":
   version "2.3.3"
-  resolved "https://registry.yarnpkg.com/@web3-onboard/common/-/common-2.3.3.tgz#02096e967dbed272c0637cda955902b96a0fce06"
+  resolved "https://registry.yarnpkg.com/@subwallet_connect/common/-/common-2.3.3.tgz#02096e967dbed272c0637cda955902b96a0fce06"
   integrity sha512-Ytppszqe77VY8WglRdr/Lfx+HmcZ2hXQEkBA23JaVYmzKvP/mC6j+sjGUD8CgXDpRRxyKoiRj6nz95GRABie6Q==
   dependencies:
     bignumber.js "^9.1.0"
     ethers "5.5.4"
     joi "17.9.1"
 
-"@web3-onboard/core@^2.21.0":
+"@subwallet_connect/core@^2.21.0":
   version "2.21.2"
-  resolved "https://registry.yarnpkg.com/@web3-onboard/core/-/core-2.21.2.tgz#962683efc87b29ee9150ab8d7ea9568ea3b41dd5"
+  resolved "https://registry.yarnpkg.com/@subwallet_connect/core/-/core-2.21.2.tgz#962683efc87b29ee9150ab8d7ea9568ea3b41dd5"
   integrity sha512-apzVi2zWqs4ktZBBJ60x1e4odI1mSoZ2c69bXUg36A0xI0iRFQ9Od44peI3mfTDEru7hWsr81Nv6l+v3HRSKLw==
   dependencies:
-    "@web3-onboard/common" "^2.3.3"
+    "@subwallet_connect/common" "^2.3.3"
     bignumber.js "^9.0.0"
     bnc-sdk "^4.6.7"
     bowser "^2.11.0"

@@ -10,8 +10,8 @@ import {
   chainIdValidation,
   chainValidation,
   validate,
-  AppMetadata
-} from '@web3-onboard/common'
+  type AppMetadata
+} from '@subwallet_connect/common'
 
 import type {
   InitOptions,

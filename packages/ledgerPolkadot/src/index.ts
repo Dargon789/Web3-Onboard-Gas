@@ -1,4 +1,4 @@
-import type { Chain, Platform, SubstrateProvider, WalletInit, WalletInterfaceSubstrate } from '@web3-onboard/common'
+import type { Chain, Platform, SubstrateProvider, WalletInit, WalletInterfaceSubstrate } from '@subwallet_connect/common'
 import type { StaticJsonRpcProvider } from '@ethersproject/providers'
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import Polkadot from "@ledgerhq/hw-app-polkadot";
@@ -9,7 +9,7 @@ import type {
     ScanAccountsOptions,
     Account,
     Asset
-} from '@web3-onboard/hw-common'
+} from '@subwallet_connect/hw-common'
 
 
 const DEFAULT_PATH = "44'/354'/0'/0/0"
@@ -74,15 +74,15 @@ function ledgerPolkadot({
             getInterface: async ({ EventEmitter, chains }) : Promise<WalletInterfaceSubstrate> =>  {
 
                 const { createEIP1193Provider, ProviderRpcError } = await import(
-                    '@web3-onboard/common'
+                    '@subwallet_connect/common'
                     )
 
                 const { accountSelect, entryModal } = await import(
-                    '@web3-onboard/hw-common'
+                    '@subwallet_connect/hw-common'
                     )
 
                 const { bigNumberFieldsToStrings, getHardwareWalletProvider } =
-                    await import('@web3-onboard/hw-common')
+                    await import('@subwallet_connect/hw-common')
 
                 const { utils } = await import('ethers')
 

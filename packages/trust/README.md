@@ -1,4 +1,4 @@
-# @web3-onboard/trust
+# @subwallet_connect/trust
 
 ## Wallet module for connecting Trust Wallet through web3-onboard
 
@@ -7,16 +7,16 @@ Trust Wallet SDK wallet module for connecting to Web3-Onboard. Web3-Onboard make
 ### Install
 
 **NPM**
-`npm i @web3-onboard/core @web3-onboard/trust`
+`npm i @subwallet_connect/core @subwallet_connect/trust`
 
 **Yarn**
-`yarn add @web3-onboard/core @web3-onboard/trust`
+`yarn add @subwallet_connect/core @subwallet_connect/trust`
 
 ## Usage
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import trustModule from '@web3-onboard/trust'
+import Onboard from '@subwallet_connect/core'
+import trustModule from '@subwallet_connect/trust'
 
 const trust = trustModule()
 

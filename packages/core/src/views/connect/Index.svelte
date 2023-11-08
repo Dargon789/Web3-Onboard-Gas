@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { EIP1193Provider, SubstrateProvider, WalletModule } from '@web3-onboard/common'
-  import {  ProviderRpcErrorCode  } from '@web3-onboard/common';
+  import type { EIP1193Provider, SubstrateProvider, WalletModule } from '@subwallet_connect/common'
+  import {  ProviderRpcErrorCode  } from '@subwallet_connect/common';
   import EventEmitter from 'eventemitter3'
   import { BigNumber } from 'ethers'
   import { _ } from 'svelte-i18n'

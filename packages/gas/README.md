@@ -1,4 +1,4 @@
-# @web3-onboard/gas
+# @subwallet_connect/gas
 
 ## A module for requesting streams or single requests of gas price estimates from the [Blocknative Gas Platform API](https://onboard.blocknative.com/docs/packages/gas).
 
@@ -7,15 +7,15 @@ Supports both Eth Mainnet and Polygon gas pricing.
 ### Install
 
 **NPM**
-`npm i @web3-onboard/gas`
+`npm i @subwallet_connect/gas`
 
 **Yarn**
-`yarn add @web3-onboard/gas`
+`yarn add @subwallet_connect/gas`
 
 ### Standalone Setup
 
 ```typescript
-import gas from '@web3-onboard/gas'
+import gas from '@subwallet_connect/gas'
 
 // subscribe to a single chain for estimates using the default poll rate of 5 secs
 // API key is optional and if provided allows for faster poll rates
@@ -65,7 +65,7 @@ const gasBlockPrices = await gas.get({
 This example assumes you have already setup web3-onboard to connect wallets to your dapp. 
 For more information see [web3-onboard docs](https://onboard.blocknative.com/docs/modules/core#install).
 ```ts
-import gas from '@web3-onboard/gas'
+import gas from '@subwallet_connect/gas'
 import { ethers } from 'ethers'
 
 // Set provider using the Web3-Onboard wallet.provider instance from the connected wallet

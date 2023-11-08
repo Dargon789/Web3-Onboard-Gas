@@ -1,4 +1,4 @@
-import type { Theme } from '@web3-onboard/core'
+import type { Theme } from '@subwallet_connect/core'
 import { useWeb3Onboard } from '../context.js'
 
 export const useUpdateTheme = (): ((

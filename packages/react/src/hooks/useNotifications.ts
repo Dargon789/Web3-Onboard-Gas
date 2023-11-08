@@ -4,7 +4,7 @@ import type {
   UpdateNotification,
   Notification,
   PreflightNotificationsOptions
-} from '@web3-onboard/core'
+} from '@subwallet_connect/core'
 import { useWeb3Onboard } from '../context.js'
 import { useAppState } from './useAppState.js'
 

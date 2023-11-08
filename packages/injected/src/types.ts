@@ -5,7 +5,7 @@ import {
   ProviderAccounts,
   Platform,
   Device
-} from '@web3-onboard/common'
+} from '@subwallet_connect/common'
 
 /**
  * The `ProviderIdentityFlag` is a property on an injected provider
@@ -69,8 +69,7 @@ export enum ProviderIdentityFlag {
   SubWallet = 'isSubWallet',
   Kayros = 'isKayros',
   SubWalletDOT = 'subwallet-js',
-  TalismanDOT = 'talisman',
-  PolkadotJs = 'polkadot-js'
+  TalismanDOT = 'talisman'
 }
 
 /**
@@ -94,8 +93,7 @@ export enum ProviderExternalUrl {
   RoninWallet = 'https://wallet.skymavis.com/',
   Coin98Wallet = 'https://coin98.com/wallet/',
   SubWallet = 'https://www.subwallet.app/',
-  Kayros = 'https://www.kayros.games/wallet/',
-  Polkadotjs = 'https://polkadot.js.org/apps/'
+  Kayros = 'https://www.kayros.games/wallet/'
 }
 
 export enum ProviderLabel {
@@ -156,8 +154,7 @@ export enum ProviderLabel {
   SubWallet = 'SubWallet',
   Kayros = 'Kayros',
   SubWalletDOT = 'SubWallet(substrate)',
-  TalismanDOT = 'Talisman(substrate)',
-  PolkadotJs = 'Polkadot{js}'
+  TalismanDOT = 'Talisman(substrate)'
 }
 
 export interface MeetOneProvider extends ExternalProvider {
@@ -196,8 +193,7 @@ export enum InjectedNameSpace {
   SubWallet = 'SubWallet',
   Kayros = 'kayros',
   SubWalletDOT = 'subwallet-js',
-  TalismanDOT = 'talisman',
-  PolkadotJs = 'polkadot-js'
+  TalismanDOT = 'talisman'
 
 }
 

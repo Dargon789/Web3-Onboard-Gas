@@ -9,7 +9,7 @@ import type {
   ProviderAccounts,
   WalletInit,
   EIP1193Provider
-} from '@web3-onboard/common'
+} from '@subwallet_connect/common'
 
 // methods that require user interaction
 const methods = [
@@ -54,7 +54,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains, EventEmitter, appMetadata }) => {
         const { ProviderRpcError, ProviderRpcErrorCode } = await import(
-          '@web3-onboard/common'
+          '@subwallet_connect/common'
         )
 
         const { default: EthereumProvider, REQUIRED_METHODS } = await import(

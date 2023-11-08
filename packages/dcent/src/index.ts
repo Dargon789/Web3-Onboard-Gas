@@ -3,13 +3,13 @@ import type {
   WalletInit,
   EIP1193Provider,
   Platform
-} from '@web3-onboard/common'
+} from '@subwallet_connect/common'
 
 import type {
   CustomNetwork,
   Account,
   ScanAccountsOptions
-} from '@web3-onboard/hw-common'
+} from '@subwallet_connect/hw-common'
 import { StaticJsonRpcProvider } from '@ethersproject/providers'
 
 interface CustomWindow extends Window {
@@ -109,14 +109,14 @@ function dcent({
         )
 
         const { getCommon, accountSelect } = await import(
-          '@web3-onboard/hw-common'
+          '@subwallet_connect/hw-common'
         )
 
         const {
           createEIP1193Provider,
           ProviderRpcErrorCode,
           ProviderRpcError
-        } = await import('@web3-onboard/common')
+        } = await import('@subwallet_connect/common')
 
         let currentChain: Chain = chains[0]
         const scanAccounts = async ({

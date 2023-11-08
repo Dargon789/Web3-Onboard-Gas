@@ -1,4 +1,4 @@
-import type { EIP1193Provider } from '@web3-onboard/common'
+import type { EIP1193Provider } from '@subwallet_connect/common'
 import type en from './i18n/en.json'
 import type SDK from 'bnc-sdk'
 import type { MultiSimOutput, SimulationTransaction } from 'bnc-sdk'

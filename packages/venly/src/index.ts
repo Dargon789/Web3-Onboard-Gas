@@ -1,4 +1,4 @@
-import { WalletInit } from '@web3-onboard/common'
+import { WalletInit } from '@subwallet_connect/common'
 
 interface VenlyOptions {
   /**  @property {string} clientId - The Client ID used to connect with Venly. More information at https://docs.venly.io/widget/deep-dive/authentication#client-id */

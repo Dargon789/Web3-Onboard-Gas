@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 
-import type { ConnectedChain } from '@web3-onboard/core'
-import type { Chain } from '@web3-onboard/common'
+import type { ConnectedChain } from '@subwallet_connect/core'
+import type { Chain } from '@subwallet_connect/common'
 import { useAppState } from './useAppState.js'
 import { useWeb3Onboard } from '../context.js'
 

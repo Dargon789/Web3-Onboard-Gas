@@ -1,4 +1,4 @@
-import type { WalletInit, EIP1193Provider } from '@web3-onboard/common'
+import type { WalletInit, EIP1193Provider } from '@subwallet_connect/common'
 import { CustomWindow } from './types.js'
 declare const window: CustomWindow
 
@@ -11,7 +11,7 @@ function frontier(): WalletInit {
       type: 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async () => {
-        const { createEIP1193Provider } = await import('@web3-onboard/common')
+        const { createEIP1193Provider } = await import('@subwallet_connect/common')
         const ethereumInjectionExists = window.hasOwnProperty('ethereum')
 
         let provider: EIP1193Provider

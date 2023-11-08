@@ -1,4 +1,4 @@
-import type { Device, ProviderRpcErrorCode } from '@web3-onboard/common'
+import type { Device, ProviderRpcErrorCode } from '@subwallet_connect/common'
 import type { InjectedProvider, InjectedWalletModule } from './types.js'
 
 export class ProviderRpcError extends Error {

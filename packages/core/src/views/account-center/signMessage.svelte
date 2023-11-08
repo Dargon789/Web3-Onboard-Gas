@@ -5,7 +5,7 @@
     import caretIcon from '../../icons/caret-light.js'
     import warningIcon from '../../icons/warning.js'
     import { state } from '../../store/index.js'
-    import { listMethodTypeMessage } from '@web3-onboard/common';
+    import { listMethodTypeMessage } from '@subwallet_connect/common';
     import { wallets$ } from '../../streams.js'
     let selectElement: HTMLSelectElement
     const wallets= $wallets$;

@@ -1,6 +1,6 @@
 import Joi from 'joi'
 import { RequestOptions, StreamOptions } from './types.js'
-import { validate, type ValidateReturn } from '@web3-onboard/common'
+import { validate, type ValidateReturn } from '@subwallet_connect/common'
 
 const requestOptions = Joi.object({
   endpoint: Joi.string().valid('blockPrices').required(),

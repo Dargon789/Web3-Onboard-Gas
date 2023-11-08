@@ -1,3 +1,3 @@
-# @web3-onboard/common
+# @subwallet_connect_common/common
 
 ## A collection of functions and types that are shared across various packages in the Onboard V2 monorepo

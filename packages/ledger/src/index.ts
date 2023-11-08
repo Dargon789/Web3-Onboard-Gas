@@ -1,4 +1,4 @@
-import type { WalletInit } from '@web3-onboard/common'
+import type { WalletInit } from '@subwallet_connect/common'
 import v1 from './v1.js'
 import v2 from './v2.js'
 

@@ -1578,9 +1578,9 @@
   resolved "https://registry.yarnpkg.com/@substrate/ss58-registry/-/ss58-registry-1.43.0.tgz#93108e45cb7ef6d82560c153e3692c2aa1c711b3"
   integrity sha512-USEkXA46P9sqClL7PZv0QFsit4S8Im97wchKG0/H/9q3AT/S76r40UHfCr4Un7eBJPE23f7fU9BZ0ITpP9MCsA==
 
-"@web3-onboard/common@^1.0.0":
+"@subwallet_connect/common@^1.0.0":
   version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@web3-onboard/common/-/common-1.0.0.tgz#b5ee22374dec2605536bd219a9f9883573775835"
+  resolved "https://registry.yarnpkg.com/@subwallet_connect/common/-/common-1.0.0.tgz#b5ee22374dec2605536bd219a9f9883573775835"
   integrity sha512-R6lkqO3D6Zn4eYcP7mcezoaS3TlQ8qBU5vRIjgzFF2+6xvKCTUE/QdZ2ArTHf+qqqULwCcieO6LCnSJn5G5RGA==
   dependencies:
     "@polkadot/extension-inject" "^0.46.5"
