@@ -11,16 +11,16 @@
 
   const { device, containerElements } = configuration
   const accountCenter$ = state
-          .select('accountCenter')
-          .pipe(startWith(state.get().accountCenter), shareReplay(1))
+    .select('accountCenter')
+    .pipe(startWith(state.get().accountCenter), shareReplay(1))
 
   const notify$ = state
-          .select('notify')
-          .pipe(startWith(state.get().notify), shareReplay(1))
+    .select('notify')
+    .pipe(startWith(state.get().notify), shareReplay(1))
 
   const notifications$: Observable<Notification[]> = state
-          .select('notifications')
-          .pipe(startWith(state.get().notifications))
+    .select('notifications')
+    .pipe(startWith(state.get().notifications))
 
   const accountCenterPositioning = 'account-center'
   const notifyPositioning = 'notify-onboard-container'
@@ -42,62 +42,62 @@
   }
 
   const accountCenterComponent = $accountCenter$.enabled
-          ? import('./account-center/Index.svelte').then(mod => mod.default)
-          : Promise.resolve(null)
+    ? import('./account-center/Index.svelte').then(mod => mod.default)
+    : Promise.resolve(null)
 
   const notifyComponent = $notify$.enabled
-          ? import('./notify/Index.svelte').then(mod => mod.default)
-          : Promise.resolve(null)
+    ? import('./notify/Index.svelte').then(mod => mod.default)
+    : Promise.resolve(null)
 
   $: sharedContainer =
-          !accountCenterMountToElement &&
-          $accountCenter$.enabled &&
-          $notify$.enabled &&
-          $notify$.position === $accountCenter$.position
+    !accountCenterMountToElement &&
+    $accountCenter$.enabled &&
+    $notify$.enabled &&
+    $notify$.position === $accountCenter$.position
 
   $: samePositionOrMobile =
-          device.type === 'mobile' || $accountCenter$.position === $notify$.position
+    device.type === 'mobile' || $accountCenter$.position === $notify$.position
 
   $: sharedMobileContainerCheck =
-          ($notify$.position.includes('bottom') &&
-                  $accountCenter$.position.includes('bottom')) ||
-          ($notify$.position.includes('top') &&
-                  $accountCenter$.position.includes('top'))
+    ($notify$.position.includes('bottom') &&
+      $accountCenter$.position.includes('bottom')) ||
+    ($notify$.position.includes('top') &&
+      $accountCenter$.position.includes('top'))
 
   $: displayNotifySeparate =
-          $notify$.enabled &&
-          (!$accountCenter$.enabled ||
-                  accountCenterMountToElement ||
-                  ($notify$.position !== $accountCenter$.position &&
-                          device.type !== 'mobile') ||
-                  (device.type === 'mobile' && !sharedMobileContainerCheck) ||
-                  !$wallets$.length)
+    $notify$.enabled &&
+    (!$accountCenter$.enabled ||
+      accountCenterMountToElement ||
+      ($notify$.position !== $accountCenter$.position &&
+        device.type !== 'mobile') ||
+      (device.type === 'mobile' && !sharedMobileContainerCheck) ||
+      !$wallets$.length)
 
   $: displayAccountCenterSeparate =
-          $accountCenter$.enabled &&
-          (!$notify$.enabled ||
-                  ($notify$.position !== $accountCenter$.position &&
-                          device.type !== 'mobile') ||
-                  (device.type === 'mobile' && !sharedMobileContainerCheck)) &&
-          $wallets$.length
+    $accountCenter$.enabled &&
+    (!$notify$.enabled ||
+      ($notify$.position !== $accountCenter$.position &&
+        device.type !== 'mobile') ||
+      (device.type === 'mobile' && !sharedMobileContainerCheck)) &&
+    $wallets$.length
 
   $: displayAccountCenterNotifySameContainer =
-          $notify$.enabled &&
-          $accountCenter$.enabled &&
-          (sharedContainer ||
-                  (device.type === 'mobile' && sharedMobileContainerCheck)) &&
-          $wallets$.length
+    $notify$.enabled &&
+    $accountCenter$.enabled &&
+    (sharedContainer ||
+      (device.type === 'mobile' && sharedMobileContainerCheck)) &&
+    $wallets$.length
 
   const accountCenterMountToElement =
-          $accountCenter$.enabled &&
-          containerElements &&
-          containerElements.accountCenter
+    $accountCenter$.enabled &&
+    containerElements &&
+    containerElements.accountCenter
 
   const attachCompToDom = (
-          domEl: HTMLElement,
-          targetEl: string,
-          component: Promise<any>,
-          compSettings: unknown
+    domEl: HTMLElement,
+    targetEl: string,
+    component: Promise<any>,
+    compSettings: unknown
   ) => {
     const target = domEl.attachShadow({ mode: 'open' })
 
@@ -139,10 +139,10 @@
   if (accountCenterMountToElement) {
     const accountCenter = document.createElement('onboard-account-center')
     attachCompToDom(
-            accountCenter,
-            accountCenterMountToElement,
-            accountCenterComponent,
-            $accountCenter$
+      accountCenter,
+      accountCenterMountToElement,
+      accountCenterComponent,
+      $accountCenter$
     )
   }
 </script>
@@ -253,19 +253,19 @@
 
   :global(input[type='checkbox']:hover) {
     border-color: var(
-            --onboard-checkbox-background,
-            var(--onboard-primary-500, var(--primary-500))
+      --onboard-checkbox-background,
+      var(--onboard-primary-500, var(--primary-500))
     );
   }
 
   :global(input[type='checkbox']:checked) {
     background: var(
-            --onboard-checkbox-background,
-            var(--onboard-primary-500, var(--primary-500))
+      --onboard-checkbox-background,
+      var(--onboard-primary-500, var(--primary-500))
     );
     border-color: var(
-            --onboard-checkbox-background,
-            var(--onboard-primary-500, var(--primary-500))
+      --onboard-checkbox-background,
+      var(--onboard-primary-500, var(--primary-500))
     );
     color: var(--onboard-checkbox-color, var(--onboard-white, var(--white)));
   }
@@ -279,18 +279,18 @@
 
   :global(input:hover) {
     border-color: var(
-            --onboard-checkbox-color,
-            var(--onboard-white, var(--white))
+      --onboard-checkbox-color,
+      var(--onboard-white, var(--white))
     );
   }
 
   :global(input:focus) {
     border-color: var(--onboard-primary-500, var(--primary-500));
     box-shadow: 0 0 1px 1px
-    var(
-            --onboard-checkbox-background,
-            var(--onboard-primary-500, var(--primary-500))
-    );
+      var(
+        --onboard-checkbox-background,
+        var(--onboard-primary-500, var(--primary-500))
+      );
     box-shadow: 0 0 0 1px -moz-mac-focusring;
   }
 
@@ -307,8 +307,8 @@
 
   :global(a) {
     color: var(
-            --onboard-link-color,
-            var(--onboard-primary-500, var(--primary-500))
+      --onboard-link-color,
+      var(--onboard-primary-500, var(--primary-500))
     );
     text-decoration: none;
   }
@@ -332,7 +332,7 @@
   :global(.onboard-button-primary) {
     background: var(--onboard-white, var(--white));
     padding: calc(var(--onboard-spacing-5, var(--spacing-5)) - 1px)
-    calc(var(--onboard-spacing-4, var(--spacing-4)) - 1px);
+      calc(var(--onboard-spacing-4, var(--spacing-4)) - 1px);
     color: var(--onboard-gray-500, var(--gray-500));
     font-size: var(--onboard-font-size-6, var(--font-size-6));
     line-height: var(--onboard-font-line-height-3, var(--font-line-height-3));
@@ -408,18 +408,18 @@
 
 {#if !$accountCenter$.enabled && !$notify$.enabled}
   <div
-          class="container flex flex-column fixed z-indexed"
-          style="top: 0; right: 0; {device.type === 'mobile'
+    class="container flex flex-column fixed z-indexed"
+    style="top: 0; right: 0; {device.type === 'mobile'
       ? 'padding-bottom: 0;'
       : ''} "
-          id="w3o-transaction-preview-container"
+    id="w3o-transaction-preview-container"
   />
 {/if}
 
 {#if displayAccountCenterNotifySameContainer}
   <div
-          class="container flex flex-column fixed z-indexed"
-          style="{setPositioningDefaults(accountCenterPositioning)[
+    class="container flex flex-column fixed z-indexed"
+    style="{setPositioningDefaults(accountCenterPositioning)[
       $accountCenter$.position
     ]}; {device.type === 'mobile' && $accountCenter$.position.includes('top')
       ? 'padding-bottom: 0;'
@@ -431,10 +431,10 @@
       {#await notifyComponent then Notify}
         {#if Notify}
           <svelte:component
-                  this={Notify}
-                  notifications={$notifications$}
-                  position={$notify$.position}
-                  {sharedContainer}
+            this={Notify}
+            notifications={$notifications$}
+            position={$notify$.position}
+            {sharedContainer}
           />
         {/if}
       {/await}
@@ -456,10 +456,10 @@
       {#await notifyComponent then Notify}
         {#if Notify}
           <svelte:component
-                  this={Notify}
-                  notifications={$notifications$}
-                  position={$notify$.position}
-                  {sharedContainer}
+            this={Notify}
+            notifications={$notifications$}
+            position={$notify$.position}
+            {sharedContainer}
           />
         {/if}
       {/await}
@@ -468,8 +468,8 @@
 {/if}
 {#if displayAccountCenterSeparate}
   <div
-          class="container flex flex-column fixed z-indexed"
-          style="{setPositioningDefaults(accountCenterPositioning)[
+    class="container flex flex-column fixed z-indexed"
+    style="{setPositioningDefaults(accountCenterPositioning)[
       $accountCenter$.position
     ]}; {device.type === 'mobile' && $accountCenter$.position.includes('top')
       ? 'padding-bottom: 0;'
@@ -484,7 +484,7 @@
       {#if $accountCenter$.enabled && $wallets$.length}
         {#await accountCenterComponent then AccountCenter}
           {#if AccountCenter}
-            <svelte:component this={AccountCenter} />
+          <svelte:component this={AccountCenter} />
           {/if}
         {/await}
       {/if}
@@ -496,8 +496,8 @@
 {/if}
 {#if displayNotifySeparate}
   <div
-          class="container flex flex-column fixed z-indexed"
-          style="{setPositioningDefaults(notifyPositioning)[
+    class="container flex flex-column fixed z-indexed"
+    style="{setPositioningDefaults(notifyPositioning)[
       $notify$.position
     ]}; {device.type === 'mobile' && $notify$.position.includes('top')
       ? 'padding-bottom: 0;'
@@ -511,10 +511,10 @@
     {#await notifyComponent then Notify}
       {#if Notify}
         <svelte:component
-                this={Notify}
-                notifications={$notifications$}
-                position={$notify$.position}
-                {sharedContainer}
+          this={Notify}
+          notifications={$notifications$}
+          position={$notify$.position}
+          {sharedContainer}
         />
       {/if}
     {/await}

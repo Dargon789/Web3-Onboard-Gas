@@ -2,7 +2,7 @@ import connectWallet from './connect.js'
 import disconnectWallet from './disconnect.js'
 import setChain from './chain.js'
 import { state } from './store/index.js'
-import { reset$, wallets$ } from './streams.js'
+import { AccountQrConnect$, qrConnect$, reset$, uri$, wallets$ } from './streams.js'
 import initI18N from './i18n/index.js'
 import App from './views/Index.svelte'
 import type {
@@ -113,7 +113,19 @@ function init(options: InitOptions): OnboardAPI {
     projectId
   } = options
 
-
+  qrConnect$.next(new QrConnect({
+        chains: chains.map((chain) => (
+            listWagmiNetwork[typeof  chain.id === 'number' ?
+                chain.id.toString() :
+                parseInt(chain.id, 16).toString()]
+        )),
+        projectId ,
+        url ,
+        chainsPolkadot,
+        uri: uri$,
+        accountState: AccountQrConnect$
+      }
+  ))
 
 
   if (containerElements) updateConfiguration({ containerElements })

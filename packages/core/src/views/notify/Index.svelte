@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { _ } from 'svelte-i18n'
   import { flip } from 'svelte/animate'
   import { fade, fly } from 'svelte/transition'
   import { cubicOut } from 'svelte/easing'

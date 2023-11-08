@@ -4,86 +4,37 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8e76172f-bb00-4546-b604-09723b806b3e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_8_2023_2_22_PM_[Changes]/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_8_2023_2_22_PM_[Changes]1/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_8_2023_2_22_PM__Changes_.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/core/src/icons/acala.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/core/src/icons/astar-network.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/core/src/icons/crust.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/core/src/icons/hydradx.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/core/src/icons/kabocha.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/core/src/icons/kusama.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/core/src/icons/phala-network.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/core/src/icons/polkadot.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/core/src/icons/statemint.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/core/src/icons/turing-network.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/core/src/icons/westend.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/injected/src/icons/bitkeep.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/injected/src/icons/polkadotjs.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/uauth/src/src/icon.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/uauth/src/src/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/uauth/src/src/types.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/uauth/src/src/validation.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/arcana-auth/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/arcana-auth/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/bitget/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/bitget/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/bitkeep/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/bitkeep/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/blocto/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/blocto/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/cede-store/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/cede-store/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/coinbase/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/coinbase/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/common/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/common/src/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/common/src/validation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/common/src/validation.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/chain.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/chain.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/icons/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/icons/index.ts" afterDir="false" />
+    <list default="true" id="8e76172f-bb00-4546-b604-09723b806b3e" name="Changes" comment="issues 3# Intergrate Substrate Wallet Connect Wallets">
+      <change afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/signMessage.svelte" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/core/src/views/connect/QrCode.svelte" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/qrConnect/.eslintrc.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/qrConnect/.prettierrc.cjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/qrConnect/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/qrConnect/src/constants.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/qrConnect/src/icon.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/qrConnect/src/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/qrConnect/src/listNetwork.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/qrConnect/src/types.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/qrConnect/src/utils.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/qrConnect/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/qrConnect/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/provider.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/provider.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/update-balances.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/update-balances.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/themes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/themes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/utils.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/views/Index.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/Index.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/views/account-center/AccountCenterPanel.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/AccountCenterPanel.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/views/account-center/SecondaryTokenTable.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/SecondaryTokenTable.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/views/account-center/WalletRow.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/account-center/WalletRow.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/views/chain/SwitchChain.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/chain/SwitchChain.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/dcent/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/dcent/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/enkrypt/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/enkrypt/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/fortmatic/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/fortmatic/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/frame/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/frame/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/frontier/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/frontier/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/frontier/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/frontier/src/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/gnosis/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/gnosis/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/infinity-wallet/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/infinity-wallet/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/infinity-wallet/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/infinity-wallet/src/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/injected/src/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/injected/src/constants.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/injected/src/helpers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/injected/src/helpers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/injected/src/icons/bitget.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/injected/src/icons/xdefi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/injected/src/icons/xdefi.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/injected/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/injected/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/injected/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/injected/src/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/injected/src/wallets.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/injected/src/wallets.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/keepkey/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/keepkey/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/keystone/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/keystone/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/ledger/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/ledger/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/ledger/src/v1.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/ledger/src/v1.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/ledger/src/v2.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/ledger/src/v2.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/magic/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/magic/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/metamask/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/metamask/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/mew-wallet/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/mew-wallet/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/mew/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/mew/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/phantom/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/phantom/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/portis/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/portis/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/sequence/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/sequence/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/taho/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/taho/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/tallyho/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/tallyho/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/torus/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/torus/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/trezor/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/trezor/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/trust/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/trust/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/trust/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/trust/src/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/venly/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/venly/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/walletconnect/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/walletconnect/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/walletconnect/src/walletConnect.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/walletconnect/src/walletConnect.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/walletlink/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/walletlink/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/web3auth/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/web3auth/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/xdefi/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/xdefi/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/zeal/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/zeal/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/SelectingWallet.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/SelectingWallet.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/Sidebar.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/Sidebar.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/views/notify/Index.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/notify/Index.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/views/notify/Notification.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/notify/Notification.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/views/shared/NetworkSelector.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/shared/NetworkSelector.svelte" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,29 +63,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "sw__issuse",
-    "last_opened_file_path": "C:/Users/Admin/Documents/temp/Reactjs-project2/web3-onboard_issues/packages/core/src",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2023.2\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;sw__issuse&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Admin/Documents/temp/Reactjs-project2/web3-onboard_issues/packages/core/src&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2023.2\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard_issues\packages\core\src" />
+      <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard_issues\packages" />
       <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard_issues\packages\zeal" />
       <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard_issues\packages\xdefi" />
       <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard_issues\packages\web3auth" />
-      <recent name="C:\Users\Admin\Documents\temp\Reactjs-project2\web3-onboard_issues\packages\walletlink" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -147,6 +98,7 @@
       <updated>1699428102112</updated>
       <workItem from="1699428103562" duration="71000" />
       <workItem from="1699428187155" duration="2323000" />
+      <workItem from="1699430835147" duration="1176000" />
     </task>
     <servers />
   </component>
@@ -175,5 +127,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="issues 3# Intergrate Substrate Wallet Connect Wallets" />
+    <option name="LAST_COMMIT_MESSAGE" value="issues 3# Intergrate Substrate Wallet Connect Wallets" />
   </component>
 </project>

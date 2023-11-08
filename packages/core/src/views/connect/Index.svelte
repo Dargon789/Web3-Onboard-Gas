@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { ProviderRpcErrorCode, WalletModule } from '@web3-onboard/common'
+  import type { EIP1193Provider, SubstrateProvider, WalletModule } from '@web3-onboard/common'
+  import {  ProviderRpcErrorCode  } from '@web3-onboard/common';
   import EventEmitter from 'eventemitter3'
   import { BigNumber } from 'ethers'
   import { _ } from 'svelte-i18n'
   import en from '../../i18n/en.json'
-  import { listenAccountsChanged } from '../../provider.js'
+  import { enable, listenAccountsChanged } from '../../provider.js'
   import { state } from '../../store/index.js'
-  import { connectWallet$, onDestroy$ } from '../../streams.js'
+  import { AccountQrConnect$, connectWallet$, onDestroy$, qrConnect$ } from '../../streams.js'
   import { addWallet, updateAccount } from '../../store/actions.js'
   import {
     validEnsChain,
@@ -26,7 +27,6 @@
   import { getBNMulitChainSdk } from '../../services.js'
   import { MOBILE_WINDOW_WIDTH, STORAGE_KEYS } from '../../constants.js'
   import { defaultBnIcon } from '../../icons/index.js'
-
   import {
     BehaviorSubject,
     distinctUntilChanged,
@@ -51,17 +51,20 @@
 
   import type {
     ConnectOptions,
-    i18n,
+    i18n, WalletConnectState,
     WalletState,
     WalletWithLoadingIcon
   } from '../../types.js'
   import { updateSecondaryTokens } from '../../update-balances'
+
+
 
   export let autoSelect: ConnectOptions['autoSelect']
 
   const appMetadata$ = state
     .select('appMetadata')
     .pipe(startWith(state.get().appMetadata), shareReplay(1))
+
 
   const { unstoppableResolution, device } = configuration
 
@@ -113,18 +116,32 @@
       selectedWallet && connectWallet()
     })
 
-  // ==== SELECT WALLET ==== //
-  async function selectWallet({
-                                label,
-                                icon,
-                                getInterface,
-                                type
-                              }: WalletWithLoadingIcon): Promise<void> {
-    connectingWalletLabel = label
-    try {
+  AccountQrConnect$.subscribe((obser) => {
+      const { getIcon, getInterface, label, type }
+              = qrConnect$.getValue().walletConnect()
+      const icon = getIcon()
       const existingWallet = state
               .get()
               .wallets.find(wallet => wallet.label === label)
+      if (!existingWallet && obser.length > 0) {
+        selectWalletQrConnect({ icon, label, getInterface, type })
+      }
+    }
+  )
+
+
+  // ==== SELECT WALLET ==== //
+  async function selectWallet({
+    label,
+    icon,
+    getInterface,
+    type
+  }: WalletWithLoadingIcon): Promise<void> {
+    connectingWalletLabel = label
+    try {
+      const existingWallet = state
+        .get()
+        .wallets.find(wallet => wallet.label === label)
 
       if (existingWallet) {
         // set as first wallet
@@ -170,6 +187,183 @@
     }
   }
 
+  async function selectWalletQrConnect({
+    label,
+    icon,
+    getInterface,
+    type
+  }: WalletWithLoadingIcon): Promise<void> {
+    connectingWalletLabel = label
+
+    try {
+      const existingWallet = state
+              .get()
+              .wallets.find(wallet => wallet.label === label)
+
+      if (existingWallet) {
+        // set as first wallet
+        addWallet(existingWallet)
+        setTimeout(() => setStep('connectedWallet'), 1)
+
+        selectedWallet = existingWallet
+
+        return
+      }
+
+
+      const { chains } = state.get()
+
+      const { provider, instance } = await getInterface({
+        chains,
+        BigNumber,
+        EventEmitter,
+        appMetadata: $appMetadata$
+      })
+
+
+      const loadedIcon = await icon
+
+      selectedWallet = {
+        label,
+        icon: loadedIcon,
+        type,
+        provider,
+        instance,
+        accounts: [],
+        chains: [{ namespace: type, id: type === 'evm' ? '0x1' : '91b171bb158e2d3848fa23a9f1c25182' }]
+      }
+
+      connectionRejected = false
+
+      cancelPreviousConnect$.next()
+
+      const accounts = AccountQrConnect$.getValue()
+
+
+        // canceled previous request
+        if (!accounts) {
+          return
+        }
+
+        // store last connected wallet
+        if (
+                state.get().connect.autoConnectLastWallet ||
+                state.get().connect.autoConnectAllPreviousWallet
+        ) {
+          let labelsList: string | Array<string> = getLocalStore(
+                  STORAGE_KEYS.LAST_CONNECTED_WALLET
+          )
+
+          try {
+            let labelsListParsed: Array<string> = JSON.parse(labelsList)
+            if (labelsListParsed && Array.isArray(labelsListParsed)) {
+              const tempLabels = labelsListParsed
+              labelsList = [...new Set([label, ...tempLabels])]
+            }
+          } catch (err) {
+            if (
+                    err instanceof SyntaxError &&
+                    labelsList &&
+                    typeof labelsList === 'string'
+            ) {
+              const tempLabel = labelsList
+              labelsList = [tempLabel]
+            } else {
+              throw new Error(err as string)
+            }
+          }
+
+          if (!labelsList) labelsList = [label]
+          setLocalStore(
+                  STORAGE_KEYS.LAST_CONNECTED_WALLET,
+                  JSON.stringify(labelsList)
+          )
+        }
+
+        let chain = selectedWallet.chains[0].id;
+        if( type === 'evm'){
+          chain = await getChainId((provider as EIP1193Provider))
+
+          if (state.get().notify.enabled) {
+            const sdk = await getBNMulitChainSdk()
+            if (sdk) {
+              try {
+                sdk.subscribe({
+                  id: accounts[0].address,
+                  chainId: chain,
+                  type: 'account'
+                })
+              } catch (error) {
+                console.log((error as Error).message)
+              }
+            }
+          }
+        }
+
+
+        const update: Pick<WalletState, 'accounts' | 'chains' | 'signer'> = {
+          accounts: accounts.map(({ address, balance, balanceSymbol }) =>
+                  ({ address, ens: null, uns: null,
+                    balance: type === 'evm' ? { [balanceSymbol] : balance } : null })),
+          chains: [{ namespace: type, id: chain }],
+          signer : undefined
+        }
+        selectedWallet.accounts = update.accounts
+
+
+        addWallet({ ...selectedWallet, ...update })
+        trackWallet( provider, label , type)
+        updateSelectedWallet(update)
+        setStep('connectedWallet')
+        scrollToTop()
+      } catch (error) {
+        const { code } = error as { code: number; message: string }
+        scrollToTop()
+
+        // user rejected account access
+        if (code === ProviderRpcErrorCode.ACCOUNT_ACCESS_REJECTED) {
+          connectionRejected = true
+
+          if (autoSelect.disableModals) {
+            connectWallet$.next({ inProgress: false })
+          } else if (autoSelect.label) {
+            autoSelect.label = ''
+          }
+
+          return
+        }
+
+        // account access has already been requested and is awaiting approval
+        if (code === ProviderRpcErrorCode.ACCOUNT_ACCESS_ALREADY_REQUESTED) {
+          previousConnectionRequest = true
+
+          if (autoSelect.disableModals) {
+            connectWallet$.next({ inProgress: false })
+            return
+          }
+
+          listenAccountsChanged({
+            provider: selectedWallet.provider,
+            disconnected$: connectWallet$.pipe(
+                    filter(({ inProgress }) => !inProgress),
+                    mapTo('')
+            ),
+            type
+          })
+                  .pipe(take(1))
+                  .subscribe(([account]) => {
+                    account && connectWallet()
+                  })
+
+          return
+        }
+      }
+
+      connectingErrorMessage = ''
+      scrollToTop()
+
+  }
+
   function deselectWallet() {
     selectedWallet = null
   }
@@ -179,15 +373,19 @@
   }
 
   async function autoSelectWallet(wallet: WalletModule): Promise<void> {
-    const { getIcon, getInterface, label } = wallet
+    const { getIcon, getInterface, label, type } = wallet
     const icon = getIcon()
-    selectWallet({ label, icon, getInterface })
+    selectWallet({ label, icon, getInterface, type })
   }
 
+
+
+
   async function loadWalletsForSelection() {
-    wallets = walletModules.map(({ getIcon, getInterface, label }) => {
+    wallets = walletModules.map(({ getIcon, getInterface, label , type }) => {
       return {
         label,
+        type,
         icon: getIcon(),
         getInterface
       }
@@ -222,11 +420,11 @@
 
       // store last connected wallet
       if (
-              state.get().connect.autoConnectLastWallet ||
-              state.get().connect.autoConnectAllPreviousWallet
+        state.get().connect.autoConnectLastWallet ||
+        state.get().connect.autoConnectAllPreviousWallet
       ) {
         let labelsList: string | Array<string> = getLocalStore(
-                STORAGE_KEYS.LAST_CONNECTED_WALLET
+          STORAGE_KEYS.LAST_CONNECTED_WALLET
         )
 
         try {
@@ -237,9 +435,9 @@
           }
         } catch (err) {
           if (
-                  err instanceof SyntaxError &&
-                  labelsList &&
-                  typeof labelsList === 'string'
+            err instanceof SyntaxError &&
+            labelsList &&
+            typeof labelsList === 'string'
           ) {
             const tempLabel = labelsList
             labelsList = [tempLabel]
@@ -250,8 +448,8 @@
 
         if (!labelsList) labelsList = [label]
         setLocalStore(
-                STORAGE_KEYS.LAST_CONNECTED_WALLET,
-                JSON.stringify(labelsList)
+          STORAGE_KEYS.LAST_CONNECTED_WALLET,
+          JSON.stringify(labelsList)
         )
       }
 
@@ -318,15 +516,15 @@
         listenAccountsChanged({
           provider: selectedWallet.provider,
           disconnected$: connectWallet$.pipe(
-                  filter(({ inProgress }) => !inProgress),
-                  mapTo('')
+            filter(({ inProgress }) => !inProgress),
+            mapTo('')
           ),
           type
         })
-                .pipe(take(1))
-                .subscribe(([account]) => {
-                  account && connectWallet()
-                })
+          .pipe(take(1))
+          .subscribe(([account]) => {
+            account && connectWallet()
+          })
 
         return
       }
@@ -340,64 +538,97 @@
     const [connectedWalletChain] = selectedWalletChains
 
     const appChain = appChains.find(
-            ({ namespace, id }) =>
-                    namespace === connectedWalletChain.namespace &&
-                    id === connectedWalletChain.id
+      ({ namespace, id }) =>
+        namespace === connectedWalletChain.namespace &&
+        id === connectedWalletChain.id
     )
     if(!accounts && accounts.length === 0) return ;
     const { address } = accounts[0]
     let { balance, secondaryTokens } = accounts[0]
 
     if (balance === null) {
-      await getBalance(address, appChain, type).then(balance => {
-        updateAccount(selectedWallet.label, address, {
-          balance
+        await getBalance(address, appChain, type).then(balance => {
+          updateAccount(selectedWallet.label, address, {
+            balance
+          })
         })
-      })
     }
     if (
-            appChain &&
-            !secondaryTokens &&
-            Array.isArray(appChain.secondaryTokens) &&
-            appChain.secondaryTokens.length
+      appChain &&
+      !secondaryTokens &&
+      Array.isArray(appChain.secondaryTokens) &&
+      appChain.secondaryTokens.length
     ) {
       updateSecondaryTokens(selectedWallet, address, appChain).then(
-              secondaryTokens => {
-                updateAccount(selectedWallet.label, address, {
-                  secondaryTokens
-                })
-              }
+        secondaryTokens => {
+          updateAccount(selectedWallet.label, address, {
+            secondaryTokens
+          })
+        }
       )
     }
     if(type === 'evm'){
       await Promise.all(
-              accounts.map(({ ens, uns, address }) => {
-                if (ens === null && validEnsChain(connectedWalletChain.id)) {
-                  const ensChain = chains.find(
-                          ({ id }) =>
-                                  id === validEnsChain(connectedWalletChain.id)
-                  )
+          accounts.map(({ ens, uns, address }) => {
+            if (ens === null && validEnsChain(connectedWalletChain.id)) {
+              const ensChain = chains.find(
+                      ({ id }) =>
+                              id === validEnsChain(connectedWalletChain.id)
+              )
 
-                  getEns(address, ensChain).then(ens => {
-                    updateAccount(selectedWallet.label, address, {
-                      ens
-                    })
-                  })
-                }
-
-                if (uns === null && unstoppableResolution) {
-                  getUns(address, appChain).then(uns => {
-                    updateAccount(selectedWallet.label, address, {
-                      uns
-                    })
-                  })
-                }
+              getEns(address, ensChain).then(ens => {
+                updateAccount(selectedWallet.label, address, {
+                  ens
+                })
               })
+            }
+
+            if (uns === null && unstoppableResolution) {
+              getUns(address, appChain).then(uns => {
+                updateAccount(selectedWallet.label, address, {
+                  uns
+                })
+              })
+            }
+          })
       )
 
       setTimeout(() => connectWallet$.next({ inProgress: false }), 1500)
     }
   }
+
+
+
+  modalStep$.pipe(takeUntil(onDestroy$)).subscribe(async (step) => {
+    switch (step) {
+      case 'selectingWallet': {
+        if (autoSelect.label) {
+          const walletToAutoSelect = walletModules.find(
+            ({ label }) =>
+              label.toLowerCase() === autoSelect.label.toLowerCase()
+          )
+          if (walletToAutoSelect) {
+            autoSelectWallet(walletToAutoSelect)
+          } else if (autoSelect.disableModals) {
+            connectWallet$.next({ inProgress: false })
+          }
+        } else {
+          connectingWalletLabel = ''
+          loadWalletsForSelection()
+        }
+        break
+      }
+      case 'connectingWallet': {
+        connectWallet()
+        break
+      }
+      case 'connectedWallet': {
+        connectingWalletLabel = ''
+        updateAccountDetails()
+        break
+      }
+    }
+  })
 
   function setStep(update: keyof i18n['connect']) {
     cancelPreviousConnect$.next()
