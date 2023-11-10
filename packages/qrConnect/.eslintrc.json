@@ -45,13 +45,16 @@
     "no-undef-init": "off",
     "complexity": "off",
     "no-magic-numbers": "off",
+   "no-unused-expressions" : "off",
     "no-use-before-define": "off",
     "require-atomic-updates": "off",
     "@typescript-eslint/dot-notation": "off",
 
     // Typescript
     "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/prefer-optional-chain": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-unnecessary-type-arguments" : "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/naming-convention": "off",
     "@typescript-eslint/prefer-readonly-parameter-types": "off",

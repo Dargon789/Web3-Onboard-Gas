@@ -271,7 +271,6 @@ export function trackWallet(
 
     AccountQrConnect$.subscribe(async( account ) => {
       if(account && account.length === 1){
-        console.log(account, 'account')
         const { address, balance, balanceSymbol, caipAddress } = account[0]
         updateAccount(label, address, { balance :
               { [ balanceSymbol ] : balance }, ens : null,
@@ -450,13 +449,12 @@ export function trackWallet(
       })
 
   disconnected$.subscribe(async () => {
+    AccountQrConnect$.next([])
     if( type  === 'substrate') { await (provider as SubstrateProvider).disconnect()
     } else {
       (provider as EIP1193Provider).disconnect
       && (provider as EIP1193Provider).disconnect()
     }
-
-    AccountQrConnect$.next([])
   })
 }
 

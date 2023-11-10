@@ -126,7 +126,7 @@ function init(options: InitOptions): OnboardAPI {
         accountState: AccountQrConnect$
       }
   ))
-
+  qrConnect$.getValue().initializeConnection(false, Date.now())
 
   if (containerElements) updateConfiguration({ containerElements })
 

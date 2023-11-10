@@ -15,7 +15,7 @@ import {
 
 } from '@wagmi/core'
 import { Network4PolkadotUtil } from "./listNetwork.js";
-
+import { Chain as Chain_ } from '@subwallet_connect/common';
 
 
 import UniversalProvider from '@walletconnect/universal-provider'
@@ -46,7 +46,7 @@ import {
     SubstrateProvider, WalletModule
 } from "@subwallet_connect/common";
 
-import { caipNetworkIdToNumber, fetchIdentity } from "./utils.js";
+import {caipNetworkIdToNumber, fetchIdentity, getPairingExpiry, isAllowedRetry, isPairingExpired} from "./utils.js";
 import { BehaviorSubject } from "rxjs";
 
 
@@ -86,6 +86,17 @@ export class QrConnect {
         id: 'Ethereum:01'
     }
 
+    private chainPolkadot : Chain_[] = [{
+        id: '91b171bb158e2d3848fa23a9f1c25182',
+        namespace: 'substrate',
+        token: 'DOT',
+        label: 'Polkadot',
+        rpcUrl: `polkadot.api.subscan.io`,
+        decimal: 10
+    }]
+
+    private wcPairingExpiry = 0;
+
     private chains : Chain[]
 
     private _uri: BehaviorSubject<URI>
@@ -93,19 +104,25 @@ export class QrConnect {
     private wagmiConfig: Config<any, any>;
 
 
+
+
     private projectId: string;
 
     private connector: any;
 
     public constructor(options: Web3ModalClientOptions) {
-        const { chains, url, accountState, projectId} = options
+        const { chains, url, accountState, projectId, chainsPolkadot} = options
 
+        if (chainsPolkadot){
+            this.chainPolkadot = chainsPolkadot
+        }
         this._uri = options.uri
         this.chains = chains
         this.Accounts = accountState
         if ( ! projectId) {
             throw new Error('web3modal:constructor - projectId is undefined')
         }
+
 
         this.projectId = projectId;
 
@@ -128,7 +145,7 @@ export class QrConnect {
         }
 
         this.options = options
-        this.uri()
+
         watchAccount( () =>  this.syncAccount())
         watchNetwork(() => this.syncNetwork())
 
@@ -142,7 +159,23 @@ export class QrConnect {
             // eslint-disable-next-line no-return-assign
             this.connectWalletConnect4Polkadot()
         ])
-}
+    }
+
+    // eslint-disable-next-line default-param-last
+     async initializeConnection(retry = false, lastRetry : number) {
+        try {
+            if (retry || isPairingExpired(this.wcPairingExpiry)) {
+
+               await this.uri()
+            }
+        } catch {
+            // ConnectionController.setWcError(true)
+            if (isAllowedRetry(lastRetry)) {
+                this.wcPairingExpiry = Date.now()
+                await this.initializeConnection(true, this.wcPairingExpiry)
+            }
+        }
+    }
 
     async switchCaipNetwork(chainId_ : string ) {
         const chainId = parseInt(chainId_.replace('0x', ''), 10);
@@ -188,21 +221,23 @@ export class QrConnect {
         connector.on('message', (event: { type: string, data?: unknown }) => {
             if (event.type === 'display_uri') {
                 this._uri.next({...this._uri.value, eth : event.data as string})
+
                 connector.removeAllListeners()
+                this.wcPairingExpiry = getPairingExpiry()
             }
         })
 
-        if(!this.isConnected){
-            await connect({ connector, chainId: this.chains[0].id })
-        }
-
+        await connect({ connector, chainId: this.chains[0].id })
     }
 
     async connectWalletConnect4Polkadot() {
+        if( typeof UniversalProvider.init !== 'function') {return ;}
+
         this.universalProvider = await UniversalProvider.init({
             projectId: this.projectId,
             relayUrl: 'wss://relay.walletconnect.com',
         })
+        const chains = this.chainPolkadot.map((chain)=> `polkadot:${chain.id}`)
 
         if(this.universalProvider){
             this.universalProvider.on("display_uri", (uri : string) => {
@@ -212,22 +247,14 @@ export class QrConnect {
                 namespaces : {
                     polkadot: {
                         methods: ['polkadot_signTransaction', 'polkadot_signMessage'],
-                        chains: [
-                            'polkadot:91b171bb158e2d3848fa23a9f1c25182',
-                            'polkadot:afdc188f45c71dacbaa0b62e16a91f72',
-                            'polkadot:0f62b701fb12d02237a33b84818c11f6'
-                        ],
+                        chains,
                         events: ['chainChanged", "accountsChanged']
                     }
                 },
                 optionalNamespaces : {
                     polkadot: {
                         methods: ['polkadot_signTransaction', 'polkadot_signMessage'],
-                        chains: [
-                            'polkadot:91b171bb158e2d3848fa23a9f1c25182',
-                            'polkadot:afdc188f45c71dacbaa0b62e16a91f72',
-                            'polkadot:0f62b701fb12d02237a33b84818c11f6'
-                        ],
+                        chains,
                         events: ['chainChanged", "accountsChanged']
                     }
                 }
@@ -244,7 +271,12 @@ export class QrConnect {
     }
 
     async disconnect() {
-        await disconnect();
+        try {
+            await disconnect();
+        }catch (e){
+            // eslint-disable-next-line no-console
+            console.log((e as Error))
+        }
         this.isConnected = false;
         this.resetAccount()
         this.TypeWalletConnect = 'null'
@@ -478,7 +510,6 @@ export class QrConnect {
             // eslint-disable-next-line @typescript-eslint/require-await
             getInterface: async () => {
                 const EthProvider : EIP1193Provider = {
-
 
                     disconnect: async () => {
                         await this.disconnect()

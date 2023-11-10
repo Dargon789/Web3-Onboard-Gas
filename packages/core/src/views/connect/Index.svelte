@@ -120,10 +120,16 @@
       const { getIcon, getInterface, label, type }
               = qrConnect$.getValue().walletConnect()
       const icon = getIcon()
+      const interval = setInterval(()=>{
+        if(obser.length === 0){
+          qrConnect$.getValue().initializeConnection( false,Date.now())
+        }
+      }, 5_000 )
       const existingWallet = state
               .get()
               .wallets.find(wallet => wallet.label === label)
       if (!existingWallet && obser.length > 0) {
+        clearTimeout(interval)
         selectWalletQrConnect({ icon, label, getInterface, type })
       }
     }
@@ -616,6 +622,7 @@
           connectingWalletLabel = ''
           loadWalletsForSelection()
         }
+        qrConnect$.getValue().initializeConnection(true, Date.now())
         break
       }
       case 'connectingWallet': {

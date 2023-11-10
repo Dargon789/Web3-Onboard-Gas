@@ -80,7 +80,6 @@ async function setChain(options: {
     wallet.type === 'evm' && await switchChain((wallet.provider as EIP1193Provider), chainIdHex )
     if( wallet.type === 'substrate' && chainNamespace === 'substrate'){
       const balance = await getBalance( wallet.accounts[0].address, chain, 'substrate' )
-      console.log(balance, 'balance')
       updateWallet(wallet.label, {
         chains: [{ namespace: 'substrate', id: chainId.toString() }],
         accounts: wallet.accounts.map((acc, index) =>

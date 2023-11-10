@@ -7,6 +7,7 @@ import { validateDisconnectOptions } from './validation.js'
 import { delLocalStore, getLocalStore, setLocalStore } from './utils'
 import { STORAGE_KEYS } from './constants'
 
+
 async function disconnect(options: DisconnectOptions): Promise<WalletState[]> {
   const error = validateDisconnectOptions(options)
   if (error) {
@@ -33,9 +34,6 @@ async function disconnect(options: DisconnectOptions): Promise<WalletState[]> {
   }
 
   disconnectWallet$.next(label)
-  setTimeout(()=>{
-
-  }, 2000)
   removeWallet(label)
 
   const labels = JSON.parse(getLocalStore(STORAGE_KEYS.LAST_CONNECTED_WALLET))
