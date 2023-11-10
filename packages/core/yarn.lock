@@ -2111,10 +2111,10 @@
     joi "17.8.1"
     rxjs "^7.5.2"
 
-"@subwallet_connect/qr_code@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@subwallet_connect/qr_code/-/qr_code-1.0.1.tgz#abf947597c816367e37327c72af239c709c30480"
-  integrity sha512-1qZ38YPmjvKA6HHok6Ok7hRI1E7StlR+PCuuX3L1e/yEvCqder2sIs9pFROBGPZtRqDoUI3mQlo9uIDbH4xRMw==
+"@subwallet_connect/qr_code@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@subwallet_connect/qr_code/-/qr_code-1.0.3.tgz#5a6b579cca3cc08909c34c38c4ae8e37252fb0fd"
+  integrity sha512-shz6gvWXQkizDjowUNGZFUPkJu5hFFjPXxnLKSRoFaRVbuF8aVfxvCKVL/l5iGuE/Ywz1PgxLokTI7ZaXXIE4Q==
   dependencies:
     "@stablelib/random" "^1.0.2"
     "@subwallet_connect/common" "^1.0.0"

@@ -481,7 +481,6 @@ export function updateAppMetadata(
 export function sendSignMessage(message : string): void {
 
   if(!message || message.length === 0) return ;
-  console.log(message)
   const action = {
     type: SEND_SIGN_MESSAGE ,
     payload: message

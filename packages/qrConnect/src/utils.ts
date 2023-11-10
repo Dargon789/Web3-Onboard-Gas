@@ -1,5 +1,6 @@
 import {BlockchainApiIdentityRequest, BlockchainApiIdentityResponse, CaipNetworkId} from "./types.js";
 import { ConstantsUtil } from "./constants.js";
+import {state} from "@subwallet_connect/core/src/store";
 
 export function caipNetworkIdToNumber(caipnetworkId?: CaipNetworkId) {
     return caipnetworkId ?caipnetworkId.split(':')[1] : '0'
@@ -119,3 +120,15 @@ export function fetchIdentity({ caipChainId, address }: BlockchainApiIdentityReq
             }
         })
     }
+
+
+export function isPairingExpired (expiry?: number) {
+    return expiry ? expiry - Date.now() <= ConstantsUtil.TEN_SEC_MS : true
+}
+
+export function getPairingExpiry() {
+    return Date.now() + ConstantsUtil.FOUR_MINUTES_MS
+}
+export function isAllowedRetry(lastRetry: number) {
+    return Date.now() - lastRetry >= ConstantsUtil.ONE_SEC_MS
+}

@@ -28,7 +28,6 @@ async function signMessageAllTypeWallet (
                     wallet.provider as EIP1193Provider
                 );
             } else if (signMethodType === 'Personal Sign') {
-                console.log('pass')
                 message = await signPersonalSignMessageRequest(
                     wallet.provider as EIP1193Provider
                 );
