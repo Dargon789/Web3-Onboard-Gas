@@ -8,14 +8,14 @@ function XDEFIWallet(): WalletInit {
   return () => {
     return {
       label: 'XDEFI Wallet',
-     type : 'evm',
+      type : 'evm',
       injectedNamespace: 'xfi',
       checkProviderIdentity: ({ provider }: { provider: any }) => {
         !!provider && !!provider['isXDEFI']
       },
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async () => {
-       let provider
+        let provider
         if (window.xfi && window.xfi.ethereum) {
           provider = window.xfi.ethereum
         }

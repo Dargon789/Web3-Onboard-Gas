@@ -1,6 +1,6 @@
 import { createSignal, createEffect, createMemo, Signal } from 'solid-js'
 import { SetStoreFunction, Store, createStore } from 'solid-js/store'
-import Web3Onboard from '@subwallet_connect/core'
+import Web3Onboard from '@web3-onboard/core'
 import type {
   InitOptions,
   OnboardAPI,
@@ -9,9 +9,9 @@ import type {
   WalletState,
   ConnectedChain,
   AppState
-} from '@subwallet_connect/core'
+} from '@web3-onboard/core'
 import { OnboardComposable, SetChainOptions } from './types'
-export type * from '@subwallet_connect/core'
+export type * from '@web3-onboard/core'
 export type * from './types'
 
 export const STORAGE_KEYS = {

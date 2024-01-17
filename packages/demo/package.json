@@ -1,0 +1,39 @@
+{
+  "name": "demo",
+  "version": "2.0.9",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@types/node": "18.11.11",
+    "@types/react": "18.2.18",
+    "@types/react-dom": "18.2.18",
+    "@subwallet_connect/coinbase": "^1.0.0",
+    "@subwallet_connect/dcent": "^1.0.0",
+    "@subwallet_connect/fortmatic": "^1.0.0",
+    "@subwallet_connect/gnosis": "^1.0.0",
+    "@subwallet_connect/injected-wallets": "^1.0.0",
+    "@subwallet_connect/keepkey": "^1.0.0",
+    "@subwallet_connect/keystone": "^1.0.0",
+    "@subwallet_connect/ledger": "^1.0.0",
+    "@subwallet_connect/magic": "^1.0.0",
+    "@subwallet_connect/mew-wallet": "^1.0.0",
+    "@subwallet_connect/portis": "^1.0.0",
+    "@subwallet_connect/sequence": "^1.0.0",
+    "@subwallet_connect/taho": "^1.0.0",
+    "@subwallet_connect/torus": "^1.0.0",
+    "@subwallet_connect/trust": "^1.0.0",
+    "@subwallet_connect/walletconnect": "^1.0.0",
+    "@subwallet_connect/walletconnect-polkadot": "^1.0.0",
+    "@subwallet_connect/react": "^1.0.4",
+    "ethers": "^5.7.2",
+    "next": "13.1.6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "typescript": "^4.5.5"
+  }
+}

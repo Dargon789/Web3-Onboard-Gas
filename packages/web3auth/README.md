@@ -1,10 +1,10 @@
-# @subwallet_connect/web3auth
+# @web3-onboard/web3auth
 
 ## Wallet module for connecting Web3auth to web3-onboard
 
 ### Install
 
-`npm i @subwallet_connect/core @subwallet_connect/web3auth`
+`npm i @web3-onboard/core @web3-onboard/web3auth`
 
 ## Options
 
@@ -14,8 +14,8 @@ For troubleshooting web3Auth errors, framework, polyfill, etc please see the [of
 ## Usage
 
 ```typescript
-import Onboard from '@subwallet_connect/core'
-import web3authModule from '@subwallet_connect/web3auth'
+import Onboard from '@web3-onboard/core'
+import web3authModule from '@web3-onboard/web3auth'
 
 const web3auth = web3authModule({
   clientId:

@@ -37,10 +37,10 @@ const errorMessages = {
 type ErrorCode = 'busy' | 'pairing'
 
 function keepkey({
-  filter,
-  containerElement,
-  consecutiveEmptyAccountThreshold
-}: {
+                   filter,
+                   containerElement,
+                   consecutiveEmptyAccountThreshold
+                 }: {
   filter?: Platform[]
   containerElement?: string
   /**
@@ -67,7 +67,7 @@ function keepkey({
       getInterface: async ({ EventEmitter, chains }) => {
         const { WebUSBKeepKeyAdapter } = await import(
           '@shapeshiftoss/hdwallet-keepkey-webusb'
-        )
+          )
 
         const {
           Keyring,
@@ -79,11 +79,11 @@ function keepkey({
 
         const { createEIP1193Provider, ProviderRpcError } = await import(
           '@subwallet_connect/common'
-        )
+          )
 
         const { accountSelect, entryModal } = await import(
           '@subwallet_connect/hw-common'
-        )
+          )
 
         const { bigNumberFieldsToStrings, getHardwareWalletProvider } =
           await import('@subwallet_connect/hw-common')
@@ -92,7 +92,7 @@ function keepkey({
 
         const { StaticJsonRpcProvider } = await import(
           '@ethersproject/providers'
-        )
+          )
         const ethUtil = await import('ethereumjs-util')
 
         const keyring = new Keyring()
@@ -151,10 +151,10 @@ function keepkey({
         }
 
         const getAccount = async ({
-          accountIdx,
-          provider,
-          asset
-        }: {
+                                    accountIdx,
+                                    provider,
+                                    asset
+                                  }: {
           accountIdx: number
           provider: StaticJsonRpcProvider
           asset: Asset
@@ -180,10 +180,10 @@ function keepkey({
         }
 
         const getAllAccounts = async ({
-          derivationPath,
-          asset,
-          provider
-        }: {
+                                        derivationPath,
+                                        asset,
+                                        provider
+                                      }: {
           derivationPath: string
           asset: Asset
           provider: StaticJsonRpcProvider
@@ -228,10 +228,10 @@ function keepkey({
         }
         let ethersProvider: StaticJsonRpcProvider
         const scanAccounts = async ({
-          derivationPath,
-          chainId,
-          asset
-        }: ScanAccountsOptions): Promise<Account[]> => {
+                                      derivationPath,
+                                      chainId,
+                                      asset
+                                    }: ScanAccountsOptions): Promise<Account[]> => {
           if (!keepKeyWallet)
             throw new Error('Device must be connected before scanning accounts')
           currentChain = chains.find(({ id }) => id === chainId) || currentChain
@@ -301,9 +301,9 @@ function keepkey({
             message:
               message.slice(0, 2) === '0x'
                 ? // @ts-ignore - commonjs weirdness
-                  (ethUtil.default || ethUtil)
-                    .toBuffer(message)
-                    .toString('utf8')
+                (ethUtil.default || ethUtil)
+                  .toBuffer(message)
+                  .toString('utf8')
                 : message
           })
 
@@ -391,10 +391,10 @@ function keepkey({
               !transactionObject || !transactionObject.hasOwnProperty('from')
                 ? accounts[0]
                 : (accounts.find(
-                    account =>
-                      account.address.toLocaleLowerCase() ===
-                      transactionObject.from.toLocaleLowerCase()
-                  ) as Account)
+                  account =>
+                    account.address.toLocaleLowerCase() ===
+                    transactionObject.from.toLocaleLowerCase()
+                ) as Account)
 
             const { derivationPath, address } = account
             const addressNList = bip32ToAddressNList(derivationPath)
@@ -426,12 +426,12 @@ function keepkey({
 
             const gasData = gasPrice
               ? {
-                  gasPrice
-                }
+                gasPrice
+              }
               : {
-                  maxFeePerGas,
-                  maxPriorityFeePerGas
-                }
+                maxFeePerGas,
+                maxPriorityFeePerGas
+              }
 
             const txn = {
               addressNList,

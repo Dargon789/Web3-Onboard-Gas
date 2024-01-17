@@ -1,19 +1,19 @@
-# @subwallet_connect/mew
+# @web3-onboard/mew
 
 ## (Deprecated) Wallet module for connecting WalletLink to web3-onboard
-_Use [@subwallet_connect/mew-wallet](../mew-wallet/README.md)_
+_Use [@web3-onboard/mew-wallet](../mew-wallet/README.md)_
 
 ## Wallet module for connecting Mew wallet to web3-onboard
 
 ### Install
 
-`npm i @subwallet_connect/mew`
+`npm i @web3-onboard/mew`
 
 ## Usage
 
 ```typescript
-import Onboard from '@subwallet_connect/core'
-import mewModule from '@subwallet_connect/mew'
+import Onboard from '@web3-onboard/core'
+import mewModule from '@web3-onboard/mew'
 
 const mew = mewModule()
 

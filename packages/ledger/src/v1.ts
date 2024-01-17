@@ -57,7 +57,7 @@ function ledger(options: LedgerOptionsWCv1 = { walletConnectVersion: 1 }): Walle
         const { ProviderRpcError, ProviderRpcErrorCode } = await import(
           '@subwallet_connect/common'
         )
-        const { default: WalletConnect } = await import('@walletconnect/client')
+
         const { Subject, fromEvent } = await import('rxjs')
         const { takeUntil, take } = await import('rxjs/operators')
         const connector = instance.connector as WalletConnect

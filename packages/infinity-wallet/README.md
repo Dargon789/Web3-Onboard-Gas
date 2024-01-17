@@ -1,4 +1,4 @@
-# @subwallet_connect/infinity-wallet
+# @web3-onboard/infinity-wallet
 
 ## Wallet module for connecting Infinity Wallet through web3-onboard
 
@@ -9,16 +9,16 @@ Checkout the official [Infinity Wallet page](https://infinitywallet.io/) for det
 ### Install
 
 **NPM**
-`npm i @subwallet_connect/core @subwallet_connect/infinity-wallet`
+`npm i @web3-onboard/core @web3-onboard/infinity-wallet`
 
 **Yarn**
-`yarn add @subwallet_connect/core @subwallet_connect/infinity-wallet`
+`yarn add @web3-onboard/core @web3-onboard/infinity-wallet`
 
 ## Usage
 
 ```typescript
-import Onboard from '@subwallet_connect/core'
-import infinityWalletModule from '@subwallet_connect/infinity-wallet'
+import Onboard from '@web3-onboard/core'
+import infinityWalletModule from '@web3-onboard/infinity-wallet'
 
 const infinityWallet = infinityWalletModule()
 

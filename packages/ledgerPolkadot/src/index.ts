@@ -307,7 +307,9 @@ function ledgerPolkadot({
                         return await signMessage(address, message) || '0x0'
                     },
 
-                    async disconnect(){}
+                    async disconnect(){},
+
+                    async request(){}
                 }
                 return {
                     provider,

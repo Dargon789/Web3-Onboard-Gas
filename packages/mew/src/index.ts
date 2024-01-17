@@ -18,7 +18,7 @@ function mew(): WalletInit {
 
         const { default: MEWWallet } = await import(
           '@myetherwallet/mewconnect-web-client'
-        )
+          )
 
         const [chain] = chains
         const mewConnect = new MEWWallet.Provider({

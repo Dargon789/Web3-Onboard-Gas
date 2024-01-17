@@ -3,8 +3,8 @@ import type { WalletInit } from '@subwallet_connect/common'
 export type { MetaMaskSDKOptions } from '@metamask/sdk'
 
 function metamask({
-  options
-}: {
+                    options
+                  }: {
   options: Partial<MetaMaskSDKOptions>
 }): WalletInit {
   return () => {

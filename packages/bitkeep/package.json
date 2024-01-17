@@ -37,13 +37,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Koniverse/web3-onboard.git",
+    "url": "https://github.com/blocknative/web3-onboard.git",
     "directory": "packages/bitkeep"
   },
   "homepage": "https://www.blocknative.com/onboard",
-  "bugs": {
-    "url": "https://github.com/blocknative/web3-onboard/issues"
-  },
+  "bugs": "https://github.com/blocknative/web3-onboard/issues",
   "module": "dist/index.js",
   "browser": "dist/index.js",
   "main": "dist/index.js",
@@ -64,7 +62,6 @@
   },
   "dependencies": {
     "@bitget-wallet/web3-sdk": "^0.0.8",
-    "@subwallet_connect/common": "^1.0.0"
-  },
-  "author": ""
+    "@subwallet_connect/common": "^1.0.1"
+  }
 }

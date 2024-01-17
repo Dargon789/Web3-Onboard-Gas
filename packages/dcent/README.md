@@ -1,16 +1,16 @@
-# @subwallet_connect/dcent
+# @web3-onboard/dcent
 
 ## Wallet module for connecting D'CENT hardware wallets to web3-onboard
 
 ### Install
 
-`npm i @subwallet_connect/dcent`
+`npm i @web3-onboard/dcent`
 
 ### Usage
 
 ```typescript
-import Onboard from '@subwallet_connect/core'
-import dcentModule from '@subwallet_connect/dcent'
+import Onboard from '@web3-onboard/core'
+import dcentModule from '@web3-onboard/dcent'
 
 const dcent = dcentModule()
 
@@ -31,8 +31,8 @@ console.log(connectedWallets)
 You may decide that on certain platforms you do not want to display this wallet as a selectable option. To do that you can use the `filter` init option which is an array of platforms that you would like this wallet to **not** be displayed to the end user:
 
 ```typescript
-import Onboard from '@subwallet_connect/core'
-import dcentModule from '@subwallet_connect/dcent'
+import Onboard from '@web3-onboard/core'
+import dcentModule from '@web3-onboard/dcent'
 
 const dcent = dcentModule({ filter: ['Safari'] })
 

@@ -40,6 +40,6 @@ export default {
     'rxjs',
     'ethers',
     '@ethereumjs/common',
-    '@subwallet_connect/common'
+    '@web3-onboard/common'
   ]
 }

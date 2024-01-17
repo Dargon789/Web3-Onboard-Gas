@@ -35,5 +35,5 @@ export default {
       inlineSources: !production
     })
   ],
-  external: ['joi', 'rxjs', 'magic-sdk', '@subwallet_connect/common']
+  external: ['joi', 'rxjs', 'magic-sdk', '@web3-onboard/common']
 }

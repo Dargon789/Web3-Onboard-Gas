@@ -21,8 +21,7 @@
   }
 
   const wheresMyWalletDefault =
-    'https://www.blocknative.com/blog/metamask-wont-connect-web3-wallet-troubleshooting'
-
+          'https://www.blocknative.com/blog/metamask-wont-connect-web3-wallet-troubleshooting'
 </script>
 
 <style>
@@ -79,12 +78,12 @@
   <div class="wallets-container">
     {#each wallets as wallet}
       <WalletButton
-        connected={checkConnected(wallet.label)}
-        connecting={connectingWalletLabel === wallet.label}
-        label={wallet.label}
-        icon={wallet.icon}
-        onClick={() => selectWallet(wallet)}
-        disabled={windowWidth <= MOBILE_WINDOW_WIDTH &&
+              connected={checkConnected(wallet.label)}
+              connecting={connectingWalletLabel === wallet.label}
+              label={wallet.label}
+              icon={wallet.icon}
+              onClick={() => selectWallet(wallet)}
+              disabled={windowWidth <= MOBILE_WINDOW_WIDTH &&
           connectingWalletLabel &&
           connectingWalletLabel !== wallet.label}
       />
@@ -98,13 +97,13 @@
             })}
           </div>
           <a
-            class="link pointer"
-            href={connect.wheresMyWalletLink || wheresMyWalletDefault}
-            target="_blank"
-            rel="noreferrer noopener"
-            >{$_('connect.selectingWallet.learnMore', {
-              default: en.connect.selectingWallet.learnMore
-            })}</a
+                  class="link pointer"
+                  href={connect.wheresMyWalletLink || wheresMyWalletDefault}
+                  target="_blank"
+                  rel="noreferrer noopener"
+          >{$_('connect.selectingWallet.learnMore', {
+            default: en.connect.selectingWallet.learnMore
+          })}</a
           >
         </Warning>
       </div>

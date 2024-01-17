@@ -56,10 +56,10 @@ const generateAccounts = async (
 }
 
 function dcent({
-  customNetwork,
-  filter,
-  containerElement
-}: {
+                 customNetwork,
+                 filter,
+                 containerElement
+               }: {
   customNetwork?: CustomNetwork
   filter?: Platform[]
   containerElement?: string
@@ -88,7 +88,7 @@ function dcent({
           if (isMobile && !provider) {
             location.replace(
               'https://link.dcentwallet.com/DAppBrowser/?url=' +
-                document.location
+              document.location
             )
           }
           provider.on = eventEmitter.on.bind(eventEmitter)
@@ -99,18 +99,18 @@ function dcent({
 
         const { StaticJsonRpcProvider } = await import(
           '@ethersproject/providers'
-        )
+          )
 
         const { default: EthDcentKeyring } = await import('eth-dcent-keyring')
         const dcentKeyring = new EthDcentKeyring({})
 
         const { TransactionFactory: Transaction } = await import(
           '@ethereumjs/tx'
-        )
+          )
 
         const { getCommon, accountSelect } = await import(
           '@subwallet_connect/hw-common'
-        )
+          )
 
         const {
           createEIP1193Provider,
@@ -120,8 +120,8 @@ function dcent({
 
         let currentChain: Chain = chains[0]
         const scanAccounts = async ({
-          chainId
-        }: ScanAccountsOptions): Promise<Account[]> => {
+                                      chainId
+                                    }: ScanAccountsOptions): Promise<Account[]> => {
           currentChain =
             chains.find(({ id }: Chain) => id === chainId) || currentChain
 
@@ -147,9 +147,9 @@ function dcent({
         }
 
         const request = async ({
-          method,
-          params
-        }: {
+                                 method,
+                                 params
+                               }: {
           method: string
           params: any
         }) => {

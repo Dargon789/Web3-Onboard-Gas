@@ -10,8 +10,8 @@ import type {
   EIP712Request,
   SubstrateProvider
 } from '@subwallet_connect/common'
-import {   weiToEth  } from '@subwallet_connect/common'
-import { AccountQrConnect$, disconnectWallet$ } from './streams.js'
+import { weiToEth } from '@subwallet_connect/common'
+import { disconnectWallet$ } from './streams.js'
 import { updateAccount, updateWallet } from './store/actions.js'
 import { validEnsChain } from './utils.js'
 import disconnect from './disconnect.js'
@@ -19,7 +19,7 @@ import { state } from './store/index.js'
 import { getBNMulitChainSdk } from './services.js'
 import { configuration } from './configuration.js'
 import { getBalanceSubstrate } from './utils.js';
-import { BN } from 'bn.js';
+import { BN } from 'bn.js'
 
 
 import type {
@@ -269,65 +269,6 @@ export function trackWallet(
       })
 
 
-    AccountQrConnect$.subscribe(async( account ) => {
-      if(account && account.length === 1){
-        const { address, balance, balanceSymbol, caipAddress } = account[0]
-        updateAccount(label, address, { balance :
-              { [ balanceSymbol ] : balance }, ens : null,
-          uns : null, secondaryTokens : null })
-
-        const { wallets } = state.get()
-        const wallet = wallets.find(wallet => wallet.label === label)
-        if(!wallet) return;
-        const { chains, type } = wallet
-        const chainId = `0x${ parseInt(caipAddress ?caipAddress.split(':')[1] : '0').toString(16)}`
-        const [connectedWalletChain] = chains
-        if ( chainId === connectedWalletChain.id  )return
-
-
-        if (state.get().notify.enabled) {
-          const sdk = await getBNMulitChainSdk()
-
-          if (sdk) {
-            const wallet = state
-                .get()
-                .wallets.find(wallet => wallet.label === label)
-
-            // Unsubscribe with timeout of 60 seconds
-            // to allow for any currently inflight transactions
-            wallet.accounts.forEach(({ address }) => {
-              sdk.unsubscribe({
-                id: address,
-                chainId: wallet.chains[0].id,
-                timeout: 60000
-              })
-            })
-
-            // resubscribe for new chainId
-            wallet.accounts.forEach(({ address }) => {
-              try {
-                sdk.subscribe({
-                  id: address,
-                  chainId: chainId,
-                  type: 'account'
-                })
-              } catch (error) {
-                // unsupported network for transaction events
-              }
-            })
-          }
-        }
-
-        updateWallet(label, {
-          chains: [{ namespace: type , id: chainId }],
-        })
-
-      }else{
-        return
-      }
-
-    })
-
   const chainChanged$ = listenChainChanged(
       { provider, disconnected$, type }).pipe(
       share()
@@ -449,7 +390,6 @@ export function trackWallet(
       })
 
   disconnected$.subscribe(async () => {
-    AccountQrConnect$.next([])
     if( type  === 'substrate') { await (provider as SubstrateProvider).disconnect()
     } else {
       (provider as EIP1193Provider).disconnect
@@ -555,12 +495,6 @@ export async function getBalance(
         }
       }
     }
-
-
-
-
-
-
 
   } catch (error) {
     console.error(error)

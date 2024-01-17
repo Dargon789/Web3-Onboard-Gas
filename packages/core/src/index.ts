@@ -2,7 +2,7 @@ import connectWallet from './connect.js'
 import disconnectWallet from './disconnect.js'
 import setChain from './chain.js'
 import { state } from './store/index.js'
-import { AccountQrConnect$, qrConnect$, reset$, uri$, wallets$ } from './streams.js'
+import { reset$, wallets$ } from './streams.js'
 import initI18N from './i18n/index.js'
 import App from './views/Index.svelte'
 import type {
@@ -16,7 +16,6 @@ import { configuration, updateConfiguration } from './configuration.js'
 import updateBalances from './update-balances.js'
 import { chainIdToHex, getLocalStore, setLocalStore } from './utils.js'
 import { preflightNotifications } from './preflight-notifications.js'
-import { listWagmiNetwork } from './listNetworkWagmi.js'
 
 import {
   validateNotify,
@@ -37,7 +36,6 @@ import {
 } from './store/actions.js'
 import type { PatchedEIP1193Provider } from '@subwallet_connect/transaction-preview'
 import { getBlocknativeSdk } from './services.js'
-import { QrConnect } from '@subwallet_connect/qr_code';
 
 
 
@@ -61,7 +59,8 @@ const API = {
       updateAppMetadata
     }
   }
-}
+};
+
 
 export type OnboardAPI = typeof API
 
@@ -108,25 +107,10 @@ function init(options: InitOptions): OnboardAPI {
     theme,
     disableFontDownload,
     unstoppableResolution,
-    url,
     chainsPolkadot,
-    projectId
   } = options
 
-  qrConnect$.next(new QrConnect({
-        chains: chains.map((chain) => (
-            listWagmiNetwork[typeof  chain.id === 'number' ?
-                chain.id.toString() :
-                parseInt(chain.id, 16).toString()]
-        )),
-        projectId ,
-        url ,
-        chainsPolkadot,
-        uri: uri$,
-        accountState: AccountQrConnect$
-      }
-  ))
-  qrConnect$.getValue().initializeConnection(false, Date.now())
+
 
   if (containerElements) updateConfiguration({ containerElements })
 

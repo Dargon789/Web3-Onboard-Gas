@@ -1,4 +1,4 @@
-# @subwallet_connect/blocto
+# @web3-onboard/blocto
 
 ## Wallet module for connecting Blocto SDK to web3-onboard
 
@@ -6,13 +6,13 @@ See [Blocto Developer Docs](https://docs.blocto.app/blocto-sdk/javascript-sdk/ev
 
 ### Install
 
-`npm i @subwallet_connect/blocto`
+`npm i @web3-onboard/blocto`
 
 ## Usage
 
 ```typescript
-import Onboard from '@subwallet_connect/core'
-import bloctoModule from '@subwallet_connect/blocto'
+import Onboard from '@web3-onboard/core'
+import bloctoModule from '@web3-onboard/blocto'
 
 // initialize the module with options
 const blocto = bloctoModule()

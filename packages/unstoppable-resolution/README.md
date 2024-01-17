@@ -1,20 +1,20 @@
-# @subwallet_connect/unstoppable-resolution
+# @web3-onboard/unstoppable-resolution
 
 ## A module to add Unstoppable Domain resolution to web3-onboard.
 
 ### Install
 
 **NPM**
-`npm i @subwallet_connect/unstoppable-resolution`
+`npm i @web3-onboard/unstoppable-resolution`
 
 **Yarn**
-`yarn add @subwallet_connect/unstoppable-resolution`
+`yarn add @web3-onboard/unstoppable-resolution`
 
 ### Standalone Setup
 
 ```typescript
-import Onboard from '@subwallet_connect/core'
-import unstoppableResolution from '@subwallet_connect/unstoppable-resolution'
+import Onboard from '@web3-onboard/core'
+import unstoppableResolution from '@web3-onboard/unstoppable-resolution'
 
 const onboard = Onboard({
   // ... other Onboard options

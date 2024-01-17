@@ -1,10 +1,10 @@
-# @subwallet_connect/fortmatic
+# @web3-onboard/fortmatic
 
 ## Wallet module for connecting Fortmatic to web3-onboard
 
 ### Install
 
-`npm i @subwallet_connect/fortmatic`
+`npm i @web3-onboard/fortmatic`
 
 ## Options
 
@@ -17,8 +17,8 @@ type FortmaticOptions = {
 ## Usage
 
 ```typescript
-import Onboard from '@subwallet_connect/core'
-import fortmaticModule from '@subwallet_connect/fortmatic'
+import Onboard from '@web3-onboard/core'
+import fortmaticModule from '@web3-onboard/fortmatic'
 
 const fortmatic = fortmaticModule({ apiKey: 'API_KEY' })
 

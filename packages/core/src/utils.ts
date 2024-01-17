@@ -170,92 +170,89 @@ export const networkToChainId: Record<string, ChainId> = {
   'bsc-main': '0x38',
   'matic-main': '0x89',
   'fantom-main': '0xfa',
-  'matic-mumbai': '0x80001',
+  'matic-mumbai': '0x80001'
 }
-
-
-
 
 export const chainStyles: Record<string, ChainStyle> = {
   '0x1': {
-    icon : ethereumIcon,
-    color : '#627EEA'
+    icon: ethereumIcon,
+    color: '#627EEA'
   },
   '0x3': {
-    icon : ethereumIcon,
-    color : '#627EEA'
+    icon: ethereumIcon,
+    color: '#627EEA'
   },
   '0x4': {
-    icon : ethereumIcon,
-    color : '#627EEA'
+    icon: ethereumIcon,
+    color: '#627EEA'
   },
   '0x5': {
-    icon : ethereumIcon,
-    color : '#627EEA'
+    icon: ethereumIcon,
+    color: '#627EEA'
   },
   '0x2a': {
-    icon : ethereumIcon,
-    color : '#627EEA'
+    icon: ethereumIcon,
+    color: '#627EEA'
   },
   '0xaa36a7': {
-    icon : ethereumIcon,
-    color : '#627EEA'
+    icon: ethereumIcon,
+    color: '#627EEA'
   },
   '0x38': {
-    icon : binanceIcon,
-    color : '#F3BA2F'
+    icon: binanceIcon,
+    color: '#F3BA2F'
   },
   '0x89': {
-    icon : polygonIcon,
-    color : '#8247E5'
+    icon: polygonIcon,
+    color: '#8247E5'
   },
   '0xfa': {
-    icon : fantomIcon,
-    color : '#1969FF'
+    icon: fantomIcon,
+    color: '#1969FF'
   },
   '0xa': {
-    icon : optimismIcon,
-    color : '#FF0420'
+    icon: optimismIcon,
+    color: '#FF0420'
   },
   '0x45': {
-    icon : optimismIcon,
-    color : '#FF0420'
+    icon: optimismIcon,
+    color: '#FF0420'
   },
   '0xa86a': {
-    icon : avalancheIcon,
-    color : '#E84142'
+    icon: avalancheIcon,
+    color: '#E84142'
   },
   '0xa4ec': {
-    icon : celoIcon,
-    color : '#FBCC5C'
+    icon: celoIcon,
+    color: '#FBCC5C'
   },
   '0x64': {
-    icon : gnosisIcon,
-    color : '#04795B'
+    icon: gnosisIcon,
+    color: '#04795B'
   },
   '0x63564C40': {
-    icon : harmonyOneIcon,
-    color : '#ffffff'
+    icon: harmonyOneIcon,
+    color: '#ffffff'
   },
-  '0xa4b1':  {
+  '0xa4b1': {
     icon: arbitrumIcon,
     color: '#33394B'
   },
   '0xa4ba': {
-    icon : arbitrumIcon,
-    color : '#33394B'
+    icon: arbitrumIcon,
+    color: '#33394B'
   },
   '0x2105': {
-    icon : baseIcon,
-    color : '#0259F9'
+    icon: baseIcon,
+    color: '#0259F9'
   },
   '0x14a33': {
-    icon : baseIcon,
-    color : '#0259F9'
+    icon: baseIcon,
+    color: '#0259F9'
   },
   '0x80001': {
-    icon : polygonIcon,
-    color : '#8247E5'
+    icon: polygonIcon,
+    color: '#8247E5'
   },
   '91b171bb158e2d3848fa23a9f1c25182' : {
     icon : polkadotIcon,
@@ -396,11 +393,11 @@ export interface  clientAxiosProps {
 
 
 export async function getBalanceSubstrate({ url, data } : clientAxiosProps){
-    if(url === '') return
-    const urlResult = baseURL.replace('*', url);
-    return await axios.post(urlResult, data)
-        .then( data_ => {
-          return data_.data.data ? data_.data.data.native[0].balance : '0';
-        })
+  if(url === '') return
+  const urlResult = baseURL.replace('*', url);
+  return await axios.post(urlResult, data)
+    .then( data_ => {
+      return data_.data.data ? data_.data.data.native[0].balance : '0';
+    })
 
 }

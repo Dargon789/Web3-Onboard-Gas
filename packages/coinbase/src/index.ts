@@ -1,8 +1,8 @@
 import { WalletInit } from '@subwallet_connect/common'
 
 function coinbaseWallet({
-  darkMode = false
-}: {
+                          darkMode = false
+                        }: {
   darkMode?: boolean
 } = {}): WalletInit {
   return () => {
@@ -19,7 +19,7 @@ function coinbaseWallet({
         // so we need to detect it to get the real constructor
         const { default: CoinbaseWalletSDK } = await import(
           '@coinbase/wallet-sdk'
-        )
+          )
         const CoinbaseWalletSDKConstructor = (
           (CoinbaseWalletSDK as any).default
             ? (CoinbaseWalletSDK as any).default

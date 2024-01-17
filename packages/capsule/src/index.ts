@@ -1,7 +1,7 @@
-import type { AppMetadata, EIP1193Provider, WalletInit } from '@web3-onboard/common'
+import type { AppMetadata, EIP1193Provider, WalletInit } from '@subwallet_connect/common'
 import type { CapsuleInitOptions } from './types'
 import type { Chain } from '@wagmi/chains'
-import type { Chain as BlocknativeChain } from '@web3-onboard/common'
+import type { Chain as BlocknativeChain } from '@subwallet_connect/common'
 import { Environment as CapsuleEnvironment } from '@usecapsule/web-sdk'
 
 type ChainId = number
@@ -71,6 +71,7 @@ function capsule(options: CapsuleInitOptions): WalletInit {
   return () => {
     return {
       label: 'Capsule',
+      type: 'evm',
       getIcon: async () => (await import('./icon')).default,
       getInterface: async ({ chains, appMetadata }) => {
         const { default: Capsule, CapsuleEIP1193Provider } = await import(

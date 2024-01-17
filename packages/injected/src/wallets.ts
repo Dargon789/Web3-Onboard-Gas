@@ -996,6 +996,8 @@ const subwalletDOT: InjectedWalletModule = {
         return '0x0'
       },
 
+      async request(){},
+
       async disconnect() {
 
       }
@@ -1063,9 +1065,9 @@ const talismanDOT: InjectedWalletModule = {
         return '0x0'
       },
 
-      async disconnect(){
+      async disconnect(){},
 
-      }
+      async request(){}
     }
 
       return {
@@ -1129,9 +1131,9 @@ const polkadotjs: InjectedWalletModule = {
         return '0x0'
       },
 
-      async disconnect(){
+      async disconnect(){},
 
-      }
+      async request(){}
     }
 
     return {

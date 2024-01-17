@@ -35,13 +35,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/blocknative/web3-onboard.git",
+    "url": "https://github.com/blocknative/web3-onboard.git",
     "directory": "packages/walletconnect"
   },
   "homepage": "https://onboard.blocknative.com",
-  "bugs": {
-    "url": "https://github.com/blocknative/web3-onboard/issues"
-  },
+  "bugs": "https://github.com/blocknative/web3-onboard/issues",
   "module": "dist/index.js",
   "browser": "dist/index.js",
   "main": "dist/index.js",
@@ -57,15 +55,15 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^5.2.2",
+    "typescript": "^4.5.5",
     "@walletconnect/types": "^2.9.0"
   },
   "dependencies": {
-    "@walletconnect/ethereum-provider": "2.10.2",
-    "@walletconnect/modal": "2.6.2",
-    "@subwallet_connect/common": "^1.0.0",
+    "@subwallet_connect/common": "^1.0.1",
+    "@walletconnect/ethereum-provider": "^2.11.0",
+    "@walletconnect/modal": "^2.6.2",
+    "@walletconnect/universal-provider": "^2.11.0",
     "joi": "17.9.1",
     "rxjs": "^7.5.2"
-  },
-  "author": ""
+  }
 }

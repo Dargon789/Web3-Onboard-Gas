@@ -34,7 +34,9 @@ export function Web3OnboardProvider({
   web3OnboardGlobal = undefined
   return (
     <Context.Provider value={web3Onboard as unknown as OnboardAPI}>
-      {children}
+      <React.Fragment>
+        {children}
+      </React.Fragment>
     </Context.Provider>
   )
 }

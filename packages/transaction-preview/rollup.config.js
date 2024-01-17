@@ -41,7 +41,7 @@ export default {
     })
   ],
   external: [
-    '@subwallet_connect/common',
+    '@web3-onboard/common',
     'bnc-sdk',
     'ethers',
     'bowser',

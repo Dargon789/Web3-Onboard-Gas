@@ -1,11 +1,11 @@
-# @subwallet_connect/walletlink
+# @web3-onboard/walletlink
 
 ## (Deprecated) Wallet module for connecting WalletLink to web3-onboard
-_Use [@subwallet_connect/coinbase](../coinbase/README.md)_
+_Use [@web3-onboard/coinbase](../coinbase/README.md)_
 
 ### Install
 
-`npm i @subwallet_connect/walletlink`
+`npm i @web3-onboard/walletlink`
 
 ## Options
 
@@ -18,8 +18,8 @@ type WalletLinkOptions = {
 ## Usage
 
 ```typescript
-import Onboard from '@subwallet_connect/core'
-import walletLinkModule from '@subwallet_connect/walletlink'
+import Onboard from '@web3-onboard/core'
+import walletLinkModule from '@web3-onboard/walletlink'
 
 // initialize the module with options
 const walletLink = walletLinkModule({ darkMode: true })

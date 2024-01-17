@@ -1,4 +1,4 @@
-# @subwallet_connect/xdefi
+# @web3-onboard/xdefi
 
 ## Wallet module for connecting XDEFI Wallet to web3-onboard
 
@@ -6,13 +6,13 @@ See [XDEFI Wallet Developer Docs](https://docs.xdefi.io/docs/technical-documenta
 
 ### Install
 
-`npm i @subwallet_connect/xdefi`
+`npm i @web3-onboard/xdefi`
 
 ## Usage
 
 ```typescript
-import Onboard from '@subwallet_connect/core'
-import xdefiWalletModule from '@subwallet_connect/xdefi'
+import Onboard from '@web3-onboard/core'
+import xdefiWalletModule from '@web3-onboard/xdefi'
 
 // initialize the module with options
 const xdefiSdk = xdefiWalletModule()

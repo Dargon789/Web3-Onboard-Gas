@@ -2,23 +2,23 @@
   <img alt="Web3-Onboard UI Components" src="https://github.com/blocknative/web3-onboard/blob/develop/assets/core.svg?raw=true" />
 </a>
 
-# @subwallet_connect/solid
+# @web3-onboard/solid
 
 A collection of composable functions for implementing web3-onboard in to a Solid project;
 
 ## Install Modules
 
 **NPM**
-`npm i @subwallet_connect/solid @subwallet_connect/injected-wallets ethers`
+`npm i @web3-onboard/solid @web3-onboard/injected-wallets ethers`
 
 **PNPM**
-`pnpm i @subwallet_connect/solid @subwallet_connect/injected-wallets ethers`
+`pnpm i @web3-onboard/solid @web3-onboard/injected-wallets ethers`
 
 ## Quickstart
 
 ```typescript
-import { init } from '@subwallet_connect/solid'
-import injectedModule from '@subwallet_connect/injected-wallets'
+import { init } from '@web3-onboard/solid'
+import injectedModule from '@web3-onboard/injected-wallets'
 
 const injected = injectedModule()
 
@@ -64,13 +64,13 @@ if (connectedWallet) {
 
 ## `init`
 
-The `init` function initializes `web3-onboard` and makes it available to the `useOnboard()` composable. For references check out the [initialization docs for `@subwallet_connect/core`](../core/README.md#initialization)
+The `init` function initializes `web3-onboard` and makes it available to the `useOnboard()` composable. For references check out the [initialization docs for `@web3-onboard/core`](../core/README.md#initialization)
 
 ### Example usage
 
 ```typescript
-import { init } from '@subwallet_connect/solid'
-import injectedModule from '@subwallet_connect/injected-wallets'
+import { init } from '@web3-onboard/solid'
+import injectedModule from '@web3-onboard/injected-wallets'
 
 const injected = injectedModule()
 const infuraKey = '<INFURA_KEY>'
@@ -96,7 +96,7 @@ const web3Onboard = init({
 ### Example usage
 
 ```typescript
-import { useOnboard } from '@subwallet_connect/solid'
+import { useOnboard } from '@web3-onboard/solid'
 // Use the composable
 const onboard = useOnboard()
 // Or destructure it
@@ -112,7 +112,7 @@ const {
 
 ### `connectWallet`
 
-Function to open the onboard modal and connect to a wallet provider. For reference check out the [connecting a wallet for `@subwallet_connect/core`](../core/README.md#connecting-a-wallet)
+Function to open the onboard modal and connect to a wallet provider. For reference check out the [connecting a wallet for `@web3-onboard/core`](../core/README.md#connecting-a-wallet)
 
 ### Example usage
 
@@ -157,7 +157,7 @@ Function to disconnect the `connectedWallet`
 ### Example usage
 
 ```tsx
-import { useOnboard } from '@subwallet_connect/solid'
+import { useOnboard } from '@web3-onboard/solid'
 function SampleConnect() {
   const { disconnectConnectedWallet } = useOnboard()
   return (
@@ -176,7 +176,7 @@ Function that returns the current chain a wallet is connected to
 ### Example usage
 
 ```tsx
-import { useOnboard } from '@subwallet_connect/solid'
+import { useOnboard } from '@web3-onboard/solid'
 function SampleConnect() {
   const { getChain } = useOnboard()
   return <span>MetaMask is connected to: {getChain('MetaMask')}</span>
@@ -190,7 +190,7 @@ Function to set the chain of a wallet
 ### Example usage
 
 ```tsx
-import { useOnboard } from '@subwallet_connect/solid'
+import { useOnboard } from '@web3-onboard/solid'
 function SampleConnect() {
   const { setChain } = useOnboard()
   const set = () => setChain({ wallet: 'MetaMask', chainId: '0x1' })
@@ -209,7 +209,7 @@ Readonly boolean ref that tracks the status of setting the chain
 ### Example usage
 
 ```tsx
-import { useOnboard } from '@subwallet_connect/solid'
+import { useOnboard } from '@web3-onboard/solid'
 function SampleConnect() {
   const { settingChain } = useOnboard()
   return { settingChain }
@@ -223,7 +223,7 @@ Readonly ref that contains every wallet that has been connected
 ### Example usage
 
 ```tsx
-import { useOnboard } from '@subwallet_connect/solid'
+import { useOnboard } from '@web3-onboard/solid'
 function SampleConnect() {
     const { wallets } = useOnboard()
    return(
@@ -247,7 +247,7 @@ Readonly ref that contains the last time that the user connected a wallet in mil
 ### Example usage
 
 ```tsx
-import { useOnboard } from '@subwallet_connect/solid'
+import { useOnboard } from '@web3-onboard/solid'
 function SampleConnect() {
   const { lastConnectedTimestamp } = useOnboard()
   return (

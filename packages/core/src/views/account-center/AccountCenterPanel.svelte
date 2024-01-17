@@ -26,7 +26,7 @@
   import { poweredByBlocknative } from '../../icons/index.js'
   import DisconnectAllConfirm from './DisconnectAllConfirm.svelte'
   import EnableTransactionProtectionModal from './EnableTransactionProtectionModal.svelte'
-  import SignMessage from './signMessage.svelte'
+  import SignMessage from './SignMessage.svelte'
   import { configuration } from '../../configuration.js'
   import SecondaryTokenTable from './SecondaryTokenTable.svelte'
   import { updateChainRPC } from '../../provider.js'

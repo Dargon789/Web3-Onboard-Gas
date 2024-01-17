@@ -56,8 +56,9 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@polkadot/dev": "^0.78.7",
     "@walletconnect/types": "^2.7.0",
-    "typescript": "^5.2.2"
+    "typescript": "^4.5.5"
   },
   "dependencies": {
     "@ethersproject/providers": "5.5.0",
@@ -71,7 +72,7 @@
     "@walletconnect/client": "^1.8.0",
     "@walletconnect/ethereum-provider": "2.9.1",
     "@walletconnect/modal": "2.6.1",
-    "@subwallet_connect/common": "^1.0.0",
+    "@subwallet_connect/common": "^1.0.1",
     "buffer": "^6.0.3",
     "https-browserify": "^1.0.0",
     "node-polyfill-webpack-plugin": "^2.0.1",

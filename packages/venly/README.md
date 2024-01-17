@@ -1,11 +1,11 @@
-# @subwallet_connect/venly
+# @web3-onboard/venly
 
 ## Wallet module for connecting Venly SDK to web3-onboard
 See [Venly SDK Docs](https://docs.venly.io/widget/) for complete documentation of Venly usage
 
 ### Install
 
-`npm install @subwallet_connect/venly`
+`npm install @web3-onboard/venly`
 
 ## Options
 
@@ -24,8 +24,8 @@ type VenlyOptions = {
 ## Usage
 
 ```typescript
-import Onboard from '@subwallet_connect/core'
-import venlyModule from '@subwallet_connect/venly'
+import Onboard from '@web3-onboard/core'
+import venlyModule from '@web3-onboard/venly'
 
 // initialize the module with options
 const venly = venlyModule({

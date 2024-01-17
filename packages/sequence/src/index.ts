@@ -14,52 +14,52 @@ function sequence(options?: SequenceOptions): WalletInit {
     return window?.ethereum && window.ethereum?.isSequence
       ? []
       : {
-          label: 'Sequence',
-          type :'evm',
-          getIcon: async () => (await import('./icon.js')).default,
-          getInterface: async () => {
-            const { sequence } = await import('0xsequence')
-            const { createEIP1193Provider } = await import(
-              '@subwallet_connect/common'
+        label: 'Sequence',
+        type :'evm',
+        getIcon: async () => (await import('./icon.js')).default,
+        getInterface: async () => {
+          const { sequence } = await import('0xsequence')
+          const { createEIP1193Provider } = await import(
+            '@subwallet_connect/common'
             )
 
-            const instance = await sequence.initWallet(network)
+          const instance = await sequence.initWallet(network)
 
-            if (!instance.isConnected()) {
-              const connectDetails = await instance.connect({
-                app: appName,
-                authorize: true
-              })
+          if (!instance.isConnected()) {
+            const connectDetails = await instance.connect({
+              app: appName,
+              authorize: true
+            })
 
-              if (!connectDetails.connected) {
-                throw new Error('Failed to connect to the wallet')
-              }
+            if (!connectDetails.connected) {
+              throw new Error('Failed to connect to the wallet')
             }
-
-            // The check for connection is necessary in case the user closes the popup or cancels
-            if (instance.isConnected()) {
-              const sequenceProvider = instance.getProvider()
-              const provider = createEIP1193Provider(sequenceProvider, {
-                eth_requestAccounts: async () => {
-                  const address = await instance.getAddress()
-                  return [address]
-                },
-                eth_chainId: async () => {
-                  const chainId = await instance.getChainId()
-
-                  return `0x${chainId.toString(16)}`
-                }
-              })
-
-              return {
-                provider,
-                instance
-              }
-            }
-
-            throw new Error('Failed to connect wallet')
           }
+
+          // The check for connection is necessary in case the user closes the popup or cancels
+          if (instance.isConnected()) {
+            const sequenceProvider = instance.getProvider()
+            const provider = createEIP1193Provider(sequenceProvider, {
+              eth_requestAccounts: async () => {
+                const address = await instance.getAddress()
+                return [address]
+              },
+              eth_chainId: async () => {
+                const chainId = await instance.getChainId()
+
+                return `0x${chainId.toString(16)}`
+              }
+            })
+
+            return {
+              provider,
+              instance
+            }
+          }
+
+          throw new Error('Failed to connect wallet')
         }
+      }
   }
 }
 

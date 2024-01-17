@@ -49,8 +49,8 @@ function fortmatic(options: APIKey): WalletInit {
               const [balance] = await instance.user.getBalances()
               return balance
                 ? BigNumber.from(balance.crypto_amount)
-                    .mul('1000000000000000000')
-                    .toString()
+                  .mul('1000000000000000000')
+                  .toString()
                 : '0'
             },
             wallet_switchEthereumChain: async ({ params }) => {

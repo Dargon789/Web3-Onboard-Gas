@@ -157,11 +157,11 @@ function trezor(options: TrezorOptions): WalletInit {
         const { default: Trezor } = await import('@trezor/connect-web')
         const {  Transaction, FeeMarketEIP1559Transaction } = await import(
           '@ethereumjs/tx'
-        )
+          )
 
         const { createEIP1193Provider, ProviderRpcError } = await import(
           '@subwallet_connect/common'
-        )
+          )
 
         const { accountSelect } = await import('@subwallet_connect/hw-common')
 
@@ -176,7 +176,7 @@ function trezor(options: TrezorOptions): WalletInit {
 
         const { StaticJsonRpcProvider } = await import(
           '@ethersproject/providers'
-        )
+          )
 
         // @ts-ignore
         const TrezorConnect = Trezor.default || Trezor
@@ -195,10 +195,10 @@ function trezor(options: TrezorOptions): WalletInit {
 
         let ethersProvider: StaticJsonRpcProvider
         const scanAccounts = async ({
-          derivationPath,
-          chainId,
-          asset
-        }: ScanAccountsOptions): Promise<Account[]> => {
+                                      derivationPath,
+                                      chainId,
+                                      asset
+                                    }: ScanAccountsOptions): Promise<Account[]> => {
           currentChain = chains.find(({ id }) => id === chainId) || currentChain
           ethersProvider = new StaticJsonRpcProvider(currentChain.rpcUrl)
 
@@ -486,7 +486,7 @@ function trezor(options: TrezorOptions): WalletInit {
                 reject(
                   new Error(
                     (response.payload && response.payload.error) ||
-                      'There was an error signing a message'
+                    'There was an error signing a message'
                   )
                 )
               }

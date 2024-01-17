@@ -65,11 +65,11 @@ const generateAccounts = async (
 }
 
 function keystone({
-  customNetwork,
-  filter,
-  containerElement,
-  consecutiveEmptyAccountThreshold
-}: {
+                    customNetwork,
+                    filter,
+                    containerElement,
+                    consecutiveEmptyAccountThreshold
+                  }: {
   customNetwork?: CustomNetwork
   filter?: Platform[]
   containerElement?: string
@@ -97,11 +97,11 @@ function keystone({
       getInterface: async ({ EventEmitter, chains }) => {
         const { StaticJsonRpcProvider } = await import(
           '@ethersproject/providers'
-        )
+          )
 
         let { default: AirGappedKeyring } = await import(
           '@keystonehq/eth-keyring'
-        )
+          )
 
         // Super weird esm issue where the default export is an object with a property default on it
         // if that is the case then we just grab the default value
@@ -109,12 +109,12 @@ function keystone({
         AirGappedKeyring =
           'default' in AirGappedKeyring
             ? // @ts-ignore
-              AirGappedKeyring.default
+            AirGappedKeyring.default
             : AirGappedKeyring
 
         const { TransactionFactory: Transaction } = await import(
           '@ethereumjs/tx'
-        )
+          )
 
         const {
           createEIP1193Provider,
@@ -139,8 +139,8 @@ function keystone({
 
         let currentChain: Chain = chains[0]
         const scanAccounts = async ({
-          chainId
-        }: ScanAccountsOptions): Promise<Account[]> => {
+                                      chainId
+                                    }: ScanAccountsOptions): Promise<Account[]> => {
           currentChain =
             chains.find(({ id }: Chain) => id === chainId) || currentChain
 

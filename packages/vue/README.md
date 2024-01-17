@@ -2,23 +2,23 @@
   <img alt="Web3-Onboard UI Components" src="https://github.com/blocknative/web3-onboard/blob/develop/assets/core.svg?raw=true" />
 </a>
 
-# @subwallet_connect/vue
+# @web3-onboard/vue
 
 A collection of composable functions for implementing web3-onboard in to a Vue project; compatible both with Vue 2 + composition-api and Vue 3
 
 ## Install Modules
 
 **NPM**
-`npm i @subwallet_connect/vue @subwallet_connect/injected-wallets ethers`
+`npm i @web3-onboard/vue @web3-onboard/injected-wallets ethers`
 
 **Yarn**
-`yarn add @subwallet_connect/vue @subwallet_connect/injected-wallets ethers`
+`yarn add @web3-onboard/vue @web3-onboard/injected-wallets ethers`
 
 ## Quickstart
 
 ```typescript
-import { init } from '@subwallet_connect/vue'
-import injectedModule from '@subwallet_connect/injected-wallets'
+import { init } from '@web3-onboard/vue'
+import injectedModule from '@web3-onboard/injected-wallets'
 
 const injected = injectedModule()
 
@@ -63,13 +63,13 @@ if (connectedWallet) {
 
 ## `init`
 
-The `init` function initializes `web3-onboard` and makes it available to the `useOnboard()` composable. For references check out the [initialization docs for `@subwallet_connect/core`](../core/README.md#initialization)
+The `init` function initializes `web3-onboard` and makes it available to the `useOnboard()` composable. For references check out the [initialization docs for `@web3-onboard/core`](../core/README.md#initialization)
 
 ### Example usage
 
 ```typescript
-import { init } from '@subwallet_connect/vue'
-import injectedModule from '@subwallet_connect/injected-wallets'
+import { init } from '@web3-onboard/vue'
+import injectedModule from '@web3-onboard/injected-wallets'
 
 const injected = injectedModule()
 const infuraKey = '<INFURA_KEY>'
@@ -95,7 +95,7 @@ const web3Onboard = init({
 ### Example usage
 
 ```typescript
-import { useOnboard } from '@subwallet_connect/vue'
+import { useOnboard } from '@web3-onboard/vue'
 
 // Use the composable
 const onboard = useOnboard()
@@ -108,13 +108,13 @@ const { wallets, connectWallet, disconnectConnectedWallet, connectedWallet } = u
 
 ### `connectWallet`
 
-Function to open the onboard modal and connect to a wallet provider. For reference check out the [connecting a wallet for `@subwallet_connect/core`](../core/README.md#connecting-a-wallet)
+Function to open the onboard modal and connect to a wallet provider. For reference check out the [connecting a wallet for `@web3-onboard/core`](../core/README.md#connecting-a-wallet)
 
 ### Example usage
 
 ```vue
 <script setup>
-import { useOnboard } from '@subwallet_connect/vue'
+import { useOnboard } from '@web3-onboard/vue'
 
 const { connectWallet: connect } = useOnboard()
 </script>
@@ -132,7 +132,7 @@ Computed property that contains the current chain to which `connectedWallet` is 
 
 ```vue
 <script setup>
-import { useOnboard } from '@subwallet_connect/vue'
+import { useOnboard } from '@web3-onboard/vue'
 
 const { connectedChain } = useOnboard()
 </script>
@@ -150,7 +150,7 @@ Computed property that contains the latest connected wallet
 
 ```vue
 <script setup>
-import { useOnboard } from '@subwallet_connect/vue'
+import { useOnboard } from '@web3-onboard/vue'
 
 const { connectedWallet } = useOnboard()
 </script>
@@ -168,7 +168,7 @@ Readonly boolean ref that tracks the state of the wallet connection status
 
 ```vue
 <script setup>
-import { useOnboard } from '@subwallet_connect/vue'
+import { useOnboard } from '@web3-onboard/vue'
 
 const { connectingWallet } = useOnboard()
 </script>
@@ -186,7 +186,7 @@ Function to disconnect a specific wallet
 
 ```vue
 <script setup>
-import { useOnboard } from '@subwallet_connect/vue'
+import { useOnboard } from '@web3-onboard/vue'
 
 const { disconnectWallet } = useOnboard()
 const disconnect = async () => disconnectWallet('MetaMask')
@@ -205,7 +205,7 @@ Function to disconnect the `connectedWallet`
 
 ```vue
 <script setup>
-import { useOnboard } from '@subwallet_connect/vue'
+import { useOnboard } from '@web3-onboard/vue'
 
 const { disconnectConnectedWallet } = useOnboard()
 </script>
@@ -225,7 +225,7 @@ Function that returns the current chain a wallet is connected to
 
 ```vue
 <script setup>
-import { useOnboard } from '@subwallet_connect/vue'
+import { useOnboard } from '@web3-onboard/vue'
 
 const { getChain } = useOnboard()
 </script>
@@ -243,7 +243,7 @@ Function to set the chain of a wallet
 
 ```vue
 <script setup>
-import { useOnboard } from '@subwallet_connect/vue'
+import { useOnboard } from '@web3-onboard/vue'
 
 const { setChain } = useOnboard()
 const set = () => setChain({ wallet: 'MetaMask', chainId: '0x1' })
@@ -262,7 +262,7 @@ Readonly boolean ref that tracks the status of setting the chain
 
 ```vue
 <script setup>
-import { useOnboard } from '@subwallet_connect/vue'
+import { useOnboard } from '@web3-onboard/vue'
 
 const { settingChain } = useOnboard()
 </script>
@@ -280,7 +280,7 @@ Readonly ref that contains every wallet that has been connected
 
 ```vue
 <script setup>
-import { useOnboard } from '@subwallet_connect/vue'
+import { useOnboard } from '@web3-onboard/vue'
 
 const { wallets } = useOnboard()
 </script>
@@ -300,7 +300,7 @@ Readonly ref that contains every wallet that user connected to in the past, usef
 
 ```vue
 <script setup>
-import { useOnboard } from '@subwallet_connect/vue'
+import { useOnboard } from '@web3-onboard/vue'
 
 const { alreadyConnectedWallets } = useOnboard()
 </script>
@@ -318,7 +318,7 @@ Readonly ref that contains the last time that the user connected a wallet in mil
 
 ```vue
 <script setup>
-import { useOnboard } from '@subwallet_connect/vue'
+import { useOnboard } from '@web3-onboard/vue'
 
 const { lastConnectedTimestamp } = useOnboard()
 </script>

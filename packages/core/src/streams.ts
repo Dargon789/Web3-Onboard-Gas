@@ -14,10 +14,6 @@ import { state } from './store/index.js'
 
 import type { WalletState, ConnectOptions } from './types.js'
 import type { EthereumTransactionData } from 'bnc-sdk'
-import { QrConnect } from '@subwallet_connect/qr_code';
-import { mainnet, type Chain as Chain_ } from '@wagmi/core';
-import type { URI } from '@subwallet_connect/qr_code/dist/types';
-import type { AccountQrConnect } from '@subwallet_connect/qr_code/dist/types';
 
 
 export const reset$ = new Subject<void>()
@@ -102,30 +98,3 @@ export const beforeUpdate$ = defer(() => {
   })
   return subject.asObservable().pipe(takeUntil(onDestroy$))
 })
-
-
-
-
-export const uri$ = new BehaviorSubject<URI>({
-  polkadot : '',
-  eth : ''
-})
-
-export const AccountQrConnect$ = new BehaviorSubject<AccountQrConnect[]>([])
-
-
-export  const qrConnect$ = new BehaviorSubject( new QrConnect({
-  chains : [ mainnet as Chain_],
-  chainsPolkadot : [{
-    id: '91b171bb158e2d3848fa23a9f1c25182',
-    namespace: 'substrate',
-    token: 'DOT',
-    label: 'Polkadot',
-    rpcUrl: `polkadot.api.subscan.io`,
-    decimal: 10
-  }],
-  projectId : 'f6bd6e2911b56f5ac3bc8b2d0e2d7ad5',
-  url : '',
-  uri : uri$ ,
-  accountState : AccountQrConnect$
-}))

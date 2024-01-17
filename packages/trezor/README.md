@@ -1,10 +1,10 @@
-# @subwallet_connect/trezor
+# @web3-onboard/trezor
 
 ## Wallet module for connecting Trezor hardware wallets to web3-onboard
 
 ### Install
 
-`npm i @subwallet_connect/trezor`
+`npm i @web3-onboard/trezor`
 
 ### Options
 
@@ -60,8 +60,8 @@ type Platform = DeviceOSName | DeviceBrowserName | DeviceType | 'all'
 ### Usage
 
 ```typescript
-import Onboard from '@subwallet_connect/core'
-import trezorModule from '@subwallet_connect/trezor'
+import Onboard from '@web3-onboard/core'
+import trezorModule from '@web3-onboard/trezor'
 
 const trezor = trezorModule({
   email: '<EMAIL_CONTACT>',
@@ -85,8 +85,8 @@ console.log(connectedWallets)
 You may decide that on certain platforms you do not want to display this wallet as a selectable option. To do that you can use the `filter` init option which is an array of platforms that you would like this wallet to **not** be displayed to the end user:
 
 ```typescript
-import Onboard from '@subwallet_connect/core'
-import trezorModule from '@subwallet_connect/trezor'
+import Onboard from '@web3-onboard/core'
+import trezorModule from '@web3-onboard/trezor'
 
 const trezor = trezorModule({
   email: '<EMAIL_CONTACT>',

@@ -11,8 +11,6 @@
   import { MOBILE_WINDOW_WIDTH } from '../../constants.js'
   import { state } from '../../store'
   import { shareReplay, startWith } from 'rxjs'
-  import { uri$ } from '../../streams.js';
-  import QrCode from './QrCode.svelte';
 
   export let step: keyof i18n['connect']
 
@@ -21,35 +19,21 @@
   const defaultContent = en.connect[step].sidebar
   const { subheading, paragraph } = defaultContent
 
-
-
   const { heading } =
-    defaultContent as i18n['connect']['selectingWallet']['sidebar']
-
-  $: uriPolkadot  = uri$.value.polkadot
-  $: uriEth = uri$.value.eth
-
-  uri$.pipe(
-          shareReplay(1)
-  ).subscribe((uri) =>{
-    uriPolkadot = uri.polkadot
-    uriEth = uri.eth
-  })
-
-
+          defaultContent as i18n['connect']['selectingWallet']['sidebar']
 
   let windowWidth: number
 
   const appMetadata$ = state
-    .select('appMetadata')
-    .pipe(startWith(state.get().appMetadata), shareReplay(1))
+          .select('appMetadata')
+          .pipe(startWith(state.get().appMetadata), shareReplay(1))
 </script>
 
 <style>
   .sidebar {
     --background-color: var(
-      --onboard-connect-sidebar-background,
-      var(--w3o-foreground-color, none)
+            --onboard-connect-sidebar-background,
+            var(--w3o-foreground-color, none)
     );
     --text-color: var(--onboard-connect-sidebar-color, inherit);
     --border-color: var(--onboard-connect-sidebar-border-color, inherit);
@@ -113,22 +97,22 @@
     height: 8px;
     border-radius: 8px;
     background: var(
-      --onboard-connect-sidebar-progress-background,
-      var(--onboard-gray-700, var(--gray-700))
+            --onboard-connect-sidebar-progress-background,
+            var(--onboard-gray-700, var(--gray-700))
     );
     transition: background 250ms ease-in-out;
   }
 
   .indicator.on {
     background: var(
-      --onboard-connect-sidebar-progress-color,
-      var(--action-color)
+            --onboard-connect-sidebar-progress-color,
+            var(--action-color)
     );
     border: 2px solid
-      var(
-        --onboard-connect-sidebar-progress-background,
-        var(--onboard-gray-700, var(--gray-700))
-      );
+    var(
+            --onboard-connect-sidebar-progress-background,
+            var(--onboard-gray-700, var(--gray-700))
+    );
   }
 
   .join {
@@ -137,16 +121,16 @@
     right: 4px;
     height: 2px;
     background: var(
-      --onboard-connect-sidebar-progress-background,
-      var(--onboard-gray-700, var(--gray-700))
+            --onboard-connect-sidebar-progress-background,
+            var(--onboard-gray-700, var(--gray-700))
     );
     transition: background 250ms ease-in-out;
   }
 
   .join.active {
     background: var(
-      --onboard-connect-sidebar-progress-color,
-      var(--action-color)
+            --onboard-connect-sidebar-progress-color,
+            var(--action-color)
     );
   }
   .no-link {
@@ -204,14 +188,12 @@
       </div>
       {#if $_(`connect.${step}.sidebar.header`, { default: '' })}
         <div class="heading">
-           {$_(`connect.${step}.sidebar.header`, {
-             default: heading
-           })}
-
+          {$_(`connect.${step}.sidebar.header`, {
+            default: heading
+          })}
         </div>
       {/if}
     {/if}
-    {#if (uriPolkadot === '' || uriEth === '')}
 
     <div class="subheading">
       {$_(`connect.${step}.sidebar.subheading`, {
@@ -225,19 +207,16 @@
         default: paragraph
       })}
     </div>
-      {:else }
-    <QrCode uriPolkadot = "{uriPolkadot}" uriEth = "{uriEth}" size="200px"/>
-      {/if}
     {#if !connect.removeIDontHaveAWalletInfoLink}
       <a
-        href={connect.iDontHaveAWalletLink ||
+              href={connect.iDontHaveAWalletLink ||
           'https://ethereum.org/en/wallets/find-wallet/#main-content'}
-        target="_blank"
-        rel="noreferrer noopener"
-        class="no-link"
-        >{$_('connect.selectingWallet.sidebar.IDontHaveAWallet', {
-          default: en.connect.selectingWallet.sidebar.IDontHaveAWallet
-        })}
+              target="_blank"
+              rel="noreferrer noopener"
+              class="no-link"
+      >{$_('connect.selectingWallet.sidebar.IDontHaveAWallet', {
+        default: en.connect.selectingWallet.sidebar.IDontHaveAWallet
+      })}
         <div class="info-icon">{@html infoIcon}</div></a
       >
     {/if}
@@ -245,32 +224,32 @@
       <div class="indicators flex items-center">
         <div class="indicator relative" class:on={true} />
         <div
-          class:active={step !== 'selectingWallet'}
-          class="join relative"
-          style={`${
+                class:active={step !== 'selectingWallet'}
+                class="join relative"
+                style={`${
             step !== 'selectingWallet'
               ? 'right: 4px; width: 52px;'
               : 'right: 2px; width: 54px;'
           }`}
         />
         <div
-          class="indicator relative"
-          style={`right: 8px;`}
-          class:on={step !== 'selectingWallet'}
+                class="indicator relative"
+                style={`right: 8px;`}
+                class:on={step !== 'selectingWallet'}
         />
         <div
-          class:active={step === 'connectedWallet'}
-          class="join relative"
-          style={`${
+                class:active={step === 'connectedWallet'}
+                class="join relative"
+                style={`${
             step === 'connectedWallet'
               ? 'right: 12px; width: 52px;'
               : 'right: 10px; width: 54px;'
           }`}
         />
         <div
-          style={`right: 16px;`}
-          class="indicator relative"
-          class:on={step === 'connectedWallet'}
+                style={`right: 16px;`}
+                class="indicator relative"
+                class:on={step === 'connectedWallet'}
         />
       </div>
     {/if}
@@ -279,28 +258,28 @@
     <div class="indicators flex items-center">
       <div class="indicator relative" class:on={true} />
       <div
-        class:active={step !== 'selectingWallet'}
-        class="join relative"
-        style={`right: 2px; ${
+              class:active={step !== 'selectingWallet'}
+              class="join relative"
+              style={`right: 2px; ${
           step !== 'selectingWallet' ? 'width: 78px;' : 'width: 82px;'
         }`}
       />
       <div
-        class="indicator relative"
-        style={`right: 4px;`}
-        class:on={step !== 'selectingWallet'}
+              class="indicator relative"
+              style={`right: 4px;`}
+              class:on={step !== 'selectingWallet'}
       />
       <div
-        class:active={step === 'connectedWallet'}
-        class="join relative"
-        style={`right: 6px; ${
+              class:active={step === 'connectedWallet'}
+              class="join relative"
+              style={`right: 6px; ${
           step === 'connectedWallet' ? 'width: 74px;' : 'width: 81px;'
         }`}
       />
       <div
-        style={`right: 8px;`}
-        class="indicator relative"
-        class:on={step === 'connectedWallet'}
+              style={`right: 8px;`}
+              class="indicator relative"
+              class:on={step === 'connectedWallet'}
       />
     </div>
   {/if}

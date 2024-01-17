@@ -1,16 +1,16 @@
-# @subwallet_connect/keepkey
+# @web3-onboard/keepkey
 
 ## Wallet module for connecting KeepKey hardware wallets to web3-onboard
 
 ### Install
 
-`npm i @subwallet_connect/keepkey`
+`npm i @web3-onboard/keepkey`
 
 ### Usage
 
 ```typescript
-import Onboard from '@subwallet_connect/core'
-import keepkeyModule from '@subwallet_connect/keepkey'
+import Onboard from '@web3-onboard/core'
+import keepkeyModule from '@web3-onboard/keepkey'
 
 const keepkey = keepkeyModule()
 
@@ -31,8 +31,8 @@ console.log(connectedWallets)
 You may decide that on certain platforms you do not want to display this wallet as a selectable option. To do that you can use the `filter` init option which is an array of platforms that you would like this wallet to **not** be displayed to the end user:
 
 ```typescript
-import Onboard from '@subwallet_connect/core'
-import keepkeyModule from '@subwallet_connect/keepkey'
+import Onboard from '@web3-onboard/core'
+import keepkeyModule from '@web3-onboard/keepkey'
 
 const keepkey = keepkeyModule({ filter: ['Safari'] })
 

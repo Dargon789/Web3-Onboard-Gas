@@ -1,10 +1,10 @@
-# @subwallet_connect/keystone
+# @web3-onboard/keystone
 
 ## Wallet module for connecting Keystone hardware wallets to web3-onboard
 
 ### Install
 
-`npm i @subwallet_connect/keystone`
+`npm i @web3-onboard/keystone`
 
 ### Options
 
@@ -56,8 +56,8 @@ interface BootstrapNode {
 ### Usage
 
 ```typescript
-import Onboard from '@subwallet_connect/core'
-import keystoneModule from '@subwallet_connect/keystone'
+import Onboard from '@web3-onboard/core'
+import keystoneModule from '@web3-onboard/keystone'
 
 const keystone = keystoneModule()
 
@@ -78,8 +78,8 @@ console.log(connectedWallets)
 You may decide that on certain platforms you do not want to display this wallet as a selectable option. To do that you can use the `filter` init option which is an array of platforms that you would like this wallet to **not** be displayed to the end user:
 
 ```typescript
-import Onboard from '@subwallet_connect/core'
-import keystoneModule from '@subwallet_connect/keystone'
+import Onboard from '@web3-onboard/core'
+import keystoneModule from '@web3-onboard/keystone'
 
 const keystone = keystoneModule({ filter: ['Safari'] })
 

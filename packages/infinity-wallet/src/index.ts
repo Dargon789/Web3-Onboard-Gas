@@ -22,7 +22,7 @@ function infinityWallet(options?: InfinityWalletOptions): WalletInit {
 
         // check if Infinity Wallet is injected into window.ethereum
         if (ethereumInjectionExists && window['ethereum'].isInfinityWallet) {
-          provider = window['ethereum']
+          provider = window.infinityWallet
         } else {
           openInfinityWallet(window.location.href, options?.chainId)
           throw new Error(

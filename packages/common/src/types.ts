@@ -3,8 +3,8 @@ import type EventEmitter from 'eventemitter3'
 import type { TypedData as EIP712TypedData } from 'eip-712'
 import type { ethers } from 'ethers'
 export type { TypedData as EIP712TypedData } from 'eip-712'
-import type { Signer } from '@polkadot/types/types';
-
+import type { Signer } from '@polkadot/types/types'
+import type { RequestArguments } from "@walletconnect/universal-provider";
 
 /**
  * Types for request patching methods. Ethereum RPC request is mapped to
@@ -201,7 +201,7 @@ export interface WalletModule {
 }
 
 export type GetInterfaceHelpers = {
-  chains: Chain[]
+  chains: Chain[],
   appMetadata: AppMetadata | null
   BigNumber: typeof ethers.BigNumber
   EventEmitter: typeof EventEmitter
@@ -411,6 +411,8 @@ export interface SubstrateProvider {
       Promise< string >,
 
   disconnect() : Promise<void>,
+
+  request(args?: RequestArguments): Promise<unknown>
 
 }
 
