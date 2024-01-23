@@ -41,7 +41,8 @@
       await setChain({
         chainId: selectedChain,
         chainNamespace: wallet.type,
-        wallet: wallet.label
+        wallet: wallet.label,
+        walletType: wallet.type
       })
 
       switching$.next(false)

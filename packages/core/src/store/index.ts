@@ -52,7 +52,7 @@ function reducer(state: AppState, action: Action): AppState {
         ...state,
         chains: [...state.chains, ...(payload as Chain[])]
       }
-    
+
     case UPDATE_CHAINS: {
       const updatedChain = payload as UpdateChainsAction['payload']
       const chains = state.chains
@@ -67,7 +67,7 @@ function reducer(state: AppState, action: Action): AppState {
     case ADD_WALLET: {
       const wallet = payload as AddWalletAction['payload']
       const existingWallet = state.wallets.find(
-        ({ label }) => label === wallet.label
+        ({ label, type }) => label === wallet.label && type === wallet.type
       )
 
       return {
@@ -76,17 +76,19 @@ function reducer(state: AppState, action: Action): AppState {
           // add to front of wallets as it is now the primary wallet
           existingWallet || (payload as WalletState),
           // filter out wallet if it already existed
-          ...state.wallets.filter(({ label }) => label !== wallet.label)
+          ...state.wallets.filter(({ label, type }) =>
+            label !== wallet.label && type !== wallet.type)
         ]
       }
     }
 
     case UPDATE_WALLET: {
       const update = payload as UpdateWalletAction['payload']
-      const { id, ...walletUpdate } = update
+      const { id, type, ...walletUpdate } = update
 
       const updatedWallets = state.wallets.map(wallet =>
-        wallet.label === id ? { ...wallet, ...walletUpdate } : wallet
+        wallet.label === id && wallet.type === type ?
+          { ...wallet, ...walletUpdate } : wallet
       )
 
       return {
@@ -96,20 +98,21 @@ function reducer(state: AppState, action: Action): AppState {
     }
 
     case REMOVE_WALLET: {
-      const update = payload as { id: string }
+      const update = payload as { id: string, type : WalletState['type'] }
 
       return {
         ...state,
-        wallets: state.wallets.filter(({ label }) => label !== update.id)
+        wallets: state.wallets.filter(({ label, type }) =>
+          label !== update.id && type === update.type)
       }
     }
 
     case UPDATE_ACCOUNT: {
       const update = payload as UpdateAccountAction['payload']
-      const { id, address, ...accountUpdate } = update
+      const { id, walletType, address, ...accountUpdate } = update
 
       const updatedWallets = state.wallets.map(wallet => {
-        if (wallet.label === id) {
+        if (wallet.label === id && wallet.type === walletType) {
           wallet.accounts = wallet.accounts.map(account => {
             if (account && account.address === address) {
               return { ...account, ...accountUpdate }

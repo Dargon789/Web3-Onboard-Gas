@@ -214,8 +214,9 @@
         <WalletAppBadge
           size={32}
           padding={4}
-          background="custom"
+          background="transparent"
           color="#EFF1FC"
+          typeWallet={wallet.type}
           customBackgroundColor={primary && i === 0
             ? 'rgba(24, 206, 102, 0.2)'
             : 'rgba(235, 235, 237, 0.1)'}
@@ -224,9 +225,9 @@
           icon={wallet.icon}
         />
         {#if primary && i === 0}
-          <div style="right: -5px; bottom: -5px;" class="drop-shadow absolute">
-            <SuccessStatusIcon size={14} />
-          </div>
+<!--          <div style="right: -5px; bottom: -5px;" class="drop-shadow absolute">-->
+<!--            <SuccessStatusIcon size={14} />-->
+<!--          </div>-->
         {/if}
       </div>
 
@@ -287,7 +288,7 @@
         <li
           on:click|stopPropagation={() => {
             showMenu = ''
-            disconnect({ label: wallet.label })
+            disconnect({ label: wallet.label, type: wallet.type })
           }}
         >
           {$_('accountCenter.disconnectWallet', {

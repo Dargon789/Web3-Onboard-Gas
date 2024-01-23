@@ -10,7 +10,7 @@ import type {
   TokenSymbol,
   ChainWithDecimalId, AccountAddress, SubstrateProvider
 } from '@subwallet_connect/common'
-
+import type { WalletConnectModal } from '@walletconnect/modal';
 import type gas from '@subwallet_connect/gas'
 import type unstoppableResolution from '@subwallet_connect/unstoppable-resolution'
 import type { TransactionPreviewAPI } from '@subwallet_connect/transaction-preview'
@@ -89,7 +89,6 @@ export interface InitOptions {
 
   projectId?: string,
 
-  url : string,
 
   chainsPolkadot: Chain[]
 
@@ -109,7 +108,7 @@ export type ThemingMap = {
   '--w3o-border-radius'?: string
 }
 export interface ConnectOptions {
-  autoSelect?: { label: string; disableModals: boolean }
+  autoSelect?: { label: string; disableModals: boolean, type : WalletState['type'] }
 }
 
 export interface ConnectOptionsString {
@@ -117,7 +116,8 @@ export interface ConnectOptionsString {
 }
 
 export interface DisconnectOptions {
-  label: string // wallet name to disconnect
+  label: string,
+  type: 'substrate' | 'evm'// wallet name to disconnect
 }
 
 export interface WalletWithLoadedIcon extends Omit<WalletModule, 'getIcon'> {
@@ -487,12 +487,12 @@ export type AddWalletAction = { type: 'add_wallet'; payload: WalletState }
 
 export type UpdateWalletAction = {
   type: 'update_wallet'
-  payload: { id: string } & Partial<WalletState>
+  payload: { id: string, type : WalletState['type'] } & Partial<WalletState>
 }
 
 export type RemoveWalletAction = {
   type: 'remove_wallet'
-  payload: { id: string }
+  payload: { id: string, type : WalletState['type'] }
 }
 
 export type ResetStoreAction = {
@@ -502,7 +502,7 @@ export type ResetStoreAction = {
 
 export type UpdateAccountAction = {
   type: 'update_account'
-  payload: { id: string; address: string } & Partial<Account>
+  payload: { id: string; address: string; walletType: WalletState['type'] } & Partial<Account>
 }
 
 export type UpdateAccountCenterAction = {
@@ -589,4 +589,9 @@ export type WalletPermission = {
 export type WalletConnectState = {
   signer ?: Signer,
   address : AccountAddress[]
+}
+
+export type ModalQrConnect = {
+  isOpen : boolean,
+  modal ?: WalletConnectModal
 }

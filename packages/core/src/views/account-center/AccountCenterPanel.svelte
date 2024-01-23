@@ -23,7 +23,7 @@
   import warningIcon from '../../icons/warning.js'
   import questionIcon from '../../icons/question.js'
   import shieldIcon from '../../icons/shield-icon.js'
-  import { poweredByBlocknative } from '../../icons/index.js'
+  import { poweredBySubwallet } from '../../icons/index.js'
   import DisconnectAllConfirm from './DisconnectAllConfirm.svelte'
   import EnableTransactionProtectionModal from './EnableTransactionProtectionModal.svelte'
   import SignMessage from './SignMessage.svelte'
@@ -41,7 +41,7 @@
     .pipe(startWith(state.get().accountCenter), shareReplay(1))
 
   function disconnectAllWallets() {
-    $wallets$.forEach(({ label }) => disconnect({ label }))
+    $wallets$.forEach(({ label, type }) => disconnect({ label, type }))
   }
 
   const { chains: appChains } = state.get()
@@ -600,7 +600,7 @@
             rel="noopener noreferrer"
             class="flex justify-center items-center powered-by-container"
           >
-            {@html poweredByBlocknative}
+            {@html poweredBySubwallet}
           </a>
         </div>
       </div>

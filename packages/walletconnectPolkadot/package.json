@@ -60,8 +60,6 @@
   },
   "dependencies": {
     "@subwallet_connect/common": "^1.0.1",
-    "@walletconnect/ethereum-provider": "^2.11.0",
-    "@walletconnect/modal": "^2.6.2",
     "@walletconnect/universal-provider": "^2.11.0",
     "joi": "17.9.1",
     "rxjs": "^7.5.2"

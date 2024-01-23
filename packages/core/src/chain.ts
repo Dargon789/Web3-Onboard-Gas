@@ -14,7 +14,8 @@ import { getBalance } from './provider.js';
 async function setChain(options: {
   chainId: string | number
   chainNamespace?: string
-  wallet?: WalletState['label']
+  wallet?: WalletState['label'],
+  walletType ?: WalletState['type'],
   rpcUrl?: string
   label?: string
   token?: string
@@ -32,6 +33,7 @@ async function setChain(options: {
     wallet: walletToSet,
     rpcUrl,
     label,
+    walletType,
     token
   } = options
   const chainIdHex = chainNamespace === 'evm' ? toHexString(chainId) : chainId.toString()
@@ -51,7 +53,8 @@ async function setChain(options: {
   }
 
   const wallet = walletToSet
-      ? wallets.find(({ label }) => label === walletToSet)
+      ? wallets.find(({ label, type }) =>
+      label === walletToSet && type === walletType)
       : wallets[0]
 
 
@@ -80,7 +83,7 @@ async function setChain(options: {
     wallet.type === 'evm' && await switchChain((wallet.provider as EIP1193Provider), chainIdHex )
     if( wallet.type === 'substrate' && chainNamespace === 'substrate'){
       const balance = await getBalance( wallet.accounts[0].address, chain, 'substrate' )
-      updateWallet(wallet.label, {
+      updateWallet(wallet.label, wallet.type, {
         chains: [{ namespace: 'substrate', id: chainId.toString() }],
         accounts: wallet.accounts.map((acc, index) =>
             index === 0 ? {  ...acc, balance } :

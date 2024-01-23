@@ -131,7 +131,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
           methods: requiredMethods,
           optionalChains: optionalChainsParsed,
           optionalMethods,
-          showQrModal: true,
+          showQrModal: false,
           rpcMap: chains
             .map(({ id, rpcUrl }) => ({ id, rpcUrl }))
             .reduce((rpcMap: Record<number, string>, { id, rpcUrl }) => {
@@ -224,7 +224,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
               }
             }
 
-            if (options && handleUri) {
+            if (options) {
               // listen for uri event
               fromEvent(
                 this.connector as JQueryStyleEventEmitter<any, string>,
@@ -234,6 +234,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                 .pipe(takeUntil(this.disconnected$))
                 .subscribe(async uri => {
                   try {
+                    this.emit('uriChanged', uri)
                     handleUri && (await handleUri(uri))
                   } catch (error) {
                     throw `An error occurred when handling the URI. Error: ${error}`
@@ -277,6 +278,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                           const hexChainId = isHexString(chainId)
                             ? chainId
                             : `0x${chainId.toString(16)}`
+                          this.emit('qrModalState', false)
                           this.emit('chainChanged', hexChainId)
                           resolve(this.connector.accounts)
                         },
@@ -301,6 +303,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                       const chainId = this.connector.chainId
                       instance = this.connector.session
                       const hexChainId = `0x${chainId.toString(16)}`
+                      this.emit('qrModalState', false)
                       this.emit('chainChanged', hexChainId)
                       return resolve(accounts)
                     }

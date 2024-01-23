@@ -7,7 +7,7 @@ import type {
   Chain,
   ProviderAccounts,
   WalletInit,
-  EIP1193Provider, SubstrateProvider
+ SubstrateProvider
 } from '@subwallet_connect/common'
 import {UniversalProviderOpts, RequestArguments} from "@walletconnect/universal-provider";
 import { Signer } from '@polkadot/types/types/extrinsic.js'
@@ -47,7 +47,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
 
   return () => {
     return {
-      label: 'WalletConnectPolkadot',
+      label: 'WalletConnect',
       type: 'substrate',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({chains, EventEmitter, appMetadata}) => {
@@ -63,7 +63,6 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
         const {Subject, fromEvent} = await import('rxjs')
         const {takeUntil, take} = await import('rxjs/operators')
 
-        const {WalletConnectModal: WalletConnectModalClass} = await import("@walletconnect/modal");
 
         const getMetaData = (): CoreTypes.Metadata | undefined => {
           if (!appMetadata) return undefined
@@ -122,12 +121,6 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
         const connector = await UniversalProvider.init({
           projectId,
           relayUrl: 'wss://relay.walletconnect.com',
-          rpcMap: chains
-            .map(({id, rpcUrl}) => ({id, rpcUrl}))
-            .reduce((rpcMap: Record<number, string>, {id, rpcUrl}) => {
-              rpcMap[parseInt(id, 16)] = rpcUrl || ''
-              return rpcMap
-            }, {}),
           metadata: getMetaData(),
         } as UniversalProviderOpts)
 
@@ -172,7 +165,6 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
 
           private disconnected$: InstanceType<typeof Subject>
 
-          public modal?: any
 
           constructor({
                         connector,
@@ -189,11 +181,8 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
             this.chains = chains
             this.disconnected$ = new Subject()
 
-            if (WalletConnectModalClass) {
-              this.modal = new WalletConnectModalClass({
-                projectId
-              });
-            }
+
+
 
             // listen for accountsChanged
             fromEvent(this.connector, 'accountsChanged', payload => payload)
@@ -251,8 +240,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
               .pipe(takeUntil(this.disconnected$))
               .subscribe(async uri => {
                 try {
-                  this.modal?.closeModal();
-                  this.modal?.openModal({uri});
+                  this.emit('uriChanged', uri)
                   handleUri && (await handleUri(uri))
                 } catch (error) {
                   throw `An error occurred when handling the URI. Error: ${error}`
@@ -276,18 +264,9 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
           async enable() {
 
             let address : string[] = [];
-
-            this.on('accountsChanged', ( (_address: string[]) => {
-              address = _address
-            }))
             try {
               address = await this.request({method : 'polkadot_requestAccounts'});
-              return {
-                address
-              }
             }catch (e) {}
-
-            console.log(address);
             return{
               address
             }
@@ -330,7 +309,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                       next: ({chainId}) => {
                         this.emit('accountsChanged', generateAccountAddress())
                         this.emit('chainChanged', convertChainIdToCaipId())
-                        this.modal?.closeModal();
+                        this.emit('qrModalState', false)
                         resolve(generateAccountAddress())
                       },
                       error: reject
@@ -363,7 +342,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                     const chainId = chains[0]
                     instance = this.connector.session
                     this.emit('chainChanged', chainId)
-                    this.modal?.closeModal();
+                    this.emit('qrModalState', false)
                     return resolve(accounts)
                   }
                 }

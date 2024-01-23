@@ -36,10 +36,10 @@ export const useConnectWallet = (): [
     return walletState
   }, [])
 
-  const disconnect = useCallback(async ({ label }: DisconnectOptions) => {
+  const disconnect = useCallback(async ({ label, type }: DisconnectOptions) => {
     setConnecting(true)
 
-    const walletState = await disconnectWallet({ label })
+    const walletState = await disconnectWallet({ label, type })
 
     setConnecting(false)
 

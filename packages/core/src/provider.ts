@@ -1,17 +1,16 @@
-import { fromEventPattern, Observable } from 'rxjs'
+import { BehaviorSubject, fromEventPattern, Observable } from 'rxjs'
 import { filter, takeUntil, take, share, switchMap } from 'rxjs/operators'
 import partition from 'lodash.partition'
 import { providers, utils } from 'ethers'
 import type {
   EthSignMessageRequest,
   PersonalSignMessageRequest,
-
   EIP712Request_v4,
   EIP712Request,
   SubstrateProvider
 } from '@subwallet_connect/common'
 import { weiToEth } from '@subwallet_connect/common'
-import { disconnectWallet$ } from './streams.js'
+import { disconnectWallet$, qrModalConnect$, uriConnect$ } from './streams.js'
 import { updateAccount, updateWallet } from './store/actions.js'
 import { validEnsChain } from './utils.js'
 import disconnect from './disconnect.js'
@@ -37,7 +36,7 @@ import type {
   Account,
   Address,
   Balances,
-  Ens, WalletConnectState,
+  Ens, ModalQrConnect, WalletConnectState,
   WalletPermission,
   WalletState
 } from './types.js'
@@ -88,7 +87,7 @@ export function getChainId(provider: EIP1193Provider): Promise<string> {
 
 export function listenAccountsChanged(args: {
   provider: EIP1193Provider | SubstrateProvider
-  disconnected$: Observable<string>,
+  disconnected$: Observable<Pick<WalletState, 'label' | 'type'>>,
   type : 'evm'|'substrate'
 }): Observable<ProviderAccounts> {
   const { provider, disconnected$, type } = args
@@ -110,7 +109,7 @@ export function listenAccountsChanged(args: {
 
 export function listenChainChanged(args: {
   provider: EIP1193Provider | SubstrateProvider
-  disconnected$: Observable<string>
+  disconnected$: Observable<Pick<WalletState, 'label' | 'type'>>
   type : 'evm' | 'substrate'
 }): Observable<ChainId> {
   const { provider, disconnected$, type } = args
@@ -129,16 +128,39 @@ export function listenChainChanged(args: {
   )
 }
 
+export function listenUriChange(args: {
+  provider: EIP1193Provider | SubstrateProvider
+  uriConnect$: BehaviorSubject<string>
+}): void {
+  const { provider, uriConnect$ } = args
+
+    provider.on('uriChanged', (uri : string)=> {
+      uriConnect$.next(uri)
+    });
+}
+
+export function listenStateModal(args: {
+  provider: EIP1193Provider | SubstrateProvider
+  qrModalConnect$: BehaviorSubject<ModalQrConnect>
+}): void {
+  const { provider, qrModalConnect$ } = args
+
+  provider.on('qrModalState', (state : boolean)=>{
+    qrModalConnect$.next({ ...qrModalConnect$.value, isOpen : state })
+  })
+}
+
+
 export function trackWallet(
     provider: EIP1193Provider | SubstrateProvider,
     label: WalletState['label'],
     type : 'evm' | 'substrate'
 ): void {
+
   const disconnected$ = disconnectWallet$.pipe(
-      filter(wallet => wallet === label),
+      filter(wallet => wallet.label === label && wallet.type === type),
       take(1)
   )
-
 
   const accountsChanged$ = listenAccountsChanged({
     type,
@@ -151,7 +173,7 @@ export function trackWallet(
     // sync accounts with internal state
     // in the case of an account has been manually disconnected
     try {
-      await syncWalletConnectedAccounts(label)
+      await syncWalletConnectedAccounts(label, type)
     } catch (error) {
       console.warn(
           'Web3Onboard: Error whilst trying to sync connected accounts:',
@@ -163,12 +185,13 @@ export function trackWallet(
     // this could happen if user locks wallet,
     // or if disconnects app from wallet
     if (!address) {
-      disconnect({ label })
+      disconnect({ label, type })
       return
     }
 
     const { wallets } = state.get()
-    const { accounts } = wallets.find(wallet => wallet.label === label)
+    const { accounts } = wallets
+      .find(wallet => wallet.label === label && wallet.type === type)
 
     const [[existingAccount], restAccounts] = partition(
         accounts,
@@ -176,7 +199,7 @@ export function trackWallet(
     )
 
     // update accounts without ens/uns and balance first
-    updateWallet(label, {
+    updateWallet(label, type, {
       accounts: [
         existingAccount || {
           address: address,
@@ -196,7 +219,8 @@ export function trackWallet(
       if (sdk) {
         const wallet = state
             .get()
-            .wallets.find(wallet => wallet.label === label)
+            .wallets.find(wallet =>
+            wallet.label === label && wallet.type === type)
         try {
           sdk.subscribe({
             id: address,
@@ -218,7 +242,8 @@ export function trackWallet(
 
             const { wallets, chains } = state.get()
 
-            const primaryWallet = wallets.find(wallet => wallet.label === label)
+            const primaryWallet = wallets.find(
+              wallet => wallet.label === label && wallet.type === type)
             const { chains: walletChains, accounts } = primaryWallet
 
             const [connectedWalletChain] = walletChains
@@ -277,7 +302,8 @@ export function trackWallet(
   // Update chain on wallet when chainId changed
   chainChanged$.subscribe(async chainId => {
     const { wallets } = state.get()
-    const { chains, accounts } = wallets.find(wallet => wallet.label === label)
+    const { chains, accounts } = wallets.find(wallet =>
+      wallet.label === label && wallet.type === type)
     const [connectedWalletChain] = chains
 
     if (chainId === connectedWalletChain.id) return
@@ -288,7 +314,8 @@ export function trackWallet(
       if (sdk) {
         const wallet = state
             .get()
-            .wallets.find(wallet => wallet.label === label)
+            .wallets.find(wallet =>
+            wallet.label === label && wallet.type === type)
 
         // Unsubscribe with timeout of 60 seconds
         // to allow for any currently inflight transactions
@@ -325,7 +352,7 @@ export function trackWallet(
             } as Account)
     )
 
-    updateWallet(label, {
+    updateWallet(label, type, {
       chains: [{ namespace: 'evm', id: chainId }],
       accounts: resetAccounts
     })
@@ -336,7 +363,8 @@ export function trackWallet(
       .pipe(
           switchMap(async chainId => {
             const { wallets, chains } = state.get()
-            const primaryWallet = wallets.find(wallet => wallet.label === label)
+            const primaryWallet = wallets.find(wallet =>
+              wallet.label === label && wallet.type === type)
             const { accounts } = primaryWallet
 
             const chain = chains.find(
@@ -386,7 +414,8 @@ export function trackWallet(
           })
       )
       .subscribe(updatedAccounts => {
-        updatedAccounts && updateWallet(label, { accounts: updatedAccounts })
+        updatedAccounts &&
+        updateWallet(label, type,  { accounts: updatedAccounts })
       })
 
   disconnected$.subscribe(async () => {
@@ -707,9 +736,11 @@ export async function signTypedData_v4MessageRequest(
 
 
 export async function syncWalletConnectedAccounts(
-    label: WalletState['label']
+    label: WalletState['label'],
+    type: WalletState['type']
 ): Promise<void> {
-  const wallet = state.get().wallets.find(wallet => wallet.label === label)
+  const wallet = state.get().wallets.find(
+    wallet => wallet.label === label && wallet.type === type)
   const permissions = wallet.type === 'evm' ? await getPermissions((wallet.provider) as EIP1193Provider) : []
   const accountsPermissions = permissions.find(
       ({ parentCapability }) => parentCapability === 'eth_accounts'
@@ -725,7 +756,11 @@ export async function syncWalletConnectedAccounts(
           connectedAccounts.includes(address)
       )
 
-      updateWallet(wallet.label, { ...wallet, accounts: syncedAccounts })
+      updateWallet(
+        wallet.label,
+        wallet.type,
+        { ...wallet, accounts: syncedAccounts }
+      )
     }
   }
 }
