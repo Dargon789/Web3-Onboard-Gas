@@ -10,7 +10,8 @@ export const themes = {
     '--w3o-border-color': 'unset',
     '--w3o-action-color': 'unset',
     '--w3o-border-radius': 'unset',
-    '--w3o-font-family': 'inherit'
+    '--w3o-font-family': 'inherit',
+    '--w3o-background-color-item': 'inherit'
   },
   light: {
     '--w3o-background-color': '#ffffff',
@@ -19,16 +20,18 @@ export const themes = {
     '--w3o-border-color': '#d0d4f7',
     '--w3o-action-color': '#6370E5',
     '--w3o-border-radius': '16px',
-    '--w3o-font-family': 'inherit'
+    '--w3o-font-family': 'inherit',
+    '--w3o-background-color-item': 'inherit'
   },
   dark: {
-    '--w3o-background-color': '#1A1D26',
-    '--w3o-foreground-color': '#242835',
-    '--w3o-text-color': '#EFF1FC',
-    '--w3o-border-color': '#33394B',
-    '--w3o-action-color': '#929bed',
+    '--w3o-background-color': '#0C0C0C',
+    '--w3o-foreground-color': '#0C0C0C',
+    '--w3o-text-color': '#FFFFFF',
+    '--w3o-border-color': '#212121',
+    '--w3o-action-color': '#252525',
     '--w3o-border-radius': '16px',
-    '--w3o-font-family': 'inherit'
+    '--w3o-font-family': 'Plus Jakarta Sans',
+    '--w3o-background-color-item': '#1A1A1A'
   }
 }
 

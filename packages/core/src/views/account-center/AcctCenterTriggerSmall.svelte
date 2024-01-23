@@ -97,16 +97,17 @@
         <WalletAppBadge
           size={32}
           padding={4}
-          background="green"
+          background="transparent"
+          typeWallet={primaryWallet ? primaryWallet.type : undefined}
           border="darkGreen"
           radius={8}
           icon={primaryWallet ? primaryWallet.icon : ''}
         />
       </div>
 
-      <div class="check-icon-wrapper drop-shadow">
-        <SuccessStatusIcon size={14} />
-      </div>
+<!--      <div class="check-icon-wrapper drop-shadow">-->
+<!--        <SuccessStatusIcon size={14} />-->
+<!--      </div>-->
     </div>
   </div>
 </div>

@@ -40,6 +40,15 @@
         "paragraph": "Your wallet is now connected to {app}"
       },
       "mainText": "Connected"
+    },
+    "installWallet": {
+      "header": "{app}",
+      "sidebar": {
+        "heading": "",
+        "subheading": "Connect your wallet",
+        "paragraph": "Connecting your wallet is like “logging in” to Web3. Select your wallet from the options to get started.",
+        "IDontHaveAWallet": "I don't have a wallet"
+      }
     }
   },
   "modals": {

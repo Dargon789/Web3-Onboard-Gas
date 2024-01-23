@@ -7,7 +7,7 @@
   import en from '../../i18n/en.json'
   import { enable, listenAccountsChanged } from '../../provider.js'
   import { state } from '../../store/index.js'
-  import {  connectWallet$, onDestroy$ } from '../../streams.js'
+  import {  connectWallet$, onDestroy$, uriConnect$, qrModalConnect$ } from '../../streams.js'
   import { addWallet, updateAccount } from '../../store/actions.js'
   import {
     validEnsChain,
@@ -20,13 +20,13 @@
   import Agreement from './Agreement.svelte'
   import ConnectedWallet from './ConnectedWallet.svelte'
   import ConnectingWallet from './ConnectingWallet.svelte'
-  import InstallWallet from './InstallWallet.svelte'
+  import InstallWalletNotifi from './InstallWalletNotifi.svelte'
   import SelectingWallet from './SelectingWallet.svelte'
   import Sidebar from './Sidebar.svelte'
   import { configuration } from '../../configuration.js'
   import { getBNMulitChainSdk } from '../../services.js'
   import { MOBILE_WINDOW_WIDTH, STORAGE_KEYS } from '../../constants.js'
-  import { defaultBnIcon } from '../../icons/index.js'
+  import { defaultSwIcon } from '../../icons/index.js'
   import {
     BehaviorSubject,
     distinctUntilChanged,
@@ -46,7 +46,9 @@
     trackWallet,
     getBalance,
     getEns,
-    getUns
+    getUns,
+    listenStateModal,
+    listenUriChange
   } from '../../provider.js'
 
   import type {
@@ -77,6 +79,7 @@
   let selectedWallet: WalletState | null
   let agreed: boolean
   let connectingWalletLabel: string
+  let connectingWalletType: string
   let connectingErrorMessage: string
 
   let windowWidth: number
@@ -126,10 +129,11 @@
     type
   }: WalletWithLoadingIcon): Promise<void> {
     connectingWalletLabel = label
+    connectingWalletType = type
     try {
       const existingWallet = state
         .get()
-        .wallets.find(wallet => wallet.label === label)
+        .wallets.find(wallet => wallet.label === label && wallet.type === type);
 
       if (existingWallet) {
         // set as first wallet
@@ -167,11 +171,14 @@
       connectingErrorMessage = ''
       scrollToTop()
       // change step on next event loop
+      listenUriChange({ provider, uriConnect$ })
+      listenStateModal({ provider, qrModalConnect$ })
       setTimeout(() => setStep('connectingWallet'), 1)
     } catch (error) {
       const { message } = error as { message: string }
       connectingErrorMessage = message
       connectingWalletLabel = ''
+      connectingWalletType= 'evm'
       scrollToTop()
     }
   }
@@ -227,7 +234,7 @@
 
 
       // canceled previous request
-      if (!address) {
+      if (!address || address.length === 0) {
         return
       }
 
@@ -241,10 +248,10 @@
         )
 
         try {
-          let labelsListParsed: Array<string> = JSON.parse(labelsList)
+          let labelsListParsed = JSON.parse(labelsList)
           if (labelsListParsed && Array.isArray(labelsListParsed)) {
             const tempLabels = labelsListParsed
-            labelsList = [...new Set([label, ...tempLabels])]
+            labelsList = [...new Set([{ label, type }, ...tempLabels])]
           }
         } catch (err) {
           if (
@@ -259,7 +266,7 @@
           }
         }
 
-        if (!labelsList) labelsList = [label]
+        if (!labelsList) labelsList = JSON.stringify([{ label, type }])
         setLocalStore(
           STORAGE_KEYS.LAST_CONNECTED_WALLET,
           JSON.stringify(labelsList)
@@ -330,7 +337,7 @@
           provider: selectedWallet.provider,
           disconnected$: connectWallet$.pipe(
             filter(({ inProgress }) => !inProgress),
-            mapTo('')
+            mapTo({ label : '', type: 'evm' }),
           ),
           type
         })
@@ -415,6 +422,10 @@
   modalStep$.pipe(takeUntil(onDestroy$)).subscribe(async (step) => {
     switch (step) {
       case 'selectingWallet': {
+        qrModalConnect$.next({
+          ...qrModalConnect$.value,
+          isOpen: false
+        })
         if (autoSelect.label) {
           const walletToAutoSelect = walletModules.find(
             ({ label }) =>
@@ -427,6 +438,7 @@
           }
         } else {
           connectingWalletLabel = ''
+          connectingWalletType = 'evm'
           loadWalletsForSelection()
         }
         break
@@ -437,6 +449,7 @@
       }
       case 'connectedWallet': {
         connectingWalletLabel = ''
+        connectingWalletType = 'evm'
         updateAccountDetails()
         break
       }
@@ -469,6 +482,7 @@
     --text-color: var(--onboard-connect-text-color, var(--w3o-text-color));
     --border-color: var(--w3o-border-color, var(--gray-200));
     --action-color: var(--w3o-action-color, var(--primary-500));
+    --item-color: var(--w3o-background-color-item, var(--primary-500));
 
     /* themeable properties */
     font-family: var(--onboard-font-family-normal, var(--font-family-normal));
@@ -488,12 +502,14 @@
 
   .content {
     width: var(--onboard-connect-content-width, 100%);
+    padding: 2rem 0 2rem 2rem;
   }
 
   .header {
     display: flex;
-    padding: 1rem;
-    border-bottom: 1px solid transparent;
+    padding-bottom: 14px;
+    width: 502px;
+    border-bottom: 3px solid transparent;
     background: var(--onboard-connect-header-background);
     color: var(--onboard-connect-header-color);
     border-color: var(--border-color);
@@ -501,6 +517,7 @@
 
   .header-heading {
     line-height: 1rem;
+    font-weight: 600;
   }
 
   .button-container {
@@ -573,7 +590,7 @@
       height: var(--onboard-connect-content-height, 440px);
     }
     .content {
-      width: var(--onboard-connect-content-width, 488px);
+      width: var(--onboard-connect-content-width, 560px);
     }
     .mobile-subheader {
       display: none;
@@ -604,7 +621,7 @@
                   <img src={$appMetadata$.icon} alt="logo" />
                 {/if}
               {:else}
-                {@html defaultBnIcon}
+                {@html defaultSwIcon}
               {/if}
             </div>
             <div class="flex flex-column justify-center w-full">
@@ -661,12 +678,13 @@
                 <SelectingWallet
                   {selectWallet}
                   {wallets}
+                  {connectingWalletType}
                   {connectingWalletLabel}
                   {connectingErrorMessage}
                 />
               </div>
             {:else}
-              <InstallWallet />
+              <InstallWalletNotifi />
             {/if}
           {/if}
 

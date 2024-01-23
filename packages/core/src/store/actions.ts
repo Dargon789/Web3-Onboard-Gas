@@ -89,10 +89,10 @@ export function addChains(chains: Chain[]): void {
 
 export function updateChain(updatedChain: Chain): void {
   const {
-    label, 
-    token, 
-    rpcUrl, 
-    id: chainId, 
+    label,
+    token,
+    rpcUrl,
+    id: chainId,
     namespace: chainNamespace
   } = updatedChain
   const error = validateSetChainOptions(
@@ -102,6 +102,8 @@ export function updateChain(updatedChain: Chain): void {
   if (error) {
     throw error
   }
+
+  console.log(chainId, label, token, '111111')
   const action = {
     type: UPDATE_CHAINS,
     payload: updatedChain
@@ -125,7 +127,7 @@ export function addWallet(wallet: WalletState): void {
   dispatch(action as AddWalletAction)
 }
 
-export function updateWallet(id: string, update: Partial<WalletState>): void {
+export function updateWallet(id: string, type : WalletState['type'], update: Partial<WalletState>): void {
   // const error = validateWallet(update)
   //
   // if (error) {
@@ -137,6 +139,7 @@ export function updateWallet(id: string, update: Partial<WalletState>): void {
     type: UPDATE_WALLET,
     payload: {
       id,
+      type,
       ...update
     }
   }
@@ -144,7 +147,7 @@ export function updateWallet(id: string, update: Partial<WalletState>): void {
   dispatch(action as UpdateWalletAction)
 }
 
-export function removeWallet(id: string): void {
+export function removeWallet(id: string, type : 'evm' | 'substrate'): void {
   const error = validateString(id, 'wallet id')
 
   if (error) {
@@ -154,7 +157,8 @@ export function removeWallet(id: string): void {
   const action = {
     type: REMOVE_WALLET,
     payload: {
-      id
+      id,
+      type: type
     }
   }
 
@@ -196,7 +200,7 @@ export async function setPrimaryWallet(
   }
 
 
-  updateWallet(wallet.label, { accounts : wallet.accounts })
+  updateWallet(wallet.label,  wallet.type, { accounts : wallet.accounts })
   // add wallet will set it to first wallet since it already exists
   addWallet(wallet)
 }
@@ -446,7 +450,9 @@ export function uniqueWalletsByLabel(
       wallet &&
       walletModuleList.findIndex(
         (innerWallet: WalletModule) =>
-          innerWallet && innerWallet.label === wallet.label
+          innerWallet
+          && innerWallet.label === wallet.label
+          && innerWallet.type === wallet.type
       ) === i
   )
 }

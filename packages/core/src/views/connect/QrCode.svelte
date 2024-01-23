@@ -1,33 +1,27 @@
 <script lang="ts">
-    import { QRCodeImage } from 'svelte-qrcode-image';
-    import { fade } from 'svelte/transition'
-    import { customNotification  } from "../../store/actions";
 
-    export let uriPolkadot: string;
+    import { fade } from 'svelte/transition';
+    import QRCode from 'easyqrcodejs'
+    import { onMount } from 'svelte';
+    import {isSVG} from "../../utils";
 
-
-    export let uriEth : string;
-
-
-    export let size : string;
-    $: choiceTypeConnect  = true;
+    export let uri = '';
+    let node : any;
+    export let logoImage = '';
 
 
-    function switchTypeConnect (){
-        choiceTypeConnect = !choiceTypeConnect;
-    }
-
-    async function  onCopyUri  (){
-        await navigator.clipboard.
-        writeText(choiceTypeConnect ? uriEth : uriPolkadot)
-        customNotification({
-            type: 'success',
-            message:
-                'Link copied',
-            autoDismiss: 1000
-        })
-
-    }
+    onMount(() => {
+      const options = {
+        text: uri,
+        // ... your other options
+        dotScale: 1,
+        quietZone: 0,
+        width: 240,
+        height: 240,
+        quietZoneColor: 'rgba(0,0,0,0)',
+      };
+      new QRCode(node, options);
+    });
 
 </script>
 
@@ -36,8 +30,16 @@
         padding: var(--onboard-spacing-4, var(--spacing-4));
         font-size: var(--onboard-font-size-6, var(--font-size-6));
         line-height: 24px;
+        margin: auto;
     }
 
+    .icon{
+        & svg {
+            width: 55px;
+            height: 55px;
+        }
+
+    }
 
     .flex{
         display: flex;
@@ -50,22 +52,32 @@
         width: 1rem;
         margin-right: 0.5rem;
     }
-    .qrCode{
-        margin: auto;
-        opacity: 1;
-
+    .qr-box-container{
+        width: 264px;
+        height: 264px;
+        border-radius: var(--border-radius-5);
+        padding: var(--spacing-5);
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
     }
 </style>
-
-    <div class="container flex items-center qrCode">
-        <label class="flex flex-column qrCode" transition:fade={{ duration: 300 }}>
-            {#if (choiceTypeConnect === true)}
-                <div on:click={switchTypeConnect}> Ethereum Connect</div>
-                <QRCodeImage text = "{uriEth}" displayHeight={120} displayWidth={130}   />
-                    {:else }
-                <div on:click={switchTypeConnect}> Polkadot Connect</div>
-                <QRCodeImage text = "{uriPolkadot}" displayHeight={120} displayWidth={130}/>
-            {/if}
-        </label>
-        <button on:click={onCopyUri} >copy</button>
-    </div>
+    {#if (uri !== '')}
+        <div class="container flex items-center qrCode">
+            <label class="flex flex-column qrCode" transition:fade={{ duration: 300 }}>
+                <div class="qr-box-container" bind:this={node}>
+                    <div in:fade|local class="icon absolute z-10">
+                        {#if isSVG(logoImage)}
+                            <!-- render svg string -->
+                            {@html logoImage}
+                        {:else}
+                            <!-- load img url -->
+                            <img src={logoImage} alt="logo" />
+                        {/if}
+                    </div>
+                </div>
+            </label>
+        </div>
+    {/if}

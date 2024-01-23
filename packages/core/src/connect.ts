@@ -33,7 +33,7 @@ async function connect(
     )
 
   const { autoSelect } = options || {
-    autoSelect: { label: '', disableModals: false }
+    autoSelect: { label: '', disableModals: false, type: 'evm' }
   }
 
   // if auto selecting, wait until next event loop
@@ -51,7 +51,7 @@ async function connect(
   connectWallet$.next({
     autoSelect:
         typeof autoSelect === 'string'
-            ? { label: autoSelect, disableModals: false }
+            ? { label: autoSelect, disableModals: false, type: 'evm' }
             : autoSelect,
     inProgress: true
   })

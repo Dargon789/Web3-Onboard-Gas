@@ -27,16 +27,16 @@
   const setPositioningDefaults = (targetComponentVariable: string) => {
     return {
       topLeft: `
-        top: var(--${targetComponentVariable}-position-top, 0); 
+        top: var(--${targetComponentVariable}-position-top, 0);
         left: var(--${targetComponentVariable}-position-left, 0);`,
       topRight: `
-        top: var(--${targetComponentVariable}-position-top, 0); 
+        top: var(--${targetComponentVariable}-position-top, 0);
         right: var(--${targetComponentVariable}-position-right, 0);`,
       bottomRight: `
-        bottom: var(--${targetComponentVariable}-position-bottom, 0); 
+        bottom: var(--${targetComponentVariable}-position-bottom, 0);
         right: var(--${targetComponentVariable}-position-right, 0);`,
       bottomLeft: `
-        bottom: var(--${targetComponentVariable}-position-bottom, 0); 
+        bottom: var(--${targetComponentVariable}-position-bottom, 0);
         left: var(--${targetComponentVariable}-position-left, 0);`
     }
   }
@@ -308,7 +308,7 @@
   :global(a) {
     color: var(
       --onboard-link-color,
-      var(--onboard-primary-500, var(--primary-500))
+      var(--onboard-primary-500, var(--primary-2))
     );
     text-decoration: none;
   }
@@ -330,14 +330,16 @@
   }
 
   :global(.onboard-button-primary) {
-    background: var(--onboard-white, var(--white));
+    background: var(--onboard-primary-500, var(--primary-2));
     padding: calc(var(--onboard-spacing-5, var(--spacing-5)) - 1px)
       calc(var(--onboard-spacing-4, var(--spacing-4)) - 1px);
-    color: var(--onboard-gray-500, var(--gray-500));
+    color:  var(--white);
     font-size: var(--onboard-font-size-6, var(--font-size-6));
     line-height: var(--onboard-font-line-height-3, var(--font-line-height-3));
-    border: 1px solid var(--onboard-gray-500, var(--gray-500));
+    border: 1px solid transparent;
     font-weight: 600;
+    height: 40px;
+    border-radius: var(--border-radius-1);
   }
 
   :global(.button-neutral-solid) {

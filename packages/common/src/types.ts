@@ -251,6 +251,8 @@ export type ProviderEvent =
     | 'message'
     | 'chainChanged'
     | 'accountsChanged'
+    | 'uriChanged'
+    | 'qrModalState'
 
 export interface SimpleEventEmitter {
   on(
@@ -261,6 +263,8 @@ export interface SimpleEventEmitter {
           | MessageListener
           | ChainListener
           | AccountsListener
+          | UriListener
+          | QrModalListener
   ): void
   removeListener(
       event: ProviderEvent,
@@ -270,6 +274,8 @@ export interface SimpleEventEmitter {
           | MessageListener
           | ChainListener
           | AccountsListener
+          | UriListener
+          | QrModalListener
   ): void
 }
 
@@ -278,6 +284,8 @@ export type DisconnectListener = (error: ProviderRpcError) => void
 export type MessageListener = (message: ProviderMessage) => void
 export type ChainListener = (chainId: ChainId) => void
 export type AccountsListener = (accounts: ProviderAccounts) => void
+export type UriListener = (uri : string) => void
+export type QrModalListener = (isOpen : boolean) => void
 
 /**
  * The hexadecimal representation of the users
@@ -386,6 +394,8 @@ export interface EIP1193Provider extends SimpleEventEmitter {
   on(event: 'message', listener: MessageListener): void
   on(event: 'chainChanged', listener: ChainListener): void
   on(event: 'accountsChanged', listener: AccountsListener): void
+  on(event: 'uriChanged', listener: UriListener): void
+  on(event: 'qrModalState', listener: QrModalListener): void
   request(args: EthAccountsRequest): Promise<ProviderAccounts>
   request(args: EthBalanceRequest): Promise<Balance>
   request(args: EIP1102Request): Promise<ProviderAccounts>
@@ -402,16 +412,18 @@ export interface EIP1193Provider extends SimpleEventEmitter {
   disconnect?(): void
 }
 
-export interface SubstrateProvider {
+export interface SubstrateProvider extends SimpleEventEmitter{
   enable () : Promise<{
     signer ?: Signer,
     address : AccountAddress[] } | undefined>,
   signDummy( address : string, data : string ,
              wallet ?: Signer  ) :
       Promise< string >,
-
+  on(event: 'connect', listener: ConnectListener): void,
+  on(event: 'disconnect', listener: DisconnectListener): void,
+  on(event: 'uriChanged', listener: UriListener): void,
+  on(event: 'qrModalState', listener: QrModalListener): void,
   disconnect() : Promise<void>,
-
   request(args?: RequestArguments): Promise<unknown>
 
 }

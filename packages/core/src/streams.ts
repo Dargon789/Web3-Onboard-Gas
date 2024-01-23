@@ -9,15 +9,22 @@ import {
   shareReplay
 } from 'rxjs/operators'
 
+
 import { resetStore } from './store/actions.js'
 import { state } from './store/index.js'
 
-import type { WalletState, ConnectOptions } from './types.js'
+import type { WalletState, ConnectOptions, ModalQrConnect } from './types.js'
 import type { EthereumTransactionData } from 'bnc-sdk'
 
 
 export const reset$ = new Subject<void>()
-export const disconnectWallet$ = new Subject<WalletState['label']>()
+export const disconnectWallet$ = new Subject<Pick<WalletState, 'label' | 'type'>>()
+
+export const qrModalConnect$ = new BehaviorSubject<ModalQrConnect>({
+  isOpen: false
+});
+
+export const uriConnect$ = new BehaviorSubject<string>('')
 
 export const connectWallet$ = new BehaviorSubject<{
   autoSelect?: ConnectOptions['autoSelect']
@@ -36,8 +43,8 @@ export const wallets$ = (
 // reset logic
 reset$.pipe(withLatestFrom(wallets$), pluck('1')).subscribe(wallets => {
   // disconnect all wallets
-  wallets.forEach(({ label }) => {
-    disconnectWallet$.next(label)
+  wallets.forEach(({ label, type }) => {
+    disconnectWallet$.next({ label, type })
   })
 
   resetStore()

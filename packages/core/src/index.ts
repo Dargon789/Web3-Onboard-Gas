@@ -2,7 +2,7 @@ import connectWallet from './connect.js'
 import disconnectWallet from './disconnect.js'
 import setChain from './chain.js'
 import { state } from './store/index.js'
-import { reset$, wallets$ } from './streams.js'
+import { qrModalConnect$, reset$, wallets$ } from './streams.js'
 import initI18N from './i18n/index.js'
 import App from './views/Index.svelte'
 import type {
@@ -16,6 +16,7 @@ import { configuration, updateConfiguration } from './configuration.js'
 import updateBalances from './update-balances.js'
 import { chainIdToHex, getLocalStore, setLocalStore } from './utils.js'
 import { preflightNotifications } from './preflight-notifications.js'
+import type { WalletState } from './types.js';
 
 import {
   validateNotify,
@@ -36,6 +37,7 @@ import {
 } from './store/actions.js'
 import type { PatchedEIP1193Provider } from '@subwallet_connect/transaction-preview'
 import { getBlocknativeSdk } from './services.js'
+import { WalletConnectModal } from '@walletconnect/modal';
 
 
 
@@ -108,6 +110,7 @@ function init(options: InitOptions): OnboardAPI {
     disableFontDownload,
     unstoppableResolution,
     chainsPolkadot,
+    projectId
   } = options
 
 
@@ -124,6 +127,13 @@ function init(options: InitOptions): OnboardAPI {
 
   initI18N(i18n)
   addChains(chainIdToHex(chains).concat(chainsPolkadot))
+  const modalWC = new WalletConnectModal({ projectId : 'f6bd6e2911b56f5ac3bc8b2d0e2d7ad5' });
+
+  qrModalConnect$.next({
+    isOpen: false,
+    modal: modalWC
+  })
+
 
   if (typeof connect !== 'undefined') {
     updateConnectModal(connect)
@@ -256,8 +266,8 @@ function init(options: InitOptions): OnboardAPI {
     const lastConnectedWallets = getLocalStore(
         STORAGE_KEYS.LAST_CONNECTED_WALLET
     )
+    const lastConnectedWalletsParsed = JSON.parse(lastConnectedWallets)
     try {
-      const lastConnectedWalletsParsed = JSON.parse(lastConnectedWallets)
       if (
           lastConnectedWalletsParsed &&
           Array.isArray(lastConnectedWalletsParsed) &&
@@ -271,8 +281,9 @@ function init(options: InitOptions): OnboardAPI {
       if (err instanceof SyntaxError && lastConnectedWallets) {
         API.connectWallet({
           autoSelect: {
-            label: lastConnectedWallets,
-            disableModals: true
+            label: lastConnectedWalletsParsed.label,
+            disableModals: true,
+            type: lastConnectedWalletsParsed.type
           }
         })
       }
@@ -313,7 +324,7 @@ const importInterFont = async (): Promise<void> => {
 }
 
 const connectAllPreviousWallets = async (
-    lastConnectedWallets: Array<string>,
+    lastConnectedWallets: Array<Pick<WalletState, 'label' | 'type'>>,
     connect: ConnectModalOptions
 ): Promise<void> => {
   const activeWalletsList = []
@@ -321,17 +332,28 @@ const connectAllPreviousWallets = async (
 
   if (!connect.autoConnectAllPreviousWallet) {
     API.connectWallet({
-      autoSelect: { label: parsedWalletList[0], disableModals: true }
+      autoSelect: {
+        label: parsedWalletList[0].label,
+        type: parsedWalletList[0].type,
+        disableModals: true
+      }
     })
     activeWalletsList.push(parsedWalletList[0])
   } else {
     // Loop in reverse to maintain wallet order
     for (let i = parsedWalletList.length; i--; ) {
       const walletConnectionPromise = await API.connectWallet({
-        autoSelect: { label: parsedWalletList[i], disableModals: true }
+        autoSelect: {
+          label: parsedWalletList[i].label,
+          type: parsedWalletList[i].type,
+          disableModals: true
+        }
       })
       // Update localStorage list for available wallets
-      if (walletConnectionPromise.some(r => r.label === parsedWalletList[i])) {
+      if (walletConnectionPromise.some(r =>
+        r.label === parsedWalletList[i].label
+        && r.type === parsedWalletList[i].type)
+      ) {
         activeWalletsList.unshift(parsedWalletList[i])
       }
     }
@@ -371,6 +393,7 @@ function mountApp(theme: Theme, disableFontDownload: boolean) {
           --white: white;
           --black: black;
           --primary-1: #2F80ED;
+          --primary-2: #004BFF;
           --primary-100: #eff1fc;
           --primary-200: #d0d4f7;
           --primary-300: #b1b8f2;
@@ -381,15 +404,16 @@ function mountApp(theme: Theme, disableFontDownload: boolean) {
           --gray-100: #ebebed;
           --gray-200: #c2c4c9;
           --gray-300: #999ca5;
-          --gray-400: #707481;
+          --gray-400: #797979;
           --gray-500: #33394b;
           --gray-600: #242835;
           --gray-700: #1a1d26;
+          --gray-800: #1A1A1A;
           --success-100: #d1fae3;
           --success-200: #baf7d5;
           --success-300: #a4f4c6;
           --success-400: #8df2b8;
-          --success-500: #5aec99;
+          --success-500: #4CEAAC;
           --success-600: #18ce66;
           --success-700: #129b4d;
           --danger-100: #ffe5e6;
@@ -416,6 +440,7 @@ function mountApp(theme: Theme, disableFontDownload: boolean) {
           --font-size-5: 1rem;
           --font-size-6: .875rem;
           --font-size-7: .75rem;
+          --font-family-normal:  'Plus Jakarta Sans';
 
           --font-line-height-1: 24px;
           --font-line-height-2: 20px;

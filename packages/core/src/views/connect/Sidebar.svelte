@@ -1,8 +1,8 @@
 <script lang="ts">
   import { _ } from 'svelte-i18n'
   import {
-    defaultBnIcon,
-    poweredByBlocknative,
+    defaultSwIcon,
+    poweredBySubwallet,
     infoIcon
   } from '../../icons/index.js'
   import en from '../../i18n/en.json'
@@ -37,7 +37,8 @@
     );
     --text-color: var(--onboard-connect-sidebar-color, inherit);
     --border-color: var(--onboard-connect-sidebar-border-color, inherit);
-
+    height: 408px;
+    margin: auto;
     display: flex;
     flex-flow: column;
     gap: 1rem;
@@ -62,7 +63,7 @@
 
   .icon-container {
     display: flex;
-    height: 3.5rem;
+    height: fit-content;
     width: auto;
     min-width: 3.5rem;
     max-width: 100%;
@@ -75,11 +76,16 @@
 
   .subheading {
     line-height: 1rem;
+    margin-top: var(--spacing-3);
   }
 
   .description {
     line-height: 1.25rem;
-    font-size: var(--onboard-font-size-6, var(--font-size-6));
+    font-weight: 500;
+    font-style: normal;
+    color: var(--gray-100);
+    opacity: .65;
+    font-size: var(--onboard-font-size-6, var(--font-size-7));
   }
 
   img {
@@ -106,7 +112,7 @@
   .indicator.on {
     background: var(
             --onboard-connect-sidebar-progress-color,
-            var(--action-color)
+            var(--success-500)
     );
     border: 2px solid
     var(
@@ -130,21 +136,24 @@
   .join.active {
     background: var(
             --onboard-connect-sidebar-progress-color,
-            var(--action-color)
+            var(--success-500)
     );
   }
   .no-link {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0.25rem 0.5rem 0.25rem 0.75rem;
     gap: 0.25rem;
     font-size: var(--onboard-font-size-6, var(--font-size-6));
   }
 
   .info-icon {
     width: 1.25rem;
-    display: flex;
+    color: var(
+            --onboard-link-color,
+            var(--onboard-primary-500, var(--primary-2))
+    );
+    display: inline-flex;
     align-items: center;
   }
 
@@ -183,7 +192,7 @@
             <img src={$appMetadata$.logo || $appMetadata$.icon} alt="logo" />
           {/if}
         {:else}
-          {@html defaultBnIcon}
+          {@html defaultSwIcon}
         {/if}
       </div>
       {#if $_(`connect.${step}.sidebar.header`, { default: '' })}
@@ -208,17 +217,19 @@
       })}
     </div>
     {#if !connect.removeIDontHaveAWalletInfoLink}
+      <div class="no-link">
+      <div class="info-icon">{@html infoIcon}</div>
       <a
               href={connect.iDontHaveAWalletLink ||
           'https://ethereum.org/en/wallets/find-wallet/#main-content'}
               target="_blank"
               rel="noreferrer noopener"
-              class="no-link"
       >{$_('connect.selectingWallet.sidebar.IDontHaveAWallet', {
         default: en.connect.selectingWallet.sidebar.IDontHaveAWallet
       })}
-        <div class="info-icon">{@html infoIcon}</div></a
+        </a
       >
+      </div>
     {/if}
     {#if windowWidth < MOBILE_WINDOW_WIDTH}
       <div class="indicators flex items-center">
@@ -284,6 +295,6 @@
     </div>
   {/if}
   <div>
-    {@html poweredByBlocknative}
+    {@html poweredBySubwallet}
   </div>
 </div>

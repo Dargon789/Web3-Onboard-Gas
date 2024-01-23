@@ -15,65 +15,79 @@
 </script>
 
 <style>
-  .container {
-    padding: var(--onboard-spacing-4, var(--spacing-4));
-    color: var(
-      --onboard-connect-accent-text-color,
-      var(--onboard-gray-700, var(--gray-700))
-    );
-  }
+    .container {
+        padding: 20px 24px 0 0;
+    }
 
-  .connecting-container {
-    padding: var(--onboard-spacing-4, var(--spacing-4));
-    border-radius: var(--onboard-border-radius-1, var(--border-radius-1));
-    background: var(--onboard-success-100, var(--success-100));
-    border: 1px solid var(--onboard-success-600, var(--success-600));
-    width: 100%;
-  }
+    .connecting-container {
+        width: 100%;
+        padding: var(--onboard-spacing-4, var(--spacing-4));
+        padding: 12px 14px 16px 18px;
+        transition: background-color 100ms ease-in-out,
+        border-color 100ms ease-in-out;
+        border-radius: var(--border-radius-5);
+        background: var(--w3o-background-color-item, var(--primary-800));
+        border: 1px solid transparent;
+        color: var(--w3o-text-color, var(--white));
+    }
 
-  .text {
-    right: var(--onboard-spacing-5, var(--spacing-5));
-  }
 
-  .tick {
-    color: var(--onboard-success-700, var(--success-700));
-  }
+    .text {
+        line-height: 24px;
+        font-weight: 600;
+    }
+
+    .subtext {
+        font-size: var(--onboard-font-size-7, var(--font-size-7));
+        color: var(--gray-400);
+        line-height: 20px;
+        font-weight: 600;
+    }
+
+    .items-center{
+        gap: var(--spacing-5);
+    }
+
+
+
+    @media all and (max-width: 520px) {
+        .connecting-container {
+            border-radius: var(--onboard-border-radius-4, var(--border-radius-4));
+        }
+
+        .container {
+            padding-bottom: 0;
+        }
+    }
 </style>
 
 <div class="container">
   <div class="connecting-container flex justify-between items-center">
     <div class="flex items-center">
       <div class="flex justify-center items-end relative">
-        <WalletAppBadge
-          size={40}
-          padding={8}
-          background={$appMetadata$ && $appMetadata$.icon
-            ? 'lightBlue'
-            : 'lightGray'}
-          border="darkGreen"
-          icon={($appMetadata$ && $appMetadata$.icon) || questionIcon}
-        />
-
-        <div class="relative" style="right: 1rem; top: 4px; z-index: 1;">
-          <SuccessStatusIcon size={17} />
-        </div>
-
-        <div class="relative" style="right: 1.75rem;">
+        <div class="relative">
           <WalletAppBadge
             size={40}
             padding={8}
+            typeWallet={selectedWallet.type}
             border="darkGreen"
-            background="white"
+            background="transparent"
             icon={selectedWallet.icon}
           />
         </div>
       </div>
-      <div class="text relative">
-        {$_('connect.connectedWallet.mainText', {
-          default: en.connect.connectedWallet.mainText,
-          values: { wallet: selectedWallet.label } 
-        })}
-      </div>
+        <div class="flex flex-column justify-center ml connecting-wallet-info">
+            <div class="text">
+                {selectedWallet.label}
+            </div>
+
+                <div class="subtext">
+                    {$_('connect.connectedWallet.mainText', {
+                        default: en.connect.connectedWallet.mainText,
+                        values: { wallet: selectedWallet.label }
+                    })}
+                </div>
+        </div>
     </div>
 
     <div class="tick flex items-center" style="width: 24px;">

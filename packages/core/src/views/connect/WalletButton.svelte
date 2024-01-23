@@ -11,7 +11,11 @@
   export let connecting: boolean
   export let disabled: boolean
 
+  export let typeWallet: string
+
   let windowWidth: number
+
+
 </script>
 
 <style>
@@ -39,7 +43,8 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem;
-    width: 5rem;
+    width: 243px;
+    height: 68px;
   }
 
   .name {
@@ -60,15 +65,14 @@
   @media screen and (min-width: 768px) {
     button.wallet-button-styling {
       transition: background-color 250ms ease-in-out;
-
-      background: var(--onboard-wallet-button-background, none);
+      background: var(--onboard-wallet-button-background, var(--item-color));
       border: 1px solid transparent;
-      border-color: var(--onboard-wallet-button-border-color, var(--border-color));
-      border-radius: var(--onboard-wallet-button-border-radius, var(--border-radius-1));
+      border-color: var(--onboard-wallet-button-border-color, transparent);
+      border-radius: var(--onboard-wallet-button-border-radius, var(--border-radius-5));
     }
 
     button.wallet-button-styling:hover {
-      background: var(--onboard-wallet-button-background-hover, var(--foreground-color));
+      background: var(--onboard-wallet-button-background-hover, var(--action-color));
       color: var(--onboard-wallet-button-color-hover);
     }
 
@@ -76,7 +80,6 @@
       flex: 1;
       flex-flow: row nowrap;
       gap: 1rem;
-      padding: 1rem;
     }
 
     button.connected {
@@ -89,6 +92,7 @@
       text-align: initial;
       max-width: inherit;
       max-height: 3rem;
+      font-weight: 600;
     }
 
     .status-icon {
@@ -114,7 +118,8 @@
   >
     <div class="wallet-button-container-inner">
       <WalletAppBadge
-        size={windowWidth >= MOBILE_WINDOW_WIDTH ? 48 : 56}
+        size={windowWidth >= MOBILE_WINDOW_WIDTH ? 40 : 56}
+        typeWallet={typeWallet}
         {icon}
         loading={connecting}
         border={connected ? 'green' : 'custom'}

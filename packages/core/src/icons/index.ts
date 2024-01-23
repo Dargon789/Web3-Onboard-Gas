@@ -1,6 +1,6 @@
 // bn branding
-export { default as defaultBnIcon } from './blocknative-icon.js'
-export { default as poweredByBlocknative } from './poweredByBlocknative.js'
+export { default as defaultSwIcon } from './subwallet-icon.js'
+export { default as poweredBySubwallet } from './poweredBySubwallet'
 // chain icons
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -38,3 +38,7 @@ export { default as caretIcon } from './caret.js'
 export { default as warningIcon } from './warning.js'
 export { default as successIcon } from './success.js'
 export { default as pendingIcon } from './pending.js'
+
+// subIcon
+export { default as ethereumSubIcon } from './eth.js'
+export { default as dotSubIcon } from './dot.js'

@@ -158,9 +158,9 @@ export enum ProviderLabel {
   Coin98Wallet = 'Coin98 Wallet',
   SubWallet = 'SubWallet',
   Kayros = 'Kayros',
-  SubWalletDOT = 'SubWallet(substrate)',
-  TalismanDOT = 'Talisman(substrate)',
-  PolkadotJs = 'polkadot-js'
+  SubWalletDOT = 'SubWallet',
+  TalismanDOT = 'Talisman',
+  PolkadotJs = 'Polkadot{.js}'
 }
 
 export interface MeetOneProvider extends ExternalProvider {
@@ -172,6 +172,8 @@ export interface BinanceProvider extends EIP1193Provider {
   requestAccounts: () => Promise<ProviderAccounts>
   isUnlocked: boolean
 }
+
+
 
 export enum InjectedNameSpace {
   Ethereum = 'ethereum',

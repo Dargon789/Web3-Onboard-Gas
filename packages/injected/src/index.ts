@@ -10,6 +10,7 @@ import type {
     CustomWindow,
     InjectedWalletModule
 } from './types.js'
+import {InjectedWindow} from "@polkadot/extension-inject/types";
 
 declare const window: CustomWindow
 
@@ -39,7 +40,7 @@ function injected(options?: InjectedWalletOptions): WalletInit  {
         // combine custom with standard wallets and dedupe
         const allWallets = uniqBy(
             [...custom, ...standardWallets],
-            ({ label }) => label
+            ({ label, type }) => [label, type]
         )
 
         const wallets = allWallets.reduce(
@@ -51,13 +52,15 @@ function injected(options?: InjectedWalletOptions): WalletInit  {
                 if(type === 'evm'){
                     // @ts-ignore
                     const provider = window[injectedNamespace] as CustomWindow['ethereum']
+
                     walletAvailable = isWalletAvailable(
                         provider,
                         checkProviderIdentity,
                         device
                     )
                 }else{
-                    walletAvailable = true;
+                  const injectedWindow = window as unknown as Window & InjectedWindow;
+                  walletAvailable =  !!injectedWindow?.injectedWeb3[wallet.injectedNamespace];
                 }
                 const walletFilters = filter[label]
                 const filteredWallet = walletFilters === false

@@ -11,7 +11,8 @@ type SetChainOptions = {
 }
 
 export const useSetChain = (
-  walletLabel?: string
+  walletLabel?: string,
+  walletType ?: 'evm' | 'substrate'
 ): [
   {
     chains: Chain[]
@@ -28,7 +29,7 @@ export const useSetChain = (
 
   const getChain = () => {
     const wallet = walletLabel
-      ? wallets.find(({ label }) => label === walletLabel)
+      ? wallets.find(({ label, type }) => label === walletLabel && walletType === type)
       : wallets[0]
     return wallet && wallet.chains ? wallet.chains[0] : null
   }

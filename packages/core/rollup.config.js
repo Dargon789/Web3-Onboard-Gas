@@ -56,6 +56,8 @@ export default {
     'bignumber.js',
     'bnc-sdk',
     'nanoid',
-    '@unstoppabledomains/resolution'
+    '@unstoppabledomains/resolution',
+    '@walletconnect/modal',
+    'easyqrcodejs'
   ]
 }

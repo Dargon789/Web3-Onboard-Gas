@@ -69,7 +69,7 @@ function ledgerPolkadot({
 
         return {
             type: 'substrate',
-            label: 'Ledger Polkadot',
+            label: 'Ledger',
             getIcon,
             getInterface: async ({ EventEmitter, chains }) : Promise<WalletInterfaceSubstrate> =>  {
 
@@ -263,6 +263,7 @@ function ledgerPolkadot({
                 const keepKeyProvider = getHardwareWalletProvider(
                     () => currentChain.rpcUrl || ''
                 )
+                const emitter = new EventEmitter();
 
                 const provider : SubstrateProvider = {
                     async enable() {
@@ -309,7 +310,10 @@ function ledgerPolkadot({
 
                     async disconnect(){},
 
-                    async request(){}
+                    async request(){},
+
+                    on: emitter.on.bind(emitter),
+                    removeListener: emitter.removeListener.bind(emitter)
                 }
                 return {
                     provider,

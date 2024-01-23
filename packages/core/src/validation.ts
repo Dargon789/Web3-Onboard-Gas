@@ -268,7 +268,8 @@ const connectOptions = Joi.object({
 })
 
 const disconnectOptions = Joi.object({
-  label: Joi.string().required()
+  label: Joi.string().required(),
+  type: Joi.string().required()
 }).required()
 
 const secondaryTokenValidation = Joi.object({
