@@ -77,7 +77,7 @@ function reducer(state: AppState, action: Action): AppState {
           existingWallet || (payload as WalletState),
           // filter out wallet if it already existed
           ...state.wallets.filter(({ label, type }) =>
-            label !== wallet.label && type !== wallet.type)
+            !( label === wallet.label && type === wallet.type))
         ]
       }
     }

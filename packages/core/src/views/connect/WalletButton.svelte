@@ -2,7 +2,13 @@
   import { fade } from 'svelte/transition'
   import { MOBILE_WINDOW_WIDTH } from '../../constants.js'
 
-  import { WalletAppBadge, SuccessStatusIcon } from '../shared/index.js'
+  import { WalletAppBadge } from '../shared/index.js'
+  import { successIcon, downloadIcon, vectorIcon, qrCodeIcon } from '../../icons/index.js';
+  import { WalletPlatformByLabel } from '../../utils.js';
+  import type { CustomWindow, PlatformType } from '../../types.js';
+  import { onMount } from 'svelte';
+  import type { WalletState } from '../../types.js';
+
 
   export let icon: Promise<string>
   export let label: string
@@ -11,9 +17,48 @@
   export let connecting: boolean
   export let disabled: boolean
 
+  let statusIcon: any = undefined
   export let typeWallet: string
 
   let windowWidth: number
+
+  let platformList : PlatformType[]
+
+  onMount(()=>{
+    const platformContainer = WalletPlatformByLabel[typeWallet][label as WalletState['label']];
+    if(!platformContainer) return;
+
+    const { platform, namespace } = WalletPlatformByLabel[typeWallet][label as WalletState['label']]
+    if(namespace &&  window !== undefined) {
+      if(typeWallet === 'evm' && 'ethereum' in window){
+         if(!(window.ethereum[namespace as keyof typeof window.ethereum]
+                 || window[namespace as keyof typeof window])){
+           statusIcon = downloadIcon;
+         }
+      }
+    }
+    if(statusIcon === undefined){
+      if (platform.length === 0) return;
+      platformList = platform
+      switch (platformList[0]){
+        case 'Cold Wallet': {
+          statusIcon = vectorIcon;
+          break;
+        }
+        case 'WebApp':
+        case 'Extension':
+        case 'Mobile':
+        case 'Dapp': {
+          statusIcon = undefined;
+          break;
+        }
+        case 'QRcode': {
+          statusIcon = qrCodeIcon;
+          break;
+        }
+      }
+    }
+  });
 
 
 </script>
@@ -62,6 +107,8 @@
     left: 3.5rem;
   }
 
+
+
   @media screen and (min-width: 768px) {
     button.wallet-button-styling {
       transition: background-color 250ms ease-in-out;
@@ -101,8 +148,24 @@
       left: auto;
       right: 1rem;
       margin: auto;
-      height: 20px;
+      height: fit-content;
+      display: flex;
+      align-items: center;
     }
+
+    /*.subtext {*/
+    /*  font-size: var(--onboard-font-size-7, var(--font-size-7));*/
+    /*  color: var(--gray-400);*/
+    /*  display: flex;*/
+    /*  gap: var(--spacing-4);*/
+    /*  line-height: 20px;*/
+    /*  font-weight: 600;*/
+    /*}*/
+
+    /*.information-group{*/
+    /*  display: flex;*/
+    /*  flex-direction: column;*/
+    /*}*/
   }
 </style>
 
@@ -125,12 +188,15 @@
         border={connected ? 'green' : 'custom'}
         background="transparent"
       />
-      <div class="name">{label}</div>
-      {#if connected}
+        <div class="name">{label}</div>
         <div class="status-icon">
-          <SuccessStatusIcon size={20} />
+          {#if connected}
+            {@html successIcon}
+          {:else if (statusIcon !== undefined) }
+            {@html statusIcon}
+          {/if}
         </div>
-      {/if}
+
     </div>
   </button>
 </div>

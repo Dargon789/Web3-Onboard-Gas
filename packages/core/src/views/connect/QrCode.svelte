@@ -3,7 +3,7 @@
     import { fade } from 'svelte/transition';
     import QRCode from 'easyqrcodejs'
     import { onMount } from 'svelte';
-    import {isSVG} from "../../utils";
+    import { isSVG } from '../../utils.js';
 
     export let uri = '';
     let node : any;

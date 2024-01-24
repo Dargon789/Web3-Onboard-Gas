@@ -178,12 +178,11 @@
     border: 1px solid var(--onboard-gray-100, var(--gray-100));
     border-radius: 8px;
     list-style-type: none;
-    right: 0.25rem;
-    top: 2.25rem;
+    right: 2.5rem;
     margin: 0;
     padding: 0;
     border: none;
-    position: absolute;
+    position: fixed;
     overflow: hidden;
     z-index: 1;
   }

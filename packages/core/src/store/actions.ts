@@ -103,7 +103,6 @@ export function updateChain(updatedChain: Chain): void {
     throw error
   }
 
-  console.log(chainId, label, token, '111111')
   const action = {
     type: UPDATE_CHAINS,
     payload: updatedChain
@@ -143,6 +142,7 @@ export function updateWallet(id: string, type : WalletState['type'], update: Par
       ...update
     }
   }
+  console.log(update, 'update')
 
   dispatch(action as UpdateWalletAction)
 }

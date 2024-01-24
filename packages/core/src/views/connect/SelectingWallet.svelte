@@ -46,7 +46,7 @@
   }
 
   .warning-container {
-    margin: 1rem 1rem 0;
+    margin: 1rem 1.5rem  0 0;
   }
 
   .notice-container {
