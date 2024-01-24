@@ -59,7 +59,7 @@
     "@safe-global/safe-apps-sdk": "^8.0.0"
   },
   "dependencies": {
-    "@subwallet_connect/common": "^1.0.0"
+    "@subwallet_connect/common": "^1.0.1"
   },
   "peerDependencies": {
     "@safe-global/safe-apps-provider": "^0.17.1",

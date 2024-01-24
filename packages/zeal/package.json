@@ -54,6 +54,6 @@
     "window": "^4.2.7"
   },
   "dependencies": {
-    "@subwallet_connect/common": "^1.0.0"
+    "@subwallet_connect/common": "^1.0.1"
   }
 }

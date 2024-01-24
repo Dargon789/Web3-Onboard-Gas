@@ -179,6 +179,9 @@
       connectingErrorMessage = message
       connectingWalletLabel = ''
       connectingWalletType= 'evm'
+      if(message.includes('not installed')){
+        setStep('installWallet');
+      }
       scrollToTop()
     }
   }
@@ -294,7 +297,6 @@
         }
       }
 
-
       const update: Pick<WalletState, 'accounts' | 'chains' | 'signer'> = {
         accounts: address.map((address) =>
                 ({ address, ens: null, uns: null, balance: null })),
@@ -304,6 +306,7 @@
 
       addWallet({ ...selectedWallet, ...update })
       trackWallet( provider, label , type)
+      console.log(update, 'update', selectedWallet)
       updateSelectedWallet(update)
       setStep('connectedWallet')
       scrollToTop()
@@ -412,9 +415,9 @@
             }
           })
       )
-
       setTimeout(() => connectWallet$.next({ inProgress: false }), 1500)
     }
+
   }
 
 
@@ -702,6 +705,7 @@
           {#if $modalStep$ === 'connectedWallet' && selectedWallet && windowWidth >= MOBILE_WINDOW_WIDTH}
             <ConnectedWallet {selectedWallet} />
           {/if}
+
         </div>
       </div>
     </div>

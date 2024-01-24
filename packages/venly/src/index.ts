@@ -1,4 +1,5 @@
 import { WalletInit } from '@subwallet_connect/common'
+import {VenlyProviderOptions} from "@venly/web3-provider";
 
 interface VenlyOptions {
   /**  @property {string} clientId - The Client ID used to connect with Venly. More information at https://docs.venly.io/widget/deep-dive/authentication#client-id */
@@ -17,16 +18,16 @@ function venly(options: VenlyOptions): WalletInit {
         const { VenlyProvider, SECRET_TYPES } = await import('@venly/web3-provider')
 
         const chainId = +chains[0].id
-        const chain = SECRET_TYPES[chainId]
-        if (!chain) 
+        const chain = SECRET_TYPES[chainId as keyof typeof SECRET_TYPES]
+        if (!chain)
           throw new Error('Chain not supported')
 
         const providerOptions = { ...options, secretType: chain.secretType }
-        if (!options.environment) 
+        if (!options.environment)
           providerOptions.environment = chain.env
-        
+
         const instance = new VenlyProvider()
-        const provider = await instance.createProvider(providerOptions)
+        const provider = await instance.createProvider(providerOptions as VenlyProviderOptions)
 
         return {
           provider,

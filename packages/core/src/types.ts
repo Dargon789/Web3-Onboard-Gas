@@ -595,3 +595,14 @@ export type ModalQrConnect = {
   isOpen : boolean,
   modal ?: WalletConnectModal
 }
+
+export type PlatformType = 'Extension' | 'WebApp' | 'Cold Wallet' | 'QRcode' | 'Dapp' | 'Mobile';
+
+export interface WalletStateDeviceInterface  {
+  platform : PlatformType[],
+  namespace?: string
+}
+
+export interface CustomWindow extends Window  {
+  ethereum: EIP1193Provider & Record<string, boolean | undefined>
+}

@@ -144,7 +144,7 @@
   .actions {
     color: var(
       --account-center-maximized-upper-action-color,
-      var(--action-color)
+      var(--text-color)
     );
     padding-left: 2px;
   }
@@ -377,7 +377,7 @@
       <!-- connected accounts -->
       <div class="p5">
         <div class="wallets">
-          {#each $wallets$ as wallet, i (wallet.label)}
+          {#each $wallets$ as wallet, i (wallet.label, wallet.type)}
             <WalletRow
               bind:hideMenu={hideWalletRowMenu}
               {wallet}

@@ -38,6 +38,9 @@ export { default as caretIcon } from './caret.js'
 export { default as warningIcon } from './warning.js'
 export { default as successIcon } from './success.js'
 export { default as pendingIcon } from './pending.js'
+export { default as downloadIcon } from './download'
+export { default as qrCodeIcon }  from  './qrCode'
+export { default as vectorIcon } from './vector'
 
 // subIcon
 export { default as ethereumSubIcon } from './eth.js'

@@ -45,8 +45,10 @@ import type {
   ChainStyle,
   ConnectedChain,
   DeviceNotBrowser,
-  NotifyEventStyles
+  NotifyEventStyles, PlatformType, WalletStateDeviceInterface
 } from './types.js'
+import type { WalletState } from  './types.js';
+
 
 export function getDevice(): Device | DeviceNotBrowser {
   if (typeof window !== 'undefined') {
@@ -400,4 +402,136 @@ export async function getBalanceSubstrate({ url, data } : clientAxiosProps){
       return data_.data.data ? data_.data.data.native[0].balance : '0';
     })
 
+}
+
+
+ const TypeWalletEvmPlatformByLabel  : Record<WalletState['label'], WalletStateDeviceInterface> = {
+  'Arcana Auth' : {
+    platform: ['Extension', 'WebApp']
+  },
+  'Bitget Wallet': {
+    platform: ['Extension']
+  },
+  'BitKeep': {
+    platform: ['Extension']
+  },
+  'Blockto': {
+    platform: ['WebApp', 'Mobile']
+  },
+  'Capsule': {
+    platform: ['Extension']
+  },
+  'cede.store': {
+    platform: ['Extension'],
+    namespace: 'cede'
+  },
+  'Coinbase Wallet': {
+    platform: ['Extension', 'WebApp'],
+    namespace: 'coinbaseWallet'
+  },
+  'D\'CENT': {
+    platform: ['Cold Wallet'],
+    namespace: 'ethereum'
+  },
+  'Enkrypt': {
+    platform: ['Extension'],
+    namespace: 'enkrypt'
+  },
+  'Fortmatic': {
+    platform: ['WebApp']
+  },
+  'Frame': {
+    platform: ['Extension'],
+    namespace: 'isFrame'
+  },
+  'Frontier': {
+    platform: ['Extension'],
+    namespace: 'frontier'
+  },
+  'Safe': {
+    platform: ['WebApp']
+  },
+  'Infinity Wallet': {
+    platform: ['Extension'],
+    namespace: 'infinityWallet'
+  },
+  'KeepKey': {
+    platform: ['Cold Wallet']
+  },
+  'Keystone': {
+    platform: ['Cold Wallet']
+  },
+  'Ledger': {
+    platform: ['QRcode']
+  },
+  'MetaMask': {
+    platform: ['QRcode','Extension']
+  },
+  'MEW Wallet': {
+    platform: ['Extension'],
+    namespace: 'isMEWwallet'
+  },
+  'Phantom': {
+    platform: ['Extension'],
+    namespace: 'phantom'
+  },
+  'Portis': {
+    platform: ['WebApp']
+  },
+  'Sequence': {
+    platform: ['Extension'],
+    namespace: 'isSequence'
+  },
+  'Taho': {
+    platform: ['Extension'],
+    namespace: 'tally'
+  },
+   'Coinbase': {
+    platform: ['QRcode']
+   },
+  'Torus': {
+    platform: ['WebApp']
+  },
+  'Trezor': {
+    platform: ['Cold Wallet']
+  },
+  'Trust Wallet': {
+    platform: ['Extension'],
+    namespace: 'trustwallet'
+  },
+  'Unstoppable': {
+    platform: ['Mobile']
+  },
+  'Venly': {
+    platform: ['Extension']
+  },
+  'WalletConnect': {
+    platform: ['QRcode', 'Extension']
+  },
+  'Web3Auth': {
+    platform: ['WebApp']
+  },
+  'XDEFI Wallet': {
+    platform: ['Extension'],
+    namespace: 'xfi'
+  },
+  'Zeal': {
+    platform: ['Extension'],
+    namespace: 'zeal'
+  }
+}
+
+const TypeWalletSubstratePlatformByLabel : Record<WalletState['label'], WalletStateDeviceInterface> = {
+  'WalletConnect': {
+    platform: ['QRcode', 'Extension']
+  },
+  'Ledger': {
+    platform: ['Cold Wallet']
+  }
+}
+
+
+export const WalletPlatformByLabel : Record<WalletState['label'], Record<WalletState['label'], WalletStateDeviceInterface>> = {
+  'evm' : TypeWalletEvmPlatformByLabel,
+  'substrate' : TypeWalletSubstratePlatformByLabel
 }
