@@ -9,13 +9,13 @@ import type { SelectAccountOptions, Account } from './types.js'
 const accountSelect = async (
   options: SelectAccountOptions
 ): Promise<Account[]> => {
-  if (options) {
-    const error = validateSelectAccountOptions(options)
-
-    if (error) {
-      throw error
-    }
-  }
+  // if (options) {
+  //   const error = validateSelectAccountOptions(options)
+  //
+  //   if (error) {
+  //     throw error
+  //   }
+  // }
 
   const app = mountAccountSelect(options, accounts$)
 

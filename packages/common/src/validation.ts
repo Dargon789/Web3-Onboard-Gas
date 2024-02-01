@@ -11,11 +11,11 @@ export function validate(
 }
 
 export const chainIdValidation = Joi.alternatives().try(
-  Joi.string().pattern(/^0x[0-9a-fA-F]+$/),
+  Joi.string().pattern(/^[0-9a-fA-F]+$/),
   Joi.number().positive()
 )
 
-export const chainNamespaceValidation = Joi.string().valid('evm')
+export const chainNamespaceValidation = Joi.string().valid('evm', 'substrate')
 
 /** Related to ConnectionInfo from 'ethers/lib/utils' */
 export const providerConnectionInfoValidation = Joi.object({

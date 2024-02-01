@@ -418,10 +418,10 @@ function mountApp(theme: Theme, disableFontDownload: boolean) {
           --success-700: #129b4d;
           --danger-100: #ffe5e6;
           --danger-200: #ffcccc;
-          --danger-300: #ffb3b3;
           --danger-400: #ff8080;
+          --danger-300: #ffb3b3;
           --danger-500: #ff4f4f;
-          --danger-600: #cc0000;
+          --danger-600: #BF1616;
           --danger-700: #660000;
           --warning-100: #ffefcc;
           --warning-200: #ffe7b3;
@@ -430,6 +430,7 @@ function mountApp(theme: Theme, disableFontDownload: boolean) {
           --warning-500: #ffaf00;
           --warning-600: #cc8c00;
           --warning-700: #664600;
+          --warning-800: #D9C500;
 
           /* FONTS */
 

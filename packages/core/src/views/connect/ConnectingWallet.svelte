@@ -9,6 +9,7 @@
   import { errorIcon } from '../../icons';
   import QrCode from './QrCode.svelte';
   import { qrModalConnect$, uriConnect$ } from '../../streams.js';
+  import {MOBILE_WINDOW_WIDTH} from "../../constants";
 
   export let connectWallet: () => Promise<void>
   export let selectedWallet: WalletState
@@ -17,6 +18,8 @@
   export let connectionRejected: boolean
   export let previousConnectionRequest: boolean
 
+  let windowWidth: number
+
   $: uri = '';
 
   uriConnect$.subscribe((_uri)=>{
@@ -24,7 +27,6 @@
   })
 
   qrModalConnect$.subscribe(({ isOpen, modal })=>{
-    console.log(isOpen, modal, 'modal')
     if(isOpen && modal && uri !== ''){
       modal.openModal({ uri })
     }else{
@@ -38,7 +40,6 @@
       isOpen: true
     })
   }
-
   const appMetadata$ = state
     .select('appMetadata')
     .pipe(startWith(state.get().appMetadata), shareReplay(1))
@@ -131,6 +132,8 @@
 
 </style>
 
+<svelte:window bind:innerWidth={windowWidth} />
+
 <div
     class:qr-container = { uri !== ''}
     class="container flex flex-column items-center"
@@ -139,7 +142,7 @@
     class:qr-connecting-container = { uri !== ''}
     class="connecting-container flex justify-between items-center"
   >
-    {#if (uri !== '' )}
+    {#if (uri !== '' && windowWidth >= MOBILE_WINDOW_WIDTH)}
       <QrCode uri={uri} logoImage={selectedWallet.icon}/>
       {:else}
     <div class="flex">

@@ -45,7 +45,7 @@
   }
   div.border-action:before {
     content: '';
-    background-image: conic-gradient(#b1b7f2 20deg, #6370e5 120deg);
+    background-image: conic-gradient(#d7ae31 20deg, #9e916a 120deg);
     height: 140%;
     width: 140%;
     position: absolute;
@@ -77,13 +77,7 @@
         defaultNotifyEventStyles[notification.type]['backgroundColor']
       }; color: ${
         defaultNotifyEventStyles[notification.type]['iconColor'] || ''
-      }; ${
-        notification.type === 'pending'
-          ? 'height: 28px; width: 28px; margin: 2px;'
-          : `border: 2px solid ${
-              defaultNotifyEventStyles[notification.type]['borderColor']
-            }`
-      }; `}
+      }; ${ 'height: 28px; width: 28px; margin: 2px;'}; `}
     >
       <div
         class={`notification-icon flex items-center justify-center ${

@@ -59,6 +59,7 @@
     );
     font-weight: 400;
     overflow: hidden;
+    width: 200px;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;

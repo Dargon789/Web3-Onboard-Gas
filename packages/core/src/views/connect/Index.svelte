@@ -85,6 +85,30 @@
   let windowWidth: number
   let scrollContainer: HTMLElement
 
+  $: uri = '';
+
+  uriConnect$.subscribe((_uri)=>{
+    if(_uri !== '' && windowWidth <= MOBILE_WINDOW_WIDTH){
+      uri = _uri;
+      openQrModal();
+    }
+  })
+
+  qrModalConnect$.subscribe(({ isOpen, modal })=>{
+    if(isOpen && modal && uri !== ''){
+      modal.openModal({ uri })
+    }else{
+      modal.closeModal();
+    }
+  })
+
+  function openQrModal() {
+    qrModalConnect$.next({
+      ...qrModalConnect$.value,
+      isOpen: true
+    })
+  }
+
   const modalStep$ = new BehaviorSubject<keyof i18n['connect']>(
     'selectingWallet'
   )
@@ -306,7 +330,6 @@
 
       addWallet({ ...selectedWallet, ...update })
       trackWallet( provider, label , type)
-      console.log(update, 'update', selectedWallet)
       updateSelectedWallet(update)
       setStep('connectedWallet')
       scrollToTop()
@@ -415,8 +438,8 @@
             }
           })
       )
-      setTimeout(() => connectWallet$.next({ inProgress: false }), 1500)
     }
+    setTimeout(() => connectWallet$.next({ inProgress: false }), 1500)
 
   }
 
@@ -520,12 +543,12 @@
 
   .header-heading {
     line-height: 1rem;
-    font-weight: 600;
+    font-weight: 500;
   }
 
   .button-container {
-    right: 0.5rem;
-    top: 0.5rem;
+    right: 1rem;
+    top: 1rem;
   }
 
   .mobile-header {

@@ -1,4 +1,4 @@
-import Joi from 'joi'
+import Joi, {number} from 'joi'
 import type { SelectAccountOptions } from './types.js'
 
 import {

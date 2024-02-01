@@ -7,7 +7,7 @@
   import closeIcon from '../../icons/close-circle.js'
   import { configuration } from '../../configuration.js'
   import { removeTransaction, transactions$, wallets$ } from '../../streams.js'
-  import { chainStyles, networkToChainId } from '../../utils.js'
+  import { chainStyles, defaultNotifyEventStyles, networkToChainId } from '../../utils.js'
 
   import {
     addCustomNotification,
@@ -64,7 +64,7 @@
     --foreground-color: var(--w3o-foreground-color, var(--gray-600));
     --text-color: var(--w3o-text-color, #FFF);
     --border-color: var(--w3o-border-color);
-
+    padding: 14px 12px;
     font-family: inherit;
     transition: background 300ms ease-in-out, color 300ms ease-in-out;
     pointer-events: all;
@@ -72,7 +72,8 @@
     width: 100%;
     min-height: 56px;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-4);
     position: relative;
     overflow: hidden;
     border: 1px solid transparent;
@@ -84,10 +85,6 @@
     color: var(--text-color);
   }
 
-  .bn-notify-notification-inner {
-    padding: 0.75rem;
-  }
-
   .bn-notify-notification:hover
     > div.bn-notify-notification-inner
     > div.notify-close-btn-desktop {
@@ -96,35 +93,15 @@
   }
 
   div.notify-close-btn {
-    margin-left: auto;
     margin-bottom: auto;
-    height: 24px;
-    width: 24px;
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    justify-content: center;
-    align-items: center;
-  }
-
-  div.notify-close-btn-desktop {
-    visibility: hidden;
-    transition: visibility 0.15s linear, opacity 0.15s linear;
-    opacity: 0;
+    height: 28px;
+    width: 28px;
+    margin-right: -14px;
   }
 
   .notify-close-btn .close-icon {
     width: 20px;
     margin: auto;
-    color: var(--text-color);
-  }
-
-  .notify-close-btn > .close-icon {
-    color: var(--notify-onboard-close-icon-color);
-  }
-
-  .notify-close-btn:hover > .close-icon {
-    color: var(--notify-onboard-close-icon-hover);
   }
 
   .transaction-status {
@@ -187,6 +164,9 @@
   class:bn-notify-clickable={notification.onClick}
   on:click={e => notification.onClick && notification.onClick(e)}
   class="bn-notify-notification bn-notify-notification-{notification.type}}"
+  style={`${ `border: 2px solid ${
+               defaultNotifyEventStyles[notification.type]['borderColor']
+          }`};`}
 >
   <div class="flex bn-notify-notification-inner">
     <StatusIconBadge
@@ -203,7 +183,11 @@
       }}
       class="notify-close-btn notify-close-btn-{device.type} pointer flex"
     >
-      <div class="flex items-center close-icon">
+      <div class="flex items-center close-icon"
+           style={`${ `color: ${
+               defaultNotifyEventStyles[notification.type]['borderColor']
+          }`};`}
+      >
         {@html closeIcon}
       </div>
     </div>

@@ -1,9 +1,10 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { useConnectWallet } from '@subwallet_connect/react'
+import {useAccountCenter, useConnectWallet} from '@subwallet_connect/react'
 import { ethers } from 'ethers'
 import { EIP1193Provider } from '@subwallet_connect/common'
+import {useEffect} from "react";
 
 const buttonStyles = {
   borderRadius: '6px',
@@ -20,6 +21,16 @@ const buttonStyles = {
 
 export default function Home(): React.ReactElement {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
+  const changeAccountCenterView = useAccountCenter();
+
+
+  useEffect(() => {
+    changeAccountCenterView({
+      expanded : true,
+      minimal: false,
+      position: "topRight"
+    })
+  }, []);
 
   // create an ethers provider
   let ethersProvider
@@ -41,7 +52,7 @@ export default function Home(): React.ReactElement {
         <main className={styles.main}>
           <h1 className={styles.title}>
             Welcome to this demo of{' '}
-            <a href="https://onboard.blocknative.com"> Web3-Onboard!</a>
+            <a href="https://www.subwallet.app/"> SubConnect!</a>
           </h1>
 
           <button

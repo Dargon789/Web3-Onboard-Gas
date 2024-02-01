@@ -51,12 +51,20 @@
 
   .sub-icon{
     z-index: 1;
-    left: 20px;
-    top: 20px;
+    left: 45%;
+    top: 50%;
   }
 
   .border-radius-icon{
     border-radius: 10px;
+  }
+
+  .logo{
+    display: flex;
+    & svg {
+      width: 40px;
+      height: 40px;
+    }
   }
 
   .border-custom {
@@ -221,13 +229,15 @@
       <div class="placeholder-icon" />
     {:then iconLoaded}
       <div in:fade|local class="icon flex justify-center items-center">
-        {#if isSVG(iconLoaded)}
-          <!-- render svg string -->
-          {@html iconLoaded}
-        {:else}
-          <!-- load img url -->
-          <img src={iconLoaded} alt="logo" />
-        {/if}
+        <div class="logo">
+          {#if isSVG(iconLoaded)}
+            <!-- render svg string -->
+            {@html iconLoaded}
+          {:else}
+            <!-- load img url -->
+            <img src={iconLoaded} alt="logo" />
+          {/if}
+        </div>
         {#if (typeWallet)}
           <div class=" sub-icon absolute z-10  ">
             {@html subIcon}

@@ -7,22 +7,23 @@
   .container {
     gap: 1rem;
     padding: 0.75rem;
-    color: var(--onboard-warning-700, var(--warning-700));
+    color: var(--white);
     font-size: var(--onboard-font-size-7, var(--font-size-7));
     line-height: 16px;
-    border: 1px solid var(--onboard-warning-400, var(--warning-400));
-    background: var(--onboard-warning-100, var(--warning-100));
+    background: var(--gray-800);
     border-radius: 12px;
+    display: flex;
+    align-items: center;
   }
 
   .icon {
-    color: var(--onboard-warning-700, var(--warning-700));
+    color: var(--onboard-warning-700, var(--warning-800));
     width: 1rem;
     height: 1rem;
     flex: 0 0 auto;
   }
-	
-  
+
+
 </style>
 
 <div in:slide|local="{{delay: 50, duration: 500}}" class="container flex justify-between">

@@ -46,7 +46,7 @@ async function signMessageAllTypeWallet (
         sendSignMessage(message)
         update({
             eventCode: 'dbUpdateSuccess',
-            message: `succes messgae is ${message}`,
+            message: `success message is success`,
             type: 'success',
             autoDismiss: 0
         })

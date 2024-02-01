@@ -86,10 +86,6 @@
     display: flex;
     flex-flow: column;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    width: 243px;
-    height: 68px;
   }
 
   .name {
@@ -126,7 +122,10 @@
     .wallet-button-container-inner {
       flex: 1;
       flex-flow: row nowrap;
-      gap: 1rem;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      width: 243px;
+      height: 68px;
     }
 
     button.connected {
@@ -139,7 +138,8 @@
       text-align: initial;
       max-width: inherit;
       max-height: 3rem;
-      font-weight: 600;
+      font-weight: 500;
+      color: var(--white);
     }
 
     .status-icon {
@@ -192,7 +192,7 @@
         <div class="status-icon">
           {#if connected}
             {@html successIcon}
-          {:else if (statusIcon !== undefined) }
+          {:else if (statusIcon !== undefined && windowWidth > MOBILE_WINDOW_WIDTH) }
             {@html statusIcon}
           {/if}
         </div>

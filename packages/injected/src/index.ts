@@ -60,7 +60,7 @@ function injected(options?: InjectedWalletOptions): WalletInit  {
                     )
                 }else{
                   const injectedWindow = window as unknown as Window & InjectedWindow;
-                  walletAvailable =  !!injectedWindow?.injectedWeb3[wallet.injectedNamespace];
+                  walletAvailable = !!(injectedWindow?.injectedWeb3 && injectedWindow?.injectedWeb3[wallet.injectedNamespace]);
                 }
                 const walletFilters = filter[label]
                 const filteredWallet = walletFilters === false

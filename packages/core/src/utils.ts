@@ -15,7 +15,7 @@ import type {
 import {
   hourglass,
   gnosisIcon,
-  checkmark,
+  successIcon,
   errorIcon,
   infoIcon,
   ethereumIcon,
@@ -333,22 +333,22 @@ export function initializeWalletModules(
 
 export const defaultNotifyEventStyles: Record<string, NotifyEventStyles> = {
   pending: {
-    backgroundColor: 'var(--onboard-primary-700, var(--primary-700))',
-    borderColor: '#6370E5',
+    backgroundColor: '#FDB1B11A',
+    borderColor: 'var(--warning-800)',
     eventIcon: hourglass
   },
   success: {
-    backgroundColor: '#052E17',
-    borderColor: 'var(--onboard-success-300, var(--success-300))',
-    eventIcon: checkmark
+    backgroundColor: '#FDB1B11A',
+    borderColor: 'var(--onboard-success-500, var(--success-500))',
+    eventIcon: successIcon
   },
   error: {
     backgroundColor: '#FDB1B11A',
-    borderColor: 'var(--onboard-danger-300, var(--danger-300))',
+    borderColor: 'var(--onboard-danger-600, var(--danger-600))',
     eventIcon: errorIcon
   },
   hint: {
-    backgroundColor: 'var(--onboard-gray-500, var(--gray-500))',
+    backgroundColor: '#FDB1B11A',
     borderColor: 'var(--onboard-gray-500, var(--gray-500))',
     iconColor: 'var(--onboard-gray-100, var(--gray-100))',
     eventIcon: infoIcon

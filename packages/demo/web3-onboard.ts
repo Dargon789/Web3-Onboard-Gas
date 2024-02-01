@@ -190,7 +190,7 @@ export default init({
       id: 'afdc188f45c71dacbaa0b62e16a91f72' ,
       token: 'HDX',
       namespace: 'substrate',
-      label: 'Hydradx',
+      label: 'HydraDX',
       rpcUrl: 'hydradx.api.subscan.io',
       decimal : 12
     },
@@ -208,8 +208,10 @@ export default init({
   // An array of wallet modules that you would like to be presented to the user to select from when connecting a wallet.
   wallets: [
     metamaskSDKWallet,
+    walletConnectPolkadot,
     injected,
     ledger,
+    coinBase,
     trezor,
     walletConnect,
     coinbaseWallet,
@@ -224,6 +226,7 @@ export default init({
     walletLink,
     keepkey,
     keystone,
+    ledgerPolkadot_,
     magic,
     fortmatic,
     portis,

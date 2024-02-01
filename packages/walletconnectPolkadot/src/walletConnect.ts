@@ -50,7 +50,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
       label: 'WalletConnect',
       type: 'substrate',
       getIcon: async () => (await import('./icon.js')).default,
-      getInterface: async ({chains, EventEmitter, appMetadata}) => {
+      getInterface: async ({chains,           EventEmitter, appMetadata}) => {
 
         const {ProviderRpcError, ProviderRpcErrorCode} = await import(
           '@subwallet_connect/common'
