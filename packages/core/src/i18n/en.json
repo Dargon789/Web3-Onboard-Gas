@@ -72,6 +72,7 @@
     },
     "confirmTransactionProtection": {
       "heading": "Enable Transaction Protection",
+      "subHeading": "Protect your transaction",
       "description": "Protect RPC endpoints hide your transaction from front-running and sandwich bots.",
       "link": "Learn more",
       "enable": "Enable",
@@ -79,6 +80,7 @@
     },
     "confirmSignMessage": {
       "heading": "Sign Message",
+      "subHeading": "Sign Message to check the connectivity between your dapp and wallet.",
       "evmWallet": {
         "content": "Type Method Message"
       },

@@ -18,7 +18,6 @@ import sequenceModule from '@subwallet_connect/sequence'
 import {TransactionHandlerReturn} from "@subwallet_connect/core/dist/types";
 import xdefiWalletModule from '@subwallet_connect/xdefi'
 import fortmaticModule from '@subwallet_connect/fortmatic'
-import Onboard from '@subwallet_connect/core'
 import frameModule from '@subwallet_connect/frame'
 import safeModule from '@subwallet_connect/gnosis'
 import keystoneModule from '@subwallet_connect/keystone'
@@ -28,16 +27,12 @@ import trezorModule from '@subwallet_connect/trezor'
 import coinbaseModule from '@subwallet_connect/coinbase'
 import magicModule from '@subwallet_connect/magic'
 import web3authModule from '@subwallet_connect/web3auth'
-import gas from '@subwallet_connect/gas'
 import dcentModule from '@subwallet_connect/dcent'
 import zealModule from '@subwallet_connect/zeal'
-import transactionPreviewModule from '@subwallet_connect/transaction-preview'
 import enkryptModule from '@subwallet_connect/enkrypt'
 import mewWalletModule from '@subwallet_connect/mew-wallet'
 import uauthModule from '@subwallet_connect/uauth'
 import frontierModule from '@subwallet_connect/frontier'
-import bloctoModule from '@subwallet_connect/blocto'
-import cedeStoreModule from '@subwallet_connect/cede-store'
 import arcanaAuthModule from '@subwallet_connect/arcana-auth'
 import venlyModule from '@subwallet_connect/venly'
 import bitgetModule from '@subwallet_connect/bitget'
@@ -68,12 +63,13 @@ const injected = injectedModule({
 })
 const phantom = phantomModule()
 const walletConnect = walletConnectModule({
-  projectId: 'd4a987cb0d1a746dbffd38890458e65c',
-  dappUrl: 'https://www.onboard.blocknative.com'
+  projectId: '9faafb317e7de852a7821e5e3042e804',
+  dappUrl: 'https://thiendekaco.github.io/SubConnect'
 })
 
 const walletConnectPolkadot = walletConnectPolkadotModule({
-  projectId: 'd4a987cb0d1a746dbffd38890458e65c',
+  projectId: '9faafb317e7de852a7821e5e3042e804',
+  dappUrl: 'https://thiendekaco.github.io/SubConnect'
 })
 const coinbaseWallet = coinbaseModule()
 const metamaskSDKWallet = metamaskSDK({
@@ -144,9 +140,7 @@ const frameWallet = frameModule()
 const enkrypt = enkryptModule()
 const mewWallet = mewWalletModule()
 
-const transactionPreview = transactionPreviewModule({
-  requireTransactionApproval: true
-})
+
 const venly = venlyModule({
   clientId: 'blocknative',
   environment: 'staging'
@@ -168,7 +162,7 @@ export default init({
       enabled: true
     }
   },
-  projectId : 'd4a987cb0d1a746dbffd38890458e65c',
+  projectId : '9faafb317e7de852a7821e5e3042e804',
 
 
   chainsPolkadot:[
@@ -259,16 +253,60 @@ export default init({
       rpcUrl: `https://mainnet.infura.io/v3/${INFURA_KEY}`
     },
     {
-      id: 42161,
-      token: 'ARB-ETH',
-      label: 'Arbitrum One',
-      rpcUrl: 'https://rpc.ankr.com/arbitrum'
+      id: '0x504',
+      rpcUrl: 'https://rpc.api.moonbeam.network',
+      label: 'Moonbeam',
+      token: 'GLMR',
+      namespace : 'evm'
     },
     {
-      id: '0xa4ba',
-      token: 'ARB',
-      label: 'Arbitrum Nova',
-      rpcUrl: 'https://nova.arbitrum.io/rpc'
+      id: '0x505',
+      rpcUrl: 'https://rpc.api.moonriver.moonbeam.network',
+      label: 'Moonriver',
+      namespace: 'evm',
+      token : 'MOVR'
+    },
+    {
+      id: '0x507',
+      rpcUrl: 'https://rpc.api.moonbase.moonbeam.network',
+      label: 'MoonbaseAlpha',
+      token:  'DEV',
+      namespace : 'evm'
+    },
+    {
+      id: '0x250',
+      rpcUrl: 'https://astar.public.blastapi.io',
+      label: 'Astar',
+      namespace : 'evm',
+      token:  'ASTR',
+    },
+    {
+      id: '0x150', // 336
+      rpcUrl: 'https://shiden.public.blastapi.io',
+      label: 'Shiden',
+      token: 'SDN',
+      namespace : 'evm'
+    },
+    {
+      id: '0x51',
+      rpcUrl: 'https://evm.shibuya.astar.network',
+      label: 'Shibuya Testnet',
+      token:  'SBY',
+      namespace : 'evm'
+    },
+    {
+      id: '0x13881',
+      rpcUrl: 'https://endpoints.omniatech.io/v1/matic/mumbai/public',
+      label: 'Mumbai',
+      token: 'MATIC',
+      namespace : 'evm'
+    },
+    {
+      id: 288,
+      rpcUrl: 'https://endpoints.omniatech.io/v1/matic/mumbai/public',
+      label: 'Boba Testnet',
+      token: 'BOBA',
+      namespace: 'evm'
     }
 
   ],
@@ -301,7 +339,7 @@ export default init({
   notify: {
     desktop: {
       enabled: true,
-      transactionHandler: (transaction : any) :TransactionHandlerReturn => {
+      transactionHandler: (transaction) :TransactionHandlerReturn => {
         console.log({ transaction })
         if (transaction.eventCode === 'txConfirmed') {
           return {

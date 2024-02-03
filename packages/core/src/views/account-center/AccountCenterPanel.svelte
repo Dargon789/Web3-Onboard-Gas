@@ -239,9 +239,8 @@
   .protect-text {
     font-size: var(--onboard-font-size-6, var(--font-size-6));
     color: var(
-      --account-center-maximized-upper-action-color,
-      var(--action-color)
-    );
+            --account-center-maximized-upper-action-color,
+            var(--text-color));
     line-height: 1.75rem;
     display: flex;
     align-items: center;

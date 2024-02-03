@@ -4,11 +4,9 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "./packages/*",
-      "./packages/react"
+      "./packages/*"
     ],
     "nohoist": [
-      "**/react",
       "**/react-dom",
       "**/csstype"
     ]

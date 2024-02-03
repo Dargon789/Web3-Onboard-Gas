@@ -385,6 +385,17 @@
     line-height: var(--onboard-font-line-height-3, var(--font-line-height-3));
   }
 
+  :global(.button-neutral-success){
+    height: 52px;
+    width: 100%;
+    padding: var(--spacing-4);
+    margin-top: 0 !important;
+    border-radius: var(--border-radius-5);
+    background: var(--success-500);
+    color: var(--onboard-white, var(--white));
+    line-height: var(--onboard-font-line-height-3, var(--font-line-height-3));
+  }
+
 
   :global(button.rounded) {
     border-radius: 24px;

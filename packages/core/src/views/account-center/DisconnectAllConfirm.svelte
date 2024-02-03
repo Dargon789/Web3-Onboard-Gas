@@ -21,12 +21,17 @@
     max-width: 390px;
   }
 
+  .content-description, .content-subHeading {
+    padding: 0 var(--spacing-4);
+  }
+
   .content-subHeading {
     color: var(--danger-600);
     font-weight: 600;
   }
 
   .content-description {
+    font-size: var(--font-size-6);
     color: rgba(255, 255, 255, 0.45);
     font-weight: 500;
   }
@@ -55,11 +60,11 @@
 </style>
 
 <Modal close={onClose} maskClose={true}>
-    <span class="title" slot="title">
-      {$_('modals.confirmDisconnectAll.heading', {
-        default: en.modals.confirmDisconnectAll.heading
-      })}
-    </span>
+  <span class="title" slot="title">
+    {$_('modals.confirmDisconnectAll.heading', {
+      default: en.modals.confirmDisconnectAll.heading
+    })}
+  </span>
   <div class="content width-100" slot="content">
     <span class="content-subHeading width-100">
       {$_('modals.confirmDisconnectAll.subHeading', {

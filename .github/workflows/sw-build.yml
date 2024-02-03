@@ -30,13 +30,14 @@ jobs:
           yarn build
 
       # === Deploy static pages ===
-      # deploy app to vercel
-      - name: deploy site to vercel
-        uses: amondnet/vercel-action@v20
+      - name: Deploy to Cloudflare Pages
+        id: cloudflare_deployment
+        uses: cloudflare/pages-action@v1
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required
-          github-token: ${{ secrets.GITHUB_TOKEN }} #Optional
-          vercel-args: '--prod' #Optional
-          vercel-org-id: ${{ secrets.ORG_ID}}  #Required
-          vercel-project-id: ${{ secrets.PROJECT_ID}} #Required
-          directory: './packages/demo'
+            apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+            accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+            projectName: 'w3o'
+            gitHubToken: ${{ secrets.GH_AUTOMATION_TOKEN }}
+            branch: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || github.ref_name }}
+            directory: './packages/demo/build'
+            wranglerVersion: '3'
