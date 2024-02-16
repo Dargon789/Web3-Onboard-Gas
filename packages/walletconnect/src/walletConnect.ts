@@ -20,7 +20,9 @@ const methods = [
   'eth_signTypedData',
   'eth_signTypedData_v4',
   'wallet_addEthereumChain',
-  'wallet_switchEthereumChain'
+  'wallet_switchEthereumChain',
+  'wallet_getPermissions',
+  'wallet_requestPermissions'
 ]
 
 function walletConnect(options: WalletConnectOptions): WalletInit {

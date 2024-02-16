@@ -155,5 +155,5 @@ export interface NetworkItemType {
 
 export type RequestArguments  ={
   method: string;
-  params?: unknown[] | Record<string, unknown> | object | undefined;
+  params?: object | unknown[] | Record<string, unknown> | undefined;
 }

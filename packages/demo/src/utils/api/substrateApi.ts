@@ -20,7 +20,15 @@ export class substrateApi {
     return this.api?.isReady
   }
 
-  public async sendTransactionBySigner (senderAddress: string, recipientAddress: string, signer: Signer, amount: string ){
+  public async sendTransaction (senderAddress: string, recipientAddress: string, amount: string, provider: SubstrateProvider, signer?: Signer ) {
+    if(signer) {
+      return await this.sendTransactionBySigner(senderAddress, recipientAddress, signer, amount)
+    }
+
+    return await this.sendTransactionByProvider(senderAddress, recipientAddress, provider, amount)
+  }
+
+  private async sendTransactionBySigner (senderAddress: string, recipientAddress: string, signer: Signer, amount: string ){
     if(!this.api || !this.api.isReady) return;
 
     const transferExtrinsic = this.api.tx.balances.transferKeepAlive(recipientAddress, amount)
@@ -56,7 +64,7 @@ export class substrateApi {
   }
 
 
-  public async sendTransactionByProvider (senderAddress: string, recipientAddress: string, provider: SubstrateProvider, amount: string) {
+  private async sendTransactionByProvider (senderAddress: string, recipientAddress: string, provider: SubstrateProvider, amount: string) {
     if(!this.api) return;
 
     const lastHeader = await this.api.rpc.chain.getHeader()

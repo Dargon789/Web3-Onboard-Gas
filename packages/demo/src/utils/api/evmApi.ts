@@ -3,7 +3,7 @@ import type { Web3Provider } from '@ethersproject/providers';
 import type { EIP1193Provider } from "@subwallet_connect/common";
 import web3Onboard from '../../web3-onboard';
 import {RequestArguments} from "../../types";
-import {SIGN_METHODS} from "../methods";
+import {METHOD_MAP, SIGN_METHODS} from "../methods";
 
 
 
@@ -14,7 +14,7 @@ export class evmApi {
     this.provider = new ethers.providers.Web3Provider(provider, 'any')
   }
 
-  public async sendTransactionByProvider (senderAddress: string, recipientAddress: string, amount: string ) {
+  public async sendTransaction (senderAddress: string, recipientAddress: string, amount: string ) {
     if(! this.provider) return;
 
     const signer = this.provider.getUncheckedSigner();
@@ -44,11 +44,16 @@ export class evmApi {
     args.method = SIGN_METHODS.personalSign.method;
     args.params = [SIGN_METHODS.personalSign.getInput('This is personal sign message'), from];
 
-    const signature = await this.provider?.send(args.method, args.params);
+    const signature = await this.provider?.send(args.method, args.params as any[]);
     console.log('Personal Sign', signature);
 
     return signature
 
+  }
+
+  public async requestPermissions () {
+    const args = METHOD_MAP['requestPermissions']
+      return await this.provider?.send(args.method, args.params as any[]);
   }
 
 }

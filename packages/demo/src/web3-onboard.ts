@@ -37,6 +37,7 @@ import arcanaAuthModule from '@subwallet_connect/arcana-auth'
 import venlyModule from '@subwallet_connect/venly'
 import bitgetModule from '@subwallet_connect/bitget'
 import walletLinkModule from "@subwallet_connect/walletlink";
+import { SubWallet } from "../assets";
 
 // Example key • Replace with your infura key
 const INFURA_KEY = '302750fdd8644da3b50aa6daa0b89336'
@@ -300,6 +301,8 @@ export default init({
   appMetadata: {
     // The name of your dApp
     name: 'SubWallet Connect',
+
+    icon: SubWallet,
 
     description: 'Demo app for SubWalletConnect V2',
     // The url to a getting started guide for app

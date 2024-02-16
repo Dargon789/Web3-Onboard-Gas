@@ -5,14 +5,11 @@ import React from 'react';
 import Web3Onboard from "../../../assets/web3Onboard";
 import { SubWallet } from "../../../assets";
 
-interface Props {
-  width?: number | string;
-  height?: number | string;
-}
+interface Props {}
 
-const SubWalletLogo: React.FC<Props> = ({ height = 16, width = 16 }: Props) => {
+const SubWalletLogo: React.FC<Props> = () => {
   return (
-    <div dangerouslySetInnerHTML={{__html : SubWallet}} style={{ width, height}}/>
+    <div dangerouslySetInnerHTML={{__html : SubWallet}}/>
   );
 };
 
