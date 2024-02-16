@@ -4,7 +4,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from "styled-components";
-import { ThemeProps } from "../../types";
+import { ThemeProps } from "../../../types";
 import { useConnectWallet, useNotifications } from "@subwallet_connect/react";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { InjectedMetadataKnown, InjectedMetadata, MetadataDef  } from "@polkadot/extension-inject/types";

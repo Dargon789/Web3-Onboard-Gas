@@ -18,7 +18,10 @@ import {substrateApi} from "../../utils/api/substrateApi";
 import {NetworkInfo} from "../../utils/network";
 
 
-interface Props extends ThemeProps{};
+interface Props extends ThemeProps{
+  substrateProvider ?: substrateApi,
+  evmProvider ?: evmApi
+};
 
 
 type AccountMapType = {
@@ -26,74 +29,42 @@ type AccountMapType = {
   index: number
 }
 
-function Component ({className}: Props): React.ReactElement {
+function Component ({className, substrateProvider, evmProvider}: Props): React.ReactElement {
   const [{ wallet},] = useConnectWallet();
   const renderEmpty = useCallback(() => <GeneralEmptyList />, []);
   const [ accountsMap, setAccountMap ] = useState<AccountMapType[]>([])
-  const [ substrateProvider, setSubstrateProvider ] = useState<substrateApi>();
-  const [ evmProvider, setEvmProvider ] = useState<evmApi>();
+
   const [{ chains }] = useSetChain();
-  const customNotification = useNotifications()[1];
+  const [, customNotification, updateNotify,] = useNotifications();
 
 
-  useEffect(() => {
-    if(wallet?.type === "evm"){
-      setSubstrateProvider(undefined);
-      setEvmProvider(new evmApi(wallet.provider as EIP1193Provider));
-    }else if( wallet?.type === 'substrate') {
-      const {namespace: namespace_, id: chainId} = wallet.chains[0]
-      const chainInfo = chains.find(({id, namespace}) => id === chainId && namespace === namespace_);
-      if (chainInfo) {
-        const ws = NetworkInfo[chainInfo.label as string].wsProvider;
-        if (ws) {
-          setSubstrateProvider(new substrateApi(ws))
-        }
-      }
-      setEvmProvider(undefined);
-    }
-  }, [wallet]);
-
-
-  const handlePermissionsRs = useCallback(
-    (response: Maybe<unknown>) => {
-      // @ts-ignore
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      const accounts = response[0]?.caveats[0].value as string[] || [];
-
-    },
-    []
-  );
 
 
   const sendTransaction = useCallback(
     async ()=> {
       if(!wallet) return;
-      if(wallet?.type === "evm"){
-        console.log(evmProvider, 'provider')
-        await evmProvider?.sendTransactionByProvider(wallet.accounts[0].address, '0x9Cd900257bFdaf6888826f131E8B0ccB54EdB0be', '1000000000000000' )
-      }else{
-        const {namespace: namespace_, id: chainId } = wallet.chains[0]
-        const chainInfo = chains.find(({id, namespace}) => id === chainId && namespace === namespace_);
-        if(chainInfo){
-          const ws = NetworkInfo[chainInfo.label as string].wsProvider;
-          if(ws){
-            substrateProvider?.isReady().then( async ()=>{
-              !!wallet.signer ? await substrateProvider.sendTransactionBySigner(
-                wallet.accounts[0].address,
-                '5GnUABVD7kt1wnmLiSeGcuSd5ESvmVnAjdMRrtvKxUGxuy6N' ,
-                wallet.signer,
-                '100000000000'
-              ) : await substrateProvider?.sendTransactionByProvider(
-                wallet.accounts[0].address,
-                '5GnUABVD7kt1wnmLiSeGcuSd5ESvmVnAjdMRrtvKxUGxuy6N' ,
-                wallet.provider as SubstrateProvider,
-                '100000000000'
-              )
-            })
-
+      try{
+        if(wallet?.type === "evm"){
+          await evmProvider?.sendTransaction(wallet.accounts[0].address, '0x9Cd900257bFdaf6888826f131E8B0ccB54EdB0be', '1000000000000000' )
+        }else{
+          const {namespace: namespace_, id: chainId } = wallet.chains[0]
+          const chainInfo = chains.find(({id, namespace}) => id === chainId && namespace === namespace_);
+          if(chainInfo){
+            const ws = NetworkInfo[chainInfo.label as string].wsProvider;
+            if(ws){
+              substrateProvider?.isReady().then( async ()=>{
+                substrateProvider.sendTransaction(
+                  wallet.accounts[0].address,
+                  '5GnUABVD7kt1wnmLiSeGcuSd5ESvmVnAjdMRrtvKxUGxuy6N' ,
+                  '100000000000',
+                  wallet.provider as SubstrateProvider,
+                  wallet.signer
+                )
+              })
+            }
           }
         }
-      }
+      }catch (e) {}
     }, [wallet,evmProvider, substrateProvider])
 
 
