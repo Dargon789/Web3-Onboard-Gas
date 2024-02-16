@@ -195,6 +195,14 @@ export default init({
       decimal: 18,
       namespace: 'substrate',
       rpcUrl: 'astar.api.subscan.io'
+    },
+    {
+      id: 'e143f23803ac50e8f6f8e62695d1ce9e' ,
+      token: 'WND',
+      decimal : 12,
+      label: 'Westend',
+      rpcUrl: 'westend.subscan.io',
+      namespace: 'substrate'
     }
 
   ],
@@ -269,7 +277,7 @@ export default init({
     {
       id: '0x507',
       rpcUrl: 'https://rpc.api.moonbase.moonbeam.network',
-      label: 'MoonbaseAlpha',
+      label: 'Moonbase Alpha',
       token:  'DEV',
       namespace : 'evm'
     },

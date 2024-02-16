@@ -281,6 +281,9 @@
         try {
           if (labelsListParsed && Array.isArray(labelsListParsed)) {
             const tempLabels = labelsListParsed
+            if(!tempLabels.some((wallet) => {
+              return wallet.label === label && wallet.type === type
+            }))
             labelsList = JSON.stringify(
                     [...new Set([{ label, type }, ...tempLabels])]
             )
@@ -299,7 +302,6 @@
         }
 
         if (!labelsList) labelsList = JSON.stringify([{ label, type }])
-
         setLocalStore(
           STORAGE_KEYS.LAST_CONNECTED_WALLET,
           labelsList

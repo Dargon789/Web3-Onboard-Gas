@@ -102,8 +102,14 @@
   }
 
   .container:hover .balance,
-  .container:hover .elipsis-container {
+  .container:hover .elipsis-container{
     opacity: 1;
+    display: block;
+
+  }
+
+  .container:hover .success-icon{
+    display: none;
   }
 
   .container:hover .balance {
@@ -155,6 +161,7 @@
   .elipsis-container {
     flex: 0;
     padding: 0.25rem;
+    display: none;
     border-radius: 24px;
     transition: color 150ms ease-in-out, background-color 150ms ease-in-out;
     background-color: transparent;
@@ -171,6 +178,11 @@
 
   .elipsis {
     width: 24px;
+  }
+
+  .success-icon{
+    margin: 0 0.25rem;
+    display: block;
   }
 
   .menu {
@@ -223,12 +235,9 @@
           radius={8}
           icon={wallet.icon}
         />
-        {#if primary && i === 0}
-<!--          <div style="right: -5px; bottom: -5px;" class="drop-shadow absolute">-->
-<!--            <SuccessStatusIcon size={14} />-->
-<!--          </div>-->
-        {/if}
+
       </div>
+
 
       <div class="account-details">
         <!-- ADDRESS / DOMAIN -->
@@ -248,6 +257,8 @@
         {/if}
       </div>
 
+
+
       <!-- ELLIPSIS -->
       <div class="elipsis-container" class:active={showMenu === address}>
         <div
@@ -258,7 +269,17 @@
           {@html elipsisIcon}
         </div>
       </div>
+
+      {#if primary && i === 0}
+        <div class="success-icon">
+          <SuccessStatusIcon size={20} />
+        </div>
+      {/if}
+
     </div>
+
+
+
 
     {#if showMenu === address}
       <ul in:fade|local class="menu absolute">

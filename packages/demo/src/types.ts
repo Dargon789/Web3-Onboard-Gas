@@ -149,10 +149,11 @@ export interface BasicInputWrapper<T = string> {
 export interface NetworkItemType {
   name: string;
   slug: string;
-  namespace: 'evm'|'substrate'
+  namespace: 'evm'|'substrate',
+  wsProvider?: string
 }
 
 export type RequestArguments  ={
-  method: string
-  params?: unknown[] | undefined
+  method: string;
+  params?: unknown[] | Record<string, unknown> | object | undefined;
 }

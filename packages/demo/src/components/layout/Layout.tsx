@@ -32,11 +32,12 @@ function Component ( { className } : Props): React.ReactElement<null> {
     <div className={CN('__main-content', {
       '-isConnected': !!wallet
     })}>
-      <div className={'__main-content-upper'}>
+      <div className={CN('__content', {
+        '-upper': !wallet
+      })}>
         <WalletHeader visible={!!wallet} />
         <Outlet />
       </div>
-      <WalletFooter visible={!(!!wallet)} />
     </div>
   </div>
   );
@@ -63,11 +64,14 @@ const Layout = styled(Component)<Props>( ({ theme: { extendToken, token} }: Them
       justifyContent: 'flex-start'
     },
 
-    '.__main-content-upper': {
+    '.__content': {
       width: '100%',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+    },
+
+    '.-upper': {
       gap: 81
     },
 

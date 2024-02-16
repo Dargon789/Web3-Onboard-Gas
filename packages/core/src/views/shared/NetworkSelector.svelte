@@ -69,7 +69,7 @@
   select {
     border: none;
     background-image: none;
-    background-color: transparent;
+    background-color: var(--w3o-action-color, var(--gray-500));
     -webkit-appearance: none;
     -webkit-box-shadow: none;
     -moz-box-shadow: none;

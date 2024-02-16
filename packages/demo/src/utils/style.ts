@@ -7,3 +7,16 @@ export const applyPreloadStyle = (bodyBackground?: string): void => {
 
   localStorage.setItem(THEME_BACKGROUND_COLOR, backgroundColor);
 };
+
+
+export function toShort (text: string, preLength = 6, sufLength = 6): string {
+  if (!text) {
+    return '';
+  }
+
+  if (text.length > (preLength + sufLength + 1)) {
+    return `${text.slice(0, preLength)}…${text.slice(-sufLength)}`;
+  }
+
+  return text;
+}

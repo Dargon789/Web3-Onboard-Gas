@@ -11,6 +11,7 @@ import type {
 } from '@subwallet_connect/common'
 import {UniversalProviderOpts, RequestArguments} from "@walletconnect/universal-provider";
 import { Signer } from '@polkadot/types/types/extrinsic.js'
+import polkadotjs from "@subwallet_connect/injected-wallets/dist/icons/polkadotjs";
 
 // methods that require user interaction
 const methods = [
@@ -375,9 +376,22 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
               }
             }
 
-            return this.connector.request<Promise<any>>({
-              method,
-              params
+            if(!this.connector.session) {
+              throw new ProviderRpcError({
+                code: ProviderRpcErrorCode.DISCONNECTED,
+                message: `The Provider is disconnect`
+              })
+            }
+
+
+
+            return  this.connector.client?.request<Promise<any>>({
+              topic: this.connector.session.topic,
+              request: {
+                method,
+                params
+              },
+              chainId: `polkadot:${chains[0].id}`
             })
           }
 

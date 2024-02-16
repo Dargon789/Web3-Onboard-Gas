@@ -169,7 +169,6 @@
           size={32}
           padding={4}
           background="transparent"
-          typeWallet ={primaryWallet ? primaryWallet.type : undefined}
           border="darkGreen"
           radius={8}
           icon={primaryWallet ? primaryWallet.icon : ''}

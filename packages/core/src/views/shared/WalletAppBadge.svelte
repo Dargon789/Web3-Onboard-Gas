@@ -14,7 +14,6 @@
   export let color = 'black'
   export let typeWallet : string | undefined = undefined
 
-
   const subIcon = typeWallet === 'substrate' ? dotSubIcon : ethereumSubIcon
 
   export let border:
@@ -217,7 +216,7 @@
   class:background-green={background === 'green'}
   class:background-white={background === 'white'}
   class:background-transparent={background === 'transparent'}
-  class={'relative border-transparent'}
+  class={'relative'}
   style={`${
     background === 'custom' ? `background-color: ${customBackgroundColor}` : ''
   }; width: ${size}px; height: ${size}px; color: ${color}; border-color: transparent`}

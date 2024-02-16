@@ -46,7 +46,6 @@ import { validateConnectOptions } from './validation.js'
     setWalletModules(configuration.initialWalletInit)
   }
 
-    console.log('autoselect', autoSelect);
 
   connectWallet$.next({
     autoSelect:

@@ -5,17 +5,26 @@ export const NetworkInfo : Record<string, NetworkItemType> = {
   'Polkadot': {
     slug: 'polkadot',
     name: 'Polkadot',
-    namespace: 'substrate'
+    namespace: 'substrate',
+    wsProvider: "wss://rpc.polkadot.io"
   },
   'HydraDX': {
     slug: 'hydradx_main',
     name: 'HydraDX',
-    namespace: 'substrate'
+    namespace: 'substrate',
+    wsProvider: "wss://rpc.hydradx.cloud"
   },
   'Astar Network': {
     slug: 'astar',
     name: 'Astar Network',
-    namespace: 'substrate'
+    namespace: 'substrate',
+    wsProvider: "wss://rpc.astar.network"
+  },
+  'Westend': {
+    slug: 'westend',
+    name: 'Westend',
+    namespace: 'substrate',
+    wsProvider: "wss://rpc.dotters.network/westend"
   },
   'Ethereum Mainnet': {
     slug: 'ethereum',
@@ -32,7 +41,7 @@ export const NetworkInfo : Record<string, NetworkItemType> = {
     name: 'Moonriver',
     namespace: 'evm'
   },
-  "MoonbaseAlpha": {
+  "Moonbase Alpha": {
     slug: "moonbase",
     name: "Moonbase Alpha",
     namespace: 'evm'

@@ -16,6 +16,7 @@ import { NetworkInfo } from "../../utils/network";
 import { NetworkSelector } from "../modal";
 import { NETWORK_SELECTOR_MODAL } from "../../constants/modal";
 import {ScreenContext} from "../../context/ScreenContext";
+import SelectAccount from "../modal/selectors/AccountSelector";
 
 interface Props extends ThemeProps{
   visible?: boolean,
@@ -90,6 +91,8 @@ function Component ({ visible, className }: Props): React.ReactElement<Props> {
                 modalId={modalId}
                 onSelectItem={onSwitchNetwork}
               />
+              <SelectAccount />
+
             </div>
           </>:
           <>
@@ -149,6 +152,11 @@ const WalletHeader = styled(Component)<Props>(({theme : {token}}) => {
       fontSize: 30,
       color: token.colorTextLight1,
       marginLeft: 85
+    },
+
+    '.__header-action': {
+      display: 'flex',
+      gap: token.paddingSM
     },
 
     '.wallet-logo': {

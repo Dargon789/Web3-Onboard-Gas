@@ -11,8 +11,8 @@
 
 <style>
   div.notification-icons-wrapper {
-    height: 32px;
-    width: 32px;
+    height: 30px;
+    width: 30px;
   }
   .border {
     border-radius: 8px;

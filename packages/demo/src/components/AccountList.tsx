@@ -3,20 +3,20 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // eslint-disable-next-line header/header
-import {Button, message, SwList} from "@subwallet/react-ui";
+import {Button, message, SwList, Web3Block} from "@subwallet/react-ui";
 import React, {useCallback, useEffect, useState} from 'react';
 
-import { useConnectWallet } from "@subwallet_connect/react";
-import { EIP1193Provider, SubstrateProvider } from "@subwallet_connect/common";
-import { Web3Block } from "@subwallet/react-ui";
-import { GeneralEmptyList } from "./empty";
-import { Theme, ThemeProps } from "../types";
+import {useConnectWallet, useNotifications, useSetChain} from "@subwallet_connect/react";
+import {EIP1193Provider, SubstrateProvider} from "@subwallet_connect/common";
+import {GeneralEmptyList} from "./empty";
+import {RequestArguments, ThemeProps} from "../types";
 import CN from "classnames";
-import styled, { useTheme } from "styled-components";
-import { WalletState } from "@subwallet_connect/core";
-import { Maybe } from "@metamask/providers/dist/utils";
-import { RequestArguments } from "../types";
-import { METHOD_MAP, SIGN_METHODS } from "../utils/methods";
+import styled from "styled-components";
+import {Maybe} from "@metamask/providers/dist/utils";
+import {evmApi} from "../utils/api/evmApi";
+import {substrateApi} from "../utils/api/substrateApi";
+import {NetworkInfo} from "../utils/network";
+
 
 interface Props extends ThemeProps{};
 
@@ -30,65 +30,28 @@ function Component ({className}: Props): React.ReactElement {
   const [{ wallet},] = useConnectWallet();
   const renderEmpty = useCallback(() => <GeneralEmptyList />, []);
   const [ accountsMap, setAccountMap ] = useState<AccountMapType[]>([])
+  const [ substrateProvider, setSubstrateProvider ] = useState<substrateApi>();
+  const [ evmProvider, setEvmProvider ] = useState<evmApi>();
+  const [{ chains }] = useSetChain();
+  const customNotification = useNotifications()[1];
 
 
-
-
-  const signDummy = useCallback(
-    async (address: string) => {
-      const signer = wallet?.signer;
-
-      if (signer && signer.signRaw) {
-        const signPromise = signer.signRaw({ address, data: 'This is dummy message', type: 'bytes' });
-        const key = 'sign-status';
-
-        message.loading({ content: 'Signing', key });
-        signPromise.then((rs: any) => {
-          message.success({ content: 'Sign Successfully!', key });
-        }).catch((error) => {
-          console.error(error);
-          message.warning({ content: 'Sign Failed or Cancelled!', key });
-        });
-      }else{
-          await (wallet?.provider as SubstrateProvider).signDummy(address, 'hello sign dummy', undefined)
+  useEffect(() => {
+    if(wallet?.type === "evm"){
+      setSubstrateProvider(undefined);
+      setEvmProvider(new evmApi(wallet.provider as EIP1193Provider));
+    }else if( wallet?.type === 'substrate') {
+      const {namespace: namespace_, id: chainId} = wallet.chains[0]
+      const chainInfo = chains.find(({id, namespace}) => id === chainId && namespace === namespace_);
+      if (chainInfo) {
+        const ws = NetworkInfo[chainInfo.label as string].wsProvider;
+        if (ws) {
+          setSubstrateProvider(new substrateApi(ws))
+        }
       }
-    },
-    [wallet?.signer]
-  );
-
-  const makeRequest = useCallback(
-    function <T> (args: RequestArguments, callback: (rs: any) => void, errorCallback?: (e: Error) => void): void {
-      (wallet?.provider as EIP1193Provider).request(args)
-        .then((value) => callback(value))
-        .catch(async (e: Error) => {
-          errorCallback && errorCallback(e);
-          // @ts-ignore
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          await message.error(`${e.code}: ${e.message}`);
-        })
-    },
-    [wallet]
-  );
-
-  const signData = useCallback(
-    (account: string) => {
-
-      const from = account;
-      const args = {} as RequestArguments;
-
-      args.method = SIGN_METHODS.personalSign.method;
-      args.params = [SIGN_METHODS.personalSign.getInput('This is personal sign message'), from];
-
-
-      makeRequest<string>(args, (signature) => {
-        console.log('Personal Sign', signature)
-      });
-    },
-    [makeRequest]
-  );
-
-
-
+      setEvmProvider(undefined);
+    }
+  }, [wallet]);
 
 
   const handlePermissionsRs = useCallback(
@@ -101,30 +64,37 @@ function Component ({className}: Props): React.ReactElement {
     []
   );
 
-  // const sendTransaction = useCallback(
-  //   () => {
-  //     makeRequest({
-  //       method: 'eth_sendTransaction',
-  //       params: [{
-  //         from: accounts[0],
-  //         to: transactionToAddress,
-  //         value: '0x' + (transactionAmount * (10 ** (network?.nativeCurrency.decimals || 18))).toString(16),
-  //         maxFeePerGas: '0x2540be400',
-  //         maxPriorityFeePerGas: '0x3b9aca00'
-  //       }]
-  //     }, (transactionHash) => {
-  //       if (network?.explorers && network?.explorers.length && transactionHash) {
-  //         const explorer = network?.explorers[0]?.url;
-  //
-  //         setTransactionLink(explorer && (explorer + '/tx/' + (transactionHash as string)));
-  //       } else {
-  //         setTransactionLink(undefined);
-  //       }
-  //     });
-  //   },
-  //   [accounts, makeRequest, network?.explorers, network?.nativeCurrency.decimals, transactionAmount, transactionToAddress]
-  // );
 
+  const sendTransaction = useCallback(
+    async ()=> {
+      if(!wallet) return;
+      if(wallet?.type === "evm"){
+        console.log(evmProvider, 'provider')
+        await evmProvider?.sendTransactionByProvider(wallet.accounts[0].address, '0x9Cd900257bFdaf6888826f131E8B0ccB54EdB0be', '1000000000000000' )
+      }else{
+        const {namespace: namespace_, id: chainId } = wallet.chains[0]
+        const chainInfo = chains.find(({id, namespace}) => id === chainId && namespace === namespace_);
+        if(chainInfo){
+          const ws = NetworkInfo[chainInfo.label as string].wsProvider;
+          if(ws){
+            substrateProvider?.isReady().then( async ()=>{
+              !!wallet.signer ? await substrateProvider.sendTransactionBySigner(
+                wallet.accounts[0].address,
+                '5GnUABVD7kt1wnmLiSeGcuSd5ESvmVnAjdMRrtvKxUGxuy6N' ,
+                wallet.signer,
+                '100000000000'
+              ) : await substrateProvider?.sendTransactionByProvider(
+                wallet.accounts[0].address,
+                '5GnUABVD7kt1wnmLiSeGcuSd5ESvmVnAjdMRrtvKxUGxuy6N' ,
+                wallet.provider as SubstrateProvider,
+                '100000000000'
+              )
+            })
+
+          }
+        }
+      }
+    }, [wallet,evmProvider, substrateProvider])
 
 
 
@@ -133,12 +103,43 @@ function Component ({className}: Props): React.ReactElement {
      (address: string) => {
       return async () => {
         if(wallet){
-          wallet.type === 'evm' ? signData(address) : await signDummy(address);
+          const { update, dismiss } = customNotification({
+            type: 'pending',
+            message:
+              'This is a custom DApp pending notification to use however you want',
+            autoDismiss: 0
+          });
+          try {
+            wallet.type === 'evm' ?  await evmProvider?.signMessage(address) : await substrateProvider?.signMessage(address, wallet.provider as SubstrateProvider, wallet.signer);
+            update({
+              eventCode: 'dbUpdateSuccess',
+              message: `success message is success`,
+              type: 'success',
+              autoDismiss: 0
+            })
+            setTimeout(()=> dismiss(), 3000)
+          }catch (e) {
+            update({
+              eventCode: 'dbUpdateError',
+              message: `Failed, error ${(e as Error).message}`,
+              type: 'error',
+              autoDismiss: 0
+            })
+            dismiss()
+          }
+
         }
       };
     },
-    [signDummy]
+    [ evmProvider, substrateProvider]
   );
+
+  const onTransactionClicked = useCallback(
+    (address: string) => {
+      return async () => {
+        await sendTransaction();
+      };
+    }, [wallet, sendTransaction])
 
 
 
@@ -152,7 +153,6 @@ function Component ({className}: Props): React.ReactElement {
   }, [wallet]);
 
   const accountItem = useCallback(({ account, index }: AccountMapType) => {
-
     const _middleItem = (
       <div className={'__account-item-middle'}>
         <div className={'__account-item-info'}>
@@ -166,7 +166,6 @@ function Component ({className}: Props): React.ReactElement {
         <div className={'__account-item-info'}>
           <Button
             className={CN('__wallet-btn', 'sub-wallet-sign-btn')}
-            key={account}
             onClick={onSignClicked(account)}
             block={true}
           >
@@ -175,8 +174,7 @@ function Component ({className}: Props): React.ReactElement {
 
           <Button
             className={CN('__wallet-btn', 'sub-wallet-transaction-btn')}
-            key={account}
-            onClick={onSignClicked(account)}
+            onClick={onTransactionClicked(account)}
             block={true}
           >
             Transaction
@@ -188,12 +186,12 @@ function Component ({className}: Props): React.ReactElement {
 
     return(
       <Web3Block
-        leftItem={<div key={index}></div>}
+        key={index}
         className={'__account-item'}
         middleItem={_middleItem}
       />
     )
-  }, [wallet])
+  }, [wallet, onSignClicked, onTransactionClicked])
 
 
   return (
@@ -218,11 +216,9 @@ export const AccountList = styled(Component)<Props>( ({theme: {token}}) => {
       '.__account-item': {
         padding: token.padding,
         width: '100%',
+        marginBottom: token.marginSM,
         backgroundColor: token.colorBgSecondary,
         borderRadius: 8,
-        '&:hover': {
-          backgroundColor: '#252525'
-        }
       },
 
       '.__account-item-middle': {
@@ -264,7 +260,7 @@ export const AccountList = styled(Component)<Props>( ({theme: {token}}) => {
         backgroundColor: "#252525",
 
         '&:hover': {
-          backgroundColor: token.colorBgSecondary
+          backgroundColor: "#363636"
         }
       }
     }

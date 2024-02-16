@@ -183,6 +183,11 @@ export const SIGN_METHODS = {
       return keccak256(Buffer.from(message, 'utf8'));
     }
   },
+  substrateSign: {
+    name: 'Substrate Sign',
+    method: 'polkadot_signMessage',
+    getInput: (message: string): string => message
+  },
   personalSign: {
     name: 'Personal Sync',
     method: 'personal_sign',

@@ -7,13 +7,13 @@ import {
   WalletInit,
   WalletInterfaceSubstrate
 } from '@subwallet_connect/common'
-import {Ledger} from "@polkadot/hw-ledger";
-import type {BigNumber} from 'ethers'
+import { Ledger } from "@polkadot/hw-ledger";
+import type { BigNumber } from 'ethers'
 
 import type {Account, Asset, ScanAccountsOptions} from '@subwallet_connect/hw-common'
-import {Subject} from 'rxjs';
-import {RequestArguments} from '@walletconnect/ethereum-provider/dist/types/types.js';
-import {isArray} from "@shapeshiftoss/hdwallet-core";
+import { Subject} from 'rxjs';
+import { RequestArguments } from '@walletconnect/ethereum-provider/dist/types/types.js';
+import { isArray } from "@shapeshiftoss/hdwallet-core";
 
 
 const DEFAULT_PATH = "44'/354'/0'/0/0"
@@ -50,7 +50,7 @@ type ErrorCode = 'busy' | 'pairing' | 'choice'
 const methodList = [
   'polkadot_signMessage',
   'polkadot_requestAccounts',
-  'polkadot_transaction'
+  'polkadot_sendTransaction'
 ]
 function ledgerPolkadot({
          filter,
@@ -339,7 +339,7 @@ function ledgerPolkadot({
                       }
                     }
 
-                    if( method === 'polkadot_transaction'){
+                    if( method === 'polkadot_sendTransaction'){
                       try{
                         if(!this.ledger){
                           throw new ProviderRpcError({
@@ -348,20 +348,15 @@ function ledgerPolkadot({
                           })
                         }
                         if (params) {
-                          return await this.ledger.sign(stringToUint8Array(params.toString()));
+                          const json = JSON.stringify(params);
+
+                          await this.ledger.sign(Buffer.from(json, 'utf-8'))
                         }
                       }catch (e) {
-                        throw new ProviderRpcError({
-                          code: ProviderRpcErrorCode.INVALID_PARAMS,
-                          message: `The Provider does not support the requested params: ${params}`
-                        })
+                        console.log(e)
                       }
                     }
 
-                    throw new ProviderRpcError({
-                      code: ProviderRpcErrorCode.INVALID_PARAMS,
-                      message: `The Provider does not support the requested params: ${params}`
-                    })
                   }
 
               }

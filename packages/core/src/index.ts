@@ -329,7 +329,7 @@ const connectAllPreviousWallets = async (
     lastConnectedWallets: Array<Pick<WalletState, 'label' | 'type'>>,
     connect: ConnectModalOptions
 ): Promise<void> => {
-  const activeWalletsList = []
+  const activeWalletsList: Pick<WalletState, 'label' | 'type'>[] = []
   const parsedWalletList = lastConnectedWallets
   if (!connect.autoConnectAllPreviousWallet) {
     API.connectWallet({
@@ -342,28 +342,30 @@ const connectAllPreviousWallets = async (
     activeWalletsList.push(parsedWalletList[0])
   } else {
     // Loop in reverse to maintain wallet order
-    for (let i = parsedWalletList.length; i--; ) {
-      const walletConnectionPromise = await API.connectWallet({
-        autoSelect: {
-          label: parsedWalletList[i].label,
-          type: parsedWalletList[i].type,
-          disableModals: true
+    await Promise.all(parsedWalletList.map(async (wallet) => {
+      for (let i = parsedWalletList.length; i--; ) {
+        const walletConnectionPromise = await API.connectWallet({
+          autoSelect: {
+            label: parsedWalletList[i].label,
+            type: parsedWalletList[i].type,
+            disableModals: true
+          }
+        })
+        // Update localStorage list for available wallets
+        if (walletConnectionPromise.some(r =>
+          r.label === parsedWalletList[i].label
+          && r.type === parsedWalletList[i].type)
+        ) {
+          activeWalletsList.unshift(parsedWalletList[i])
         }
-      })
-      // Update localStorage list for available wallets
-      if (walletConnectionPromise.some(r =>
-        r.label === parsedWalletList[i].label
-        && r.type === parsedWalletList[i].type)
-      ) {
-        activeWalletsList.unshift(parsedWalletList[i])
       }
-    }
-  }
+    }))
+
   setLocalStore(
       STORAGE_KEYS.LAST_CONNECTED_WALLET,
       JSON.stringify(activeWalletsList)
   )
-}
+}}
 
 function mountApp(theme: Theme, disableFontDownload: boolean) {
   class Onboard extends HTMLElement {

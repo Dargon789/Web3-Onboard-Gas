@@ -28,14 +28,11 @@
 
   qrModalConnect$.subscribe( async ({ isOpen, modal })=>{
     if(isOpen && modal && uri !== ''){
-      console.log(uri, 'uri');
       try{
         await modal.openModal({ uri })
-        console.log('passs')
       }catch (e) {
-        console.log('error')
+        console.log(e)
       }
-
     }else{
       modal.closeModal();
     }
