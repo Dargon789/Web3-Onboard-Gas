@@ -38,6 +38,6 @@ jobs:
             accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
             projectName: 'w3o'
             gitHubToken: ${{ secrets.GH_AUTOMATION_TOKEN }}
-            branch: 'master'
+            branch: 'main'
             directory: './packages/demo/build'
             wranglerVersion: '3'
