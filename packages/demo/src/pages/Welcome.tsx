@@ -8,7 +8,7 @@ import { useConnectWallet } from "@subwallet_connect/react";
 import {Theme, ThemeProps} from "../types";
 import CN from "classnames";
 import styled, {useTheme} from "styled-components";
-import { Web3OnboardLogo, SubWalletLogo, DualLogo } from "./logo";
+import { Web3OnboardLogo, SubWalletLogo, DualLogo } from "../components/logo";
 import { Icon, Button, Anchor } from '@subwallet/react-ui';
 import { CheckCircle, Info } from "@phosphor-icons/react";
 import {INSTALL_WALLET} from "../constants/common";

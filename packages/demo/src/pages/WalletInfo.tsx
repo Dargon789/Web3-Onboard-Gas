@@ -3,8 +3,8 @@
 
 import React, {useEffect} from 'react';
 
-import AccountList from '../components/AccountList';
-import WalletMetadata from '../components/WalletMetadata';
+import AccountList from '../components/account/AccountList';
+import WalletMetadata from '../components/metadata/WalletMetadata';
 import { useNavigate } from "react-router-dom";
 import { useConnectWallet } from "@subwallet_connect/react";
 import { HeaderWalletInfo } from "../components/header/HeaderWalletInfo";
@@ -36,12 +36,12 @@ function Component ({className}: Props): React.ReactElement {
         </div>
         <AccountList />
       </div>
-      <div className={'__wallet-info-box'}>
-          <div className={'__wallet-info-label'}>
-            Metadata
-          </div>
-        <WalletMetadata />
-      </div>
+      {!!wallet?.metadata && <div className={'__wallet-info-box'}>
+        <div className={'__wallet-info-label'}>
+          Metadata
+        </div>
+        <WalletMetadata/>
+      </div>}
     </div>
   </div>
   );

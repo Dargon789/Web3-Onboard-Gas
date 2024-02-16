@@ -1,5 +1,5 @@
 import type { SvelteComponent } from 'svelte'
-
+import type { InjectedMetadata } from '@polkadot/extension-inject/types';
 import type {
   AppMetadata,
   Device,
@@ -143,7 +143,8 @@ export interface WalletState {
   // is connected to multiple chains at once
   chains: ConnectedChain[]
   instance?: unknown,
-  signer ?: Signer | undefined
+  signer ?: Signer | undefined,
+  metadata ?: InjectedMetadata,
   type : 'evm' | 'substrate'
 }
 
@@ -588,6 +589,7 @@ export type WalletPermission = {
 
 export type WalletConnectState = {
   signer ?: Signer,
+  metadata ?: InjectedMetadata
   address : AccountAddress[]
 }
 

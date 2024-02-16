@@ -9,8 +9,8 @@ import {HeaderWalletInfo} from "../components/header/HeaderWalletInfo";
 import { ThemeProps } from '../types';
 import CN from "classnames";
 import styled from "styled-components";
-import AccountList from "../components/AccountList";
-import WalletMetadata from "../components/WalletMetadata";
+import AccountList from "../components/account/AccountList";
+import WalletMetadata from "../components/metadata/WalletMetadata";
 
 
 
@@ -42,10 +42,7 @@ function Component ({className}: Props): React.ReactElement {
             <AccountList />
           </div>
           <div className={'__evm-wallet-info-box'}>
-            <div className={'__evm-wallet-info-label'}>
-              Metadata
-            </div>
-            <WalletMetadata />
+
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import type { ethers } from 'ethers'
 export type { TypedData as EIP712TypedData } from 'eip-712'
 import type { Signer } from '@polkadot/types/types'
 import type { RequestArguments } from "@walletconnect/universal-provider";
+import { InjectedMetadata } from "@polkadot/extension-inject/types";
 
 /**
  * Types for request patching methods. Ethereum RPC request is mapped to
@@ -196,8 +197,9 @@ export interface WalletModule {
   getInterface: (helpers: GetInterfaceHelpers) =>
       Promise<WalletInterface | WalletInterfaceSubstrate>
 
-  signer ?: Signer | undefined
+  signer ?: Signer
 
+  metadata ?: InjectedMetadata
 }
 
 export type GetInterfaceHelpers = {
@@ -415,6 +417,7 @@ export interface EIP1193Provider extends SimpleEventEmitter {
 export interface SubstrateProvider extends SimpleEventEmitter{
   enable () : Promise<{
     signer ?: Signer,
+    metadata ?: InjectedMetadata
     address : AccountAddress[] } | undefined>,
   signDummy( address : string, data : string ,
              wallet ?: Signer  ) :

@@ -8,14 +8,14 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import {useConnectWallet, useNotifications, useSetChain} from "@subwallet_connect/react";
 import {EIP1193Provider, SubstrateProvider} from "@subwallet_connect/common";
-import {GeneralEmptyList} from "./empty";
-import {RequestArguments, ThemeProps} from "../types";
+import {GeneralEmptyList} from "../empty";
+import {RequestArguments, ThemeProps} from "../../types";
 import CN from "classnames";
 import styled from "styled-components";
 import {Maybe} from "@metamask/providers/dist/utils";
-import {evmApi} from "../utils/api/evmApi";
-import {substrateApi} from "../utils/api/substrateApi";
-import {NetworkInfo} from "../utils/network";
+import {evmApi} from "../../utils/api/evmApi";
+import {substrateApi} from "../../utils/api/substrateApi";
+import {NetworkInfo} from "../../utils/network";
 
 
 interface Props extends ThemeProps{};
@@ -165,7 +165,7 @@ function Component ({className}: Props): React.ReactElement {
         </div>
         <div className={'__account-item-info'}>
           <Button
-            className={CN('__wallet-btn', 'sub-wallet-sign-btn')}
+            className={CN('__wallet-btn', '__sub-wallet-sign-btn')}
             onClick={onSignClicked(account)}
             block={true}
           >
@@ -173,7 +173,7 @@ function Component ({className}: Props): React.ReactElement {
           </Button>
 
           <Button
-            className={CN('__wallet-btn', 'sub-wallet-transaction-btn')}
+            className={CN('__wallet-btn', '__sub-wallet-transaction-btn')}
             onClick={onTransactionClicked(account)}
             block={true}
           >
@@ -256,7 +256,7 @@ export const AccountList = styled(Component)<Props>( ({theme: {token}}) => {
         color: token.colorTextLight4
       },
 
-      '.sub-wallet-transaction-btn': {
+      '.__sub-wallet-transaction-btn': {
         backgroundColor: "#252525",
 
         '&:hover': {

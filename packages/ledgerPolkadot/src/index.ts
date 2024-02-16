@@ -268,8 +268,7 @@ function ledgerPolkadot({
                                 )
                             }
                             return {
-                                address: accounts.map((account) => account.address),
-                                signer: undefined
+                                address: accounts.map((account) => account.address)
                             }
                         } catch (error) {
                             const {name} = error as { name: string }

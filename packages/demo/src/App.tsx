@@ -6,7 +6,7 @@ import React from 'react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 
 import Layout from "./components/layout/Layout";
-import Welcome from './components/Welcome';
+import Welcome from './pages/Welcome';
 import WalletInfo from './pages/WalletInfo';
 
 require('./App.scss');

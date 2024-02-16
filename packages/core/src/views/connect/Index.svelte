@@ -250,7 +250,7 @@
     const { provider, label , type } = selectedWallet
     cancelPreviousConnect$.next()
     try {
-      const { address, signer } = await Promise.race([
+      const { address, signer, metadata } = await Promise.race([
         // resolved account
         type === 'evm' ? await requestAccounts(provider as EIP1193Provider) : await enable(provider as SubstrateProvider) ,
         // or connect wallet is called again whilst waiting for response
@@ -329,11 +329,12 @@
         }
       }
 
-      const update: Pick<WalletState, 'accounts' | 'chains' | 'signer' > = {
+      const update: Pick<WalletState, 'accounts' | 'chains' | 'signer' | 'metadata'> = {
         accounts: addressFilter.map((address) =>
                 ({ address, ens: null, uns: null, balance: null })),
         chains: [{ namespace: type, id: chain }],
-        signer : signer
+        signer : signer,
+        metadata: metadata
       }
 
       addWallet({ ...selectedWallet, ...update })

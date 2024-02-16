@@ -6,6 +6,7 @@ import type {
   WalletInterfaceSubstrate, SubstrateProvider, AccountsListener, ConnectListener, DisconnectListener, MessageListener, ProviderEvent, QrModalListener, UriListener
 } from '@subwallet_connect/common'
 import type {
+  InjectedMetadata,
   InjectedWindow
 } from '@polkadot/extension-inject/types';
 import {createEIP1193Provider, ProviderAccounts} from '@subwallet_connect/common'
@@ -992,6 +993,7 @@ const subwalletDOT: InjectedWalletModule = {
 
           return {
             signer: rawExtension.signer as Signer,
+            metadata: rawExtension.metadata as InjectedMetadata,
             address: accounts.map(
               (account: { address: string }) => account.address
             )
@@ -1069,6 +1071,7 @@ const talismanDOT: InjectedWalletModule = {
 
           return {
             signer: rawExtension.signer as Signer,
+            metadata: rawExtension.metadata as InjectedMetadata,
             address: accounts.map(
               (account: { address: string }) => account.address
             )
@@ -1147,6 +1150,7 @@ const polkadotjs: InjectedWalletModule = {
 
           return {
             signer: rawExtension.signer as Signer,
+            metadata: rawExtension.metadata as InjectedMetadata,
             address: accounts.map(
               (account: { address: string; }) => account.address
             )

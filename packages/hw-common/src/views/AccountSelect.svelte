@@ -544,6 +544,7 @@
         />
         <AddressTable
           {accountsListObject}
+          lengthAccountSelectedDefault={10}
           {showEmptyAddresses}
           {handleAddAccount}
           bind:accountSelected
