@@ -187,8 +187,8 @@ export default init({
     // Optional - but allows for dapps to require users to agree to TOS and privacy policy before connecting a wallet
     agreement: {
       version: '1.0.0',
-      termsUrl: 'https://www.blocknative.com/terms-conditions',
-      privacyUrl: 'https://www.blocknative.com/privacy-policy'
+      termsUrl: 'https://docs.subwallet.app/main/privacy-and-security/terms-of-use',
+      privacyUrl: 'https://docs.subwallet.app/main/privacy-and-security/security'
     }
   },
   notify: {

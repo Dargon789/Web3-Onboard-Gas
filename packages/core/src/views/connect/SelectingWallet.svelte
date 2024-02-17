@@ -24,7 +24,7 @@
   }
 
   const wheresMyWalletDefault =
-          'https://wiki.polkadot.network/docs/wallets-and-extensions'
+          'https://www.subwallet.app/download.html?lang=1'
 </script>
 
 <style>

@@ -176,6 +176,19 @@
       margin-bottom: 0.25rem;
     }
   }
+
+
+  .powered-by-container {
+    color: rgba(255, 255, 255, 0.65);
+    padding: 0.75rem;
+    font-size: 12px;
+    text-decoration: none;
+    line-height: 20px;
+    font-weight: 500;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
 </style>
 
 <svelte:window bind:innerWidth={windowWidth} />
@@ -221,7 +234,7 @@
       <div class="info-icon">{@html infoIcon}</div>
       <a
               href={connect.iDontHaveAWalletLink ||
-          'https://docs.subwallet.app/main/'}
+          'https://www.subwallet.app/download.html'}
               target="_blank"
               rel="noreferrer noopener"
       >{$_('connect.selectingWallet.sidebar.IDontHaveAWallet', {
@@ -294,7 +307,7 @@
       />
     </div>
   {/if}
-  <div>
-    {@html poweredBySubwallet}
+  <div class="powered-by-container">
+    Polkadot version by {@html poweredBySubwallet}
   </div>
 </div>

@@ -55,13 +55,13 @@
     <div class="flex">
       <a
         target="_blank"
-        href="https://www.blocknative.com/privacy-policy"
+        href="https://docs.subwallet.app/main/privacy-and-security/security"
         class="text-sm hover:text-white">Privacy Policy</a
       >
       <div class="w-px bg-gray-divider mx-2 h-4" />
       <a
         target="_blank"
-        href="https://www.blocknative.com/terms-conditions"
+        href="https://docs.subwallet.app/main/privacy-and-security/terms-of-use"
         class="text-sm hover:text-white">Terms of Service</a
       >
     </div>

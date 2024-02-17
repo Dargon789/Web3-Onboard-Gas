@@ -334,8 +334,15 @@
   }
 
   .powered-by-container {
-    color: var(--text-color);
+    color: rgba(255, 255, 255, 0.65);
     padding: 0.75rem;
+    font-size: 12px;
+    text-decoration: none;
+    line-height: 20px;
+    font-weight: 500;
+    display: flex;
+    gap: 4px;
+    align-items: center;
   }
 </style>
 
@@ -594,12 +601,12 @@
         {/if}
         <div class="w100">
           <a
-            href="https://blocknative.com"
+            href="https://www.subwallet.app/"
             target="_blank"
             rel="noopener noreferrer"
             class="flex justify-center items-center powered-by-container"
           >
-            {@html poweredBySubwallet}
+            Polkadot version by {@html poweredBySubwallet}
           </a>
         </div>
       </div>
