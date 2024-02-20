@@ -64,7 +64,7 @@ function Component ({className, substrateProvider, evmProvider}: Props): React.R
             substrateProvider?.isReady().then( async ()=>{
               const provider = wallet.provider as SubstrateProvider;
               if(wallet.label === 'Ledger') {
-                wallet.signer = await substrateProvider?.getSignerLedger(provider)
+                wallet.signer = await substrateProvider?.getSignerLedger(address, provider)
               }
               if( wallet.label === 'WalletConnect') {
                 wallet.signer = await substrateProvider?.getSignerWC(address, provider);

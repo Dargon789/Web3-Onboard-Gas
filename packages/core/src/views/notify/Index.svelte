@@ -61,6 +61,7 @@
     padding-left: 0;
     display: flex;
     flex-flow: column nowrap;
+    position: absolute;
     font-size: var(
       --notify-onboard-font-size,
       var(--onboard-font-size-5, var(--font-size-5))

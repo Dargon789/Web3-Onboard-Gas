@@ -33,7 +33,6 @@ export class evmApi {
         sendTransaction,
         txDetails: txDetails
       })
-    console.log(transactionHash)
   }
 
 

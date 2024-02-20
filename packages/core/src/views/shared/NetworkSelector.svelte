@@ -69,13 +69,14 @@
     select {
       border: none;
       background-image: none;
-      border-radius: var(--border-radius-6);
+      border-radius: 48px;
       background-color: var(--w3o-action-color, var(--primary-500));
       -webkit-appearance: none;
       -webkit-box-shadow: none;
       -moz-box-shadow: none;
       box-shadow: none;
       appearance: none;
+      margin-top: 2px;
       font-size: var(--onboard-font-size-7, var(--font-size-7));
       line-height: var(--onboard-font-line-height-3, var(--font-line-height-3));
       transition: width 250ms ease-in-out;
@@ -83,7 +84,7 @@
       background-position: right 0px top 0px, 0 0;
       scrollbar-width: none;
       -ms-overflow-style: none;
-      padding: 0 14px 0 5px;
+      padding: 2px 14px 1px 10px;
       white-space: nowrap;
       text-overflow: ellipsis;
     }
@@ -130,9 +131,7 @@
       style={`
         color: var(${colorVar},
         var(--account-center-network-selector-color, var(--gray-500)));
-        background-image: url('data:image/svg+xml;utf8,${selectIcon}'); ${
-        bold ? 'font-weight: 600;' : ''
-      }`}
+        background-image: url('data:image/svg+xml;utf8,${selectIcon}'); `}
     >
       {#if !connectedToValidAppChain(wallet.chains[0], chains)}
         <option value={wallet.chains[0].id}

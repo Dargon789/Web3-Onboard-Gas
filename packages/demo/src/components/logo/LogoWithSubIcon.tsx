@@ -42,7 +42,6 @@ const LogoWithSubIcon = styled(Component)<Props>(({theme}) => {
     },
 
     '.__wallet-logo-sub': {
-      zIndex: 1,
       position: 'absolute',
       top: '70%',
       left: '60%',

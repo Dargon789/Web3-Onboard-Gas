@@ -69,7 +69,6 @@
     transition: background 300ms ease-in-out, color 300ms ease-in-out;
     pointer-events: all;
     backdrop-filter: blur(5px);
-    width: 100%;
     min-height: 56px;
     display: flex;
     align-items: center;
