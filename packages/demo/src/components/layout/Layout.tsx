@@ -67,11 +67,11 @@ const Layout = styled(Component)<Props>( ({ theme: { extendToken, token} }: Them
       },
 
       '::-webkit-scrollbar-track': {
-        backgroundColor: 'transparent'/* Màu nền track */
+        backgroundColor: 'transparent'
       },
 
       '::-webkit-scrollbar-thumb': {
-        backgroundColor: 'transparent' /* Màu của thanh thumb */
+        backgroundColor: 'transparent'
       }
     },
 

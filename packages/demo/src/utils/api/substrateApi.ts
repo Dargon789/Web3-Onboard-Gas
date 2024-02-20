@@ -26,11 +26,11 @@ export class substrateApi {
 
     const transferExtrinsic = this.api.tx.balances.transferKeepAlive(recipientAddress, amount)
     try{
-      const sendTransaction = async () => {
+      const sendTransaction = async (fn: (hash: string) => void) => {
         let txHash_ = ''
         await transferExtrinsic.signAndSend(senderAddress, { signer }, ({ status, txHash }) => {
           if (status.isInBlock) {
-            txHash_ = txHash.toString();
+            fn(txHash.toString());
             console.log(`Completed at block hash #${status.asInBlock.toString()}`);
           } else {
             console.log(`Current status: ${status.type}`);

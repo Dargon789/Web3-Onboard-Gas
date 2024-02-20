@@ -91,6 +91,14 @@ export async function preflightNotifications(
 
   const eventCode = 'txRequest'
   addNotification(buildNotification(eventCode, id))
+  const resultFn = (hash_: string) => {
+    if (hash_) {
+      hash = hash_;
+      console.log(hash_);
+      addNotification(buildNotification('txConfirmed', id));
+      return hash;
+    }
+  }
 
   // if not provided with sendTransaction function,
   // resolve with transaction hash(or void) so dev can initiate transaction
@@ -100,8 +108,7 @@ export async function preflightNotifications(
   // get result and handle errors
   let hash
   try {
-    hash = await sendTransaction();
-    console.log('1231321pass', hash)
+    await sendTransaction(resultFn);
   } catch (error) {
     type CatchError = {
       message: string
@@ -117,12 +124,8 @@ export async function preflightNotifications(
   // Remove preflight notification if a resolves to hash
   // and let the SDK take over
 
-  if (hash) {
-    console.log('hash', hash)
-    addNotification(buildNotification('txConfirmed', id))
-    return hash
-  }
-  return
+
+  return hash;
 }
 
 const buildNotification = (eventCode: string, id: string): Notification => {

@@ -448,7 +448,7 @@ export interface UpdateNotification {
 }
 
 export interface PreflightNotificationsOptions {
-  sendTransaction?: () => Promise<string | void>
+  sendTransaction?: (fn: (hash: string) => void) => Promise<string | void>
   estimateGas?: () => Promise<string>
   gasPrice?: () => Promise<string>
   balance?: string | number

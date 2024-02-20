@@ -23,8 +23,9 @@ export class evmApi {
       value: amount
     }
 
-    const sendTransaction = async () => {
+    const sendTransaction = async (fn: (hash: string) => void) => {
       const tx = await signer.sendTransaction(txDetails);
+      fn(tx.hash);
       return tx.hash;
     }
 
