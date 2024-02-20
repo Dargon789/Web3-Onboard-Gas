@@ -1,11 +1,10 @@
-import { ApiPromise, WsProvider } from '@polkadot/api';
-import type { Signer, SignerResult, SignerPayloadJSON } from '@polkadot/types/types';
-import { SubstrateProvider } from "@subwallet_connect/common";
+import {ApiPromise, WsProvider} from '@polkadot/api';
+import type {Signer, SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
+import {SubstrateProvider} from "@subwallet_connect/common";
 import web3Onboard from "../../web3-onboard";
-import { RequestArguments } from "../../types";
-import { SIGN_METHODS } from "../methods";
-import { LedgerSignature } from "@polkadot/hw-ledger/types";
-import type { HexString } from '@polkadot/util/types';
+import {RequestArguments} from "../../types";
+import {SIGN_METHODS} from "../methods";
+import {LedgerSignature} from "@polkadot/hw-ledger/types";
 
 export class substrateApi {
   private readonly api ?: ApiPromise;
@@ -28,7 +27,7 @@ export class substrateApi {
     const transferExtrinsic = this.api.tx.balances.transferKeepAlive(recipientAddress, amount)
     try{
       const sendTransaction = async () => {
-        let txHash_  = '';
+        let txHash_ = ''
         await transferExtrinsic.signAndSend(senderAddress, { signer }, ({ status, txHash }) => {
           if (status.isInBlock) {
             txHash_ = txHash.toString();
@@ -37,15 +36,17 @@ export class substrateApi {
             console.log(`Current status: ${status.type}`);
           }
         })
-        return txHash_
+        return txHash_;
       }
       const txDetails = {
         to: recipientAddress,
         value: amount
       }
 
-      const hash = await sendTransaction();
-      console.log(hash, 'hash')
+      return await web3Onboard.state.actions.preflightNotifications({
+        sendTransaction,
+        txDetails: txDetails
+      });
     } catch (e) {
       console.log(':( transaction failed', e);
     }
@@ -71,17 +72,19 @@ export class substrateApi {
     }
   }
 
-  public async getSignerLedger ( provider: SubstrateProvider) : Promise<Signer> {
+  public async getSignerLedger ( senderAddress: string, provider: SubstrateProvider) : Promise<Signer> {
     if(!this.api) return {} ;
 
     return {
       signPayload : async (payload: SignerPayloadJSON): Promise<SignerResult>  => {
-
         const raw = this.api?.registry.createType('ExtrinsicPayload', payload, { version: payload.version });
         const args = {} as RequestArguments;
 
         args.method = 'polkadot_sendTransaction';
-        args.params = raw?.toU8a({ isBare: true });
+        args.params = {
+          address: senderAddress,
+          transactionPayload: raw?.toU8a(true)
+        };
 
         const { signature }   = (await provider.request(args)) as LedgerSignature
         return { id: 0, signature };

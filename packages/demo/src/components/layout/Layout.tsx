@@ -55,16 +55,29 @@ const Layout = styled(Component)<Props>( ({ theme: { extendToken, token} }: Them
 
     '.__main-content': {
       height: '100%',
+      margin: 'auto',
       display: 'flex',
       overflowX: 'hidden',
       flexDirection: 'column',
       justifyContent: 'space-between',
       alignItems: 'center',
-      gap: token.padding
+      gap: token.padding,
+      '::-webkit-scrollbar': {
+        width: 0
+      },
+
+      '::-webkit-scrollbar-track': {
+        backgroundColor: 'transparent'/* Màu nền track */
+      },
+
+      '::-webkit-scrollbar-thumb': {
+        backgroundColor: 'transparent' /* Màu của thanh thumb */
+      }
     },
 
     '.__main-content.-isConnected': {
       padding: '0px 164px',
+      maxWidth: 1830,
       justifyContent: 'flex-start'
     },
 
@@ -73,6 +86,7 @@ const Layout = styled(Component)<Props>( ({ theme: { extendToken, token} }: Them
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      marginBottom: '20vh'
     },
 
     '.-upper': {

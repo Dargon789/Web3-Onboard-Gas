@@ -4,21 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8e76172f-bb00-4546-b604-09723b806b3e" name="Changes" comment="Update modal general to connect qrWallet">
-      <change afterPath="$PROJECT_DIR$/packages/core/src/icons/download.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/core/src/icons/qrCode.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/core/src/icons/vector.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_8_2023_2_22_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_8_2023_2_22_PM__Changes_.xml" afterDir="false" />
+    <list default="true" id="8e76172f-bb00-4546-b604-09723b806b3e" name="Changes" comment="R">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/icons/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/icons/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/utils.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/Index.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/QrCode.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/QrCode.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/WalletButton.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/connect/WalletButton.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/connect/installWallet.svelte" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/views/shared/SuccessStatusIcon.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/shared/SuccessStatusIcon.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/keepkey/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/keepkey/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/preflight-notifications.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/preflight-notifications.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/views/notify/Index.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/notify/Index.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/views/notify/Notification.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/notify/Notification.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/views/shared/NetworkSelector.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/views/shared/NetworkSelector.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/demo/src/components/account/AccountList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/demo/src/components/account/AccountList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/demo/src/components/layout/Layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/demo/src/components/layout/Layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/demo/src/components/layout/WalletHeader.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/demo/src/components/layout/WalletHeader.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/demo/src/components/logo/LogoWithSubIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/demo/src/components/logo/LogoWithSubIcon.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/demo/src/utils/api/evmApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/demo/src/utils/api/evmApi.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/demo/src/utils/api/substrateApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/demo/src/utils/api/substrateApi.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/ledgerPolkadot/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/ledgerPolkadot/src/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +61,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;sw__issuse&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;sw-dev&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/Admin/Documents/temp/Reactjs-project2/web3-onboard_sw/packages/demo/public/fonts&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -71,7 +69,7 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Admin\\Documents\\temp\\Reactjs-project2\\web3-onboard\\node_modules\\typescript\\lib&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\temp\\Reactjs-project2\\web3-onboard\\node_modules\\typescript\\lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -222,7 +220,31 @@
       <option name="project" value="LOCAL" />
       <updated>1706010018885</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Update ui bug #3">
+      <option name="closed" value="true" />
+      <created>1708415755434</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1708415755434</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Resolve ui bug">
+      <option name="closed" value="true" />
+      <created>1708415913586</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1708415913586</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Resolve ui bug">
+      <option name="closed" value="true" />
+      <created>1708416261667</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1708416261667</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -256,8 +278,11 @@
     <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="issues 3# Intergrate Substrate Wallet Connect Wallets" />
     <MESSAGE value="Update walletconnect for polkadot, project and logic flow are restructured." />
-    <MESSAGE value="Update modal general to connect qrWallet" />
     <MESSAGE value="Update modal design of modal to connect qrWallet" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update modal design of modal to connect qrWallet" />
+    <MESSAGE value="Update ui bug #3" />
+    <MESSAGE value="Update modal general to connect qrWallet" />
+    <MESSAGE value="R" />
+    <MESSAGE value="Resolve ui bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="Resolve ui bug" />
   </component>
 </project>

@@ -68,7 +68,6 @@ function ledgerPolkadot({
     const getIcon = async () => (await import('./icon.js')).default
 
     return ({ device }) => {
-        let accounts: Account[] | undefined
 
         const filtered =
             Array.isArray(filter) &&
@@ -117,14 +116,14 @@ function ledgerPolkadot({
 
                     private disconnected$: InstanceType<typeof Subject>
 
+                    private accountIdxMap : { [key: string]: number}
 
                   constructor() {
                     this.emit = eventEmitter.emit.bind(eventEmitter)
                     this.on = eventEmitter.on.bind(eventEmitter)
                     this.removeListener = eventEmitter.removeListener.bind(eventEmitter)
-
                     this.disconnected$ = new Subject()
-
+                    this.accountIdxMap = {}
                   }
 
                    async getAccount  ({ accountIdx, asset }: {
@@ -138,7 +137,8 @@ function ledgerPolkadot({
                       if(!account){
                         return ;
                       }
-                      address = account.address
+                      address = account.address;
+                      this.accountIdxMap = {...this.accountIdxMap, [address]: accountIdx};
                     }catch (e){
                       throw new ProviderRpcError({
                         code: 4001,
@@ -204,13 +204,14 @@ function ledgerPolkadot({
 
 
                      getAccounts = async () => {
-                        accounts = await accountSelect({
+                        const accounts = await accountSelect({
                             basePaths: DEFAULT_BASE_PATHS,
                             assets,
                             chains : [this.chainFilter[0]],
                             scanAccounts : this.scanAccounts,
                             containerElement
                         })
+
                         if (!accounts) throw new Error('No accounts were found')
                         if (accounts.length) {
                             eventEmitter.emit('accountsChanged', [accounts[0].address])
@@ -220,6 +221,7 @@ function ledgerPolkadot({
                     }
 
                      signMessage = async (address: string, message: string) => {
+                        const accounts = Object.keys(this.accountIdxMap)
                         if (
                           !accounts ||
                           !Array.isArray(accounts) ||
@@ -229,8 +231,7 @@ function ledgerPolkadot({
                               'No account selected. Must call eth_requestAccounts first.'
                             )
 
-                        const accountIdx =
-                          accounts.findIndex(account => account.address === address) || 0
+                        const accountIdx = this.accountIdxMap[address]
 
                         if(!this.ledger){
                           throw new ProviderRpcError({
@@ -238,7 +239,7 @@ function ledgerPolkadot({
                             message: errorMessages[ERROOR_CHOICEPOLKADOT]
                           })
                         }
-                        const { signature } = await this.ledger.signRaw(stringToUint8Array(message), 0, 0);
+                        const { signature } = await this.ledger.signRaw(stringToUint8Array(message), accountIdx, 0);
                         return signature
                     }
                     async enable() {
@@ -306,6 +307,8 @@ function ledgerPolkadot({
                         code: ProviderRpcErrorCode.UNSUPPORTED_METHOD,
                         message: `The Provider does not support the requested method: ${method}`
                       })
+
+                      return;
                     }
 
 
@@ -324,6 +327,7 @@ function ledgerPolkadot({
                           code: ProviderRpcErrorCode.UNSUPPORTED_METHOD,
                           message: `The Provider does not support the requested method: ${method}`
                         })
+                        return ;
                       }
                     }
 
@@ -335,6 +339,8 @@ function ledgerPolkadot({
                           code: ProviderRpcErrorCode.UNSUPPORTED_METHOD,
                           message: `The Provider does not support the requested method: ${method}`
                         })
+
+                        return;
                       }
                     }
 
@@ -346,11 +352,33 @@ function ledgerPolkadot({
                             message: errorMessages[ERROOR_CHOICEPOLKADOT]
                           })
                         }
+
+                        const accounts = Object.keys(this.accountIdxMap)
+                        if (
+                          !accounts ||
+                          !Array.isArray(accounts) ||
+                          !(accounts.length && accounts.length > 0)
+                        )
+                          throw new Error(
+                            'No account selected. Must call eth_requestAccounts first.'
+                          )
+
                         if (params) {
-                          return await this.ledger.sign(params as any)
+                          const { transactionPayload, address } = params as Record<string, string>
+                          if(!transactionPayload || !address){
+
+                            throw new ProviderRpcError({
+                              code: ProviderRpcErrorCode.INVALID_PARAMS,
+                              message: `The Provider does not permit valid params`
+                            })
+                            return;
+                          }
+                          const accountIdx = this.accountIdxMap[address];
+                          return await this.ledger.sign(transactionPayload as any, accountIdx, 0);
                         }
                       }catch (e) {
-                        console.log(e)
+                        console.log(e);
+                        return ;
                       }
                     }
 

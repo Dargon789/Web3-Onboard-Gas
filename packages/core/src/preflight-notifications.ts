@@ -100,7 +100,8 @@ export async function preflightNotifications(
   // get result and handle errors
   let hash
   try {
-    hash = await sendTransaction()
+    hash = await sendTransaction();
+    console.log('1231321pass', hash)
   } catch (error) {
     type CatchError = {
       message: string
@@ -115,8 +116,10 @@ export async function preflightNotifications(
 
   // Remove preflight notification if a resolves to hash
   // and let the SDK take over
-  removeNotification(id)
+
   if (hash) {
+    console.log('hash', hash)
+    addNotification(buildNotification('txConfirmed', id))
     return hash
   }
   return

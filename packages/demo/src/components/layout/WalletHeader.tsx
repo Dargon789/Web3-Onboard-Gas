@@ -129,11 +129,11 @@ const WalletHeader = styled(Component)<Props>(({theme : {token}}) => {
       alignItems: 'center',
     },
 
-    '.wallet-header-content.--isDisconnect':{
+    '.wallet-header-content.-isDisconnect':{
       padding: 24
     },
 
-    '.wallet-header-content.--isConnected': {
+    '.wallet-header-content.-isConnected': {
       padding: '24px 0px',
 
       '.__header-title': {
