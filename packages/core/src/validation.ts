@@ -156,7 +156,8 @@ const commonPositions = Joi.string().valid(
   'topRight',
   'bottomRight',
   'bottomLeft',
-  'topLeft'
+  'topLeft',
+  'topCenter'
 )
 
 const gasPriceProbabilities = [70, 80, 90, 95, 99]

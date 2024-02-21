@@ -70,6 +70,7 @@
     pointer-events: all;
     backdrop-filter: blur(5px);
     min-height: 56px;
+    max-width: 318px;
     display: flex;
     align-items: center;
     gap: var(--spacing-4);

@@ -230,7 +230,7 @@ export default init({
         //   }
         // }
       },
-      position: 'topLeft'
+      position: 'topCenter'
     }
   }
 })

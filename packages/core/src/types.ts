@@ -280,6 +280,7 @@ export type CommonPositions =
     | 'bottomRight'
     | 'bottomLeft'
     | 'topLeft'
+    | 'topCenter'
 
 export type AccountCenterPosition = CommonPositions
 

@@ -1,3 +1,4 @@
+
 <script lang="ts">
   import { shareReplay, startWith } from 'rxjs/operators'
   import { connectWallet$, switchChainModal$, wallets$ } from '../streams.js'
@@ -27,17 +28,23 @@
   const setPositioningDefaults = (targetComponentVariable: string) => {
     return {
       topLeft: `
-        top: var(--${targetComponentVariable}-position-top, 0);
+        top: var(--${targetComponentVariable}-position-top, 24px);
         left: var(--${targetComponentVariable}-position-left, 0);`,
       topRight: `
-        top: var(--${targetComponentVariable}-position-top, 0);
+        top: var(--${targetComponentVariable}-position-top, 24px);
         right: var(--${targetComponentVariable}-position-right, 0);`,
       bottomRight: `
         bottom: var(--${targetComponentVariable}-position-bottom, 0);
         right: var(--${targetComponentVariable}-position-right, 0);`,
       bottomLeft: `
         bottom: var(--${targetComponentVariable}-position-bottom, 0);
-        left: var(--${targetComponentVariable}-position-left, 0);`
+        left: var(--${targetComponentVariable}-position-left, 0);`,
+      topCenter:
+      ` top: var(--${targetComponentVariable}-position-top, 24px);
+        left: var(--${targetComponentVariable}-position-center, 50%);
+        transform: translate(-50%, -50%);
+      `
+
     }
   }
 
