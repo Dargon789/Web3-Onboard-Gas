@@ -33,7 +33,8 @@ export const APP_INITIAL_STATE: AppState = {
 export const STORAGE_KEYS = {
   TERMS_AGREEMENT: 'onboard.js:agreement',
   LAST_CONNECTED_WALLET: 'onboard.js:last_connected_wallet',
-  CONNECT_HD_WALLET_MODAL : 'onboard.js:connect_hd_wallet_modal'
+  CONNECT_HD_WALLET_MODAL : 'onboard.js:connect_hd_wallet_modal',
+  GET_ONLY_CHAIN_NETWORK_LEDGER : 'onboard.js:get_only_chain_network_ledger'
 }
 
 export const MOBILE_WINDOW_WIDTH = 768

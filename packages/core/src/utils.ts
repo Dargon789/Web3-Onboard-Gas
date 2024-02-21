@@ -36,9 +36,9 @@ import {
   hydraxIcon,
   kusamaIcon,
   phalaNetworkIcon,
-  statemint,
+  statemintIcon,
   turingNetworkIcon,
-  westendIcon
+  westendIcon, statemineIcon, rococoIcon
 } from './icons/index.js'
 
 import type {
@@ -159,7 +159,9 @@ export const chainIdToLabel: Record<string, string> = {
   '1bb969d85965e4bb5a651abbedf21a54' : 'Phala Network',
   '68d56f15f85d3136970ec16946040bc1' : 'Statemint',
   '0f62b701fb12d02237a33b84818c11f6' : 'Turing Network',
-  'e143f23803ac50e8f6f8e62695d1ce9e' : 'Westend'
+  'e143f23803ac50e8f6f8e62695d1ce9e' : 'Westend',
+  '6408de7737c59c238890533af25896a2': 'Rococo',
+  '48239ef607d7928874027a43a6768920': 'Statemine'
 }
 
 export const networkToChainId: Record<string, ChainId> = {
@@ -285,8 +287,8 @@ export const chainStyles: Record<string, ChainStyle> = {
     color: '#000000'
   },
   '68d56f15f85d3136970ec16946040bc1' : {
-    icon : statemint,
-    color : '#000000'
+    icon : statemintIcon,
+    color : '#E6007A'
   },
   '0f62b701fb12d02237a33b84818c11f6' : {
     icon : turingNetworkIcon,
@@ -295,7 +297,18 @@ export const chainStyles: Record<string, ChainStyle> = {
   'e143f23803ac50e8f6f8e62695d1ce9e' : {
     icon : westendIcon,
     color: '#ffffff'
+  },
+  '48239ef607d7928874027a43a6768920': {
+    icon: statemineIcon,
+    color: '#000000'
+  },
+  '6408de7737c59c238890533af25896a2': {
+    icon: rococoIcon,
+    color: '#ffffff'
   }
+
+
+
 }
 
 export const unrecognizedChainStyle = { icon: questionIcon, color: '#33394B' }

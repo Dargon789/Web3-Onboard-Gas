@@ -1,13 +1,13 @@
 <script lang="ts">
-  import type { EIP1193Provider, SubstrateProvider, WalletModule } from '@subwallet_connect/common'
+  import type { EIP1193Provider, SubstrateProvider, WalletModule, Chain } from '@subwallet_connect/common'
   import {  ProviderRpcErrorCode  } from '@subwallet_connect/common';
   import EventEmitter from 'eventemitter3';
   import { BigNumber } from 'ethers'
   import { _ } from 'svelte-i18n'
   import en from '../../i18n/en.json'
-  import { enable, listenAccountsChanged } from '../../provider.js'
+  import { enable, listenAccountsChanged, listenChainChanged } from '../../provider.js'
   import { state } from '../../store/index.js'
-  import {  connectWallet$, onDestroy$, uriConnect$, qrModalConnect$ } from '../../streams.js'
+  import {  connectWallet$, onDestroy$, uriConnect$, qrModalConnect$, disconnectWallet$ } from '../../streams.js'
   import { addWallet, updateAccount } from '../../store/actions.js'
   import {
     validEnsChain,
@@ -52,6 +52,7 @@
   } from '../../provider.js'
 
   import type {
+    ConnectedChain,
     ConnectOptions,
     i18n, WalletConnectState,
     WalletState,
@@ -182,6 +183,9 @@
 
       const loadedIcon = await icon
 
+
+
+
       selectedWallet = {
         label,
         icon: loadedIcon,
@@ -189,7 +193,7 @@
         provider,
         instance,
         accounts: [],
-        chains: [{ namespace: type, id: type === 'evm' ? '0x1' : '91b171bb158e2d3848fa23a9f1c25182' }]
+        chains: [{ namespace: type, id: (type === 'evm' ? '0x1' : '91b171bb158e2d3848fa23a9f1c25182') }]
       }
 
       connectingErrorMessage = ''
@@ -249,6 +253,15 @@
 
     const { provider, label , type } = selectedWallet
     cancelPreviousConnect$.next()
+    let chain: string | undefined = undefined;
+
+    provider.on('chainChanged', (chainId) => {
+      const chain_ = chains.find(({ id }) => id === chainId)
+      if(chain_) {
+        chain = chainId
+      }
+    })
+
     try {
       const { address, signer, metadata } = await Promise.race([
         // resolved account
@@ -308,7 +321,7 @@
         )
       }
 
-      let chain = selectedWallet.chains[0].id;
+       chain = chain ? chain : selectedWallet.chains[0].id ;
       if( type === 'evm'){
         chain = await getChainId((provider as EIP1193Provider))
 

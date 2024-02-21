@@ -1,10 +1,10 @@
 export default `
   <svg width="100%" height="100%" viewBox="0 0 152 152" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <mask id="mask0_1054_1718" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="152" height="152">
+  <mask id="mask0_1054_1719" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="152" height="152">
   <path d="M76 0C133.63 0 152 18.37 152 76C152 133.63 133.63 152 76 152C18.37 152 0 133.63 0 76C0 18.37 18.37 0 76 0Z" fill="#004BFF"/>
   </mask>
-  <g mask="url(#mask0_1054_1718)">
-  <rect width="152" height="152" fill="#E6007A"/>
+  <g mask="url(#mask0_1054_1719)">
+  <rect width="152" height="152" fill="black"/>
   </g>
   <path d="M101.233 90.8933H87.4031L84.8049 84.5512H67.2517L64.6535 90.8933H50.8237L67.3745 53.1887H84.6617L101.233 90.8933ZM76.0488 62.9882L71.4661 74.2403H80.611L76.0488 62.9882Z" fill="white"/>
   <path d="M76.0285 45.1899C81.3277 45.1899 85.6234 40.8941 85.6234 35.5949C85.6234 30.2958 81.3277 26 76.0285 26C70.7294 26 66.4336 30.2958 66.4336 35.5949C66.4336 40.8941 70.7294 45.1899 76.0285 45.1899Z" fill="white"/>

@@ -424,6 +424,8 @@ export interface SubstrateProvider extends SimpleEventEmitter{
       Promise< string >,
   on(event: 'connect', listener: ConnectListener): void,
   on(event: 'disconnect', listener: DisconnectListener): void,
+  on(event: 'chainChanged', listener: ChainListener): void
+  on(event: 'accountsChanged', listener: AccountsListener): void
   on(event: 'uriChanged', listener: UriListener): void,
   on(event: 'qrModalState', listener: QrModalListener): void,
   disconnect() : Promise<void>,

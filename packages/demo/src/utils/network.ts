@@ -60,5 +60,29 @@ export const NetworkInfo : Record<string, NetworkItemType> = {
     slug: 'polygon',
     name: 'Polygon',
     namespace: 'evm'
+  },
+  'Polkadot Asset Hub': {
+    slug: 'statemint',
+    namespace: 'substrate',
+    name: 'Polkadot Asset Hub',
+    wsProvider: 'wss://statemint-rpc.dwellir.com'
+  },
+  'Kusama Asset Hub': {
+    slug: 'statemine',
+    namespace: 'substrate',
+    name: 'Kusama Asset Hub',
+    wsProvider: 'wss://statemine-rpc.dwellir.com'
+  },
+  'Rococo': {
+    slug: 'rococo',
+    namespace: 'substrate',
+    name: 'Rococo',
+    wsProvider: 'wss://pangolin-rpc.darwinia.network'
+  },
+  'Kusama': {
+    slug: 'kusama',
+    namespace: 'substrate',
+    name: 'Kusama',
+    wsProvider: 'wss://1rpc.io/ksm'
   }
 }

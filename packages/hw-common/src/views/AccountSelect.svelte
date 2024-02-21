@@ -12,6 +12,7 @@
     Account,
     AccountsList
   } from '../types.js'
+  import { supportedApps } from '../utils.js';
 
   export let selectAccountOptions: SelectAccountOptions
   export let accounts$: Subject<Account[]>
@@ -24,6 +25,7 @@
     supportsCustomPath = true,
     containerElement
   } = selectAccountOptions
+
 
   let accountsListObject: AccountsList | undefined
   let accountSelected: Account[]  = []
@@ -40,11 +42,24 @@
     asset: assets[0] || null,
     accountIdxStart
   }
+  let assetLabel = scanAccountOptions.asset.label;
+  $: chainsFilter = chains
 
   const handleDerivationPathSelect = (e: Event) => {
-    let selectVal = (e.target as HTMLInputElement).value
-    if (selectVal === 'customPath') return (customDerivationPath = true)
-    scanAccountOptions.derivationPath = selectVal
+
+    let selectVal = (e.target as HTMLInputElement).value;
+    if (selectVal === 'customPath') return (customDerivationPath = true);
+    scanAccountOptions.derivationPath = selectVal;
+    if(assets[0].label === 'ETH') return;
+
+    chainsFilter = chains.filter(
+            (chain)=>
+                !!supportedApps[chain.id].path
+                && selectVal === supportedApps[chain.id].path
+    )
+    scanAccountOptions.chainId = chainsFilter[0].id;
+    scanAccountOptions.asset = supportedApps[chainsFilter[0].id].asset;
+    assetLabel = scanAccountOptions.asset.label;
   }
 
   const toggleDerivationPathToDropdown = () => {
@@ -55,6 +70,37 @@
   const handleCustomPath = (e: Event) => {
     let inputVal = (e.target as HTMLInputElement).value
     scanAccountOptions.derivationPath = inputVal
+  }
+
+  const handleChainSelect = ( e: Event ) => {
+    let selectedChain = (e.target as HTMLInputElement).value
+    const { asset, path } = supportedApps[selectedChain];
+    if(assets[0].label === 'ETH' ) return;
+    console.log(selectedChain);
+    if (assetLabel && path ) {
+      scanAccountOptions = {
+        ...scanAccountOptions,
+        chainId: selectedChain,
+        asset,
+        derivationPath: path
+      }
+      assetLabel = asset.label
+    }
+  }
+
+  const handleAssetSelect = ( e: Event ) => {
+    let selectVal = (e.target as HTMLInputElement).value;
+    if(assets[0].label === 'ETH' ) return;
+    scanAccountOptions.asset = assets.find(
+            (asset) => asset.label === selectVal) || scanAccountOptions.asset;
+    chainsFilter = chains.filter(
+            (chain) =>
+                    !!supportedApps[chain.id].path
+                    && (supportedApps[chain.id].asset.label === selectVal )
+    )
+    scanAccountOptions.derivationPath = supportedApps[chainsFilter[0].id].path
+    scanAccountOptions.chainId = chainsFilter[0].id;
+    assetLabel = selectVal
   }
 
   const scanAccountsWrap = async (): Promise<void> => {
@@ -73,7 +119,6 @@
       loadingAccounts = false
     } catch (err) {
       const { message } = err as { message: string }
-
       if (
         typeof message === 'string' &&
         message.includes('could not detect network')
@@ -493,6 +538,7 @@
         {:else if !customDerivationPath}
           <select
             class="base-path-select"
+            bind:value={scanAccountOptions['derivationPath']}
             on:change={handleDerivationPathSelect}
           >
             {#each basePaths as path}
@@ -509,9 +555,12 @@
 
       <div class="asset-container">
         <h4 class="control-label">Asset</h4>
-        <select class="asset-select" bind:value={scanAccountOptions['asset']}>
+        <select class="asset-select"
+                bind:value={assetLabel}
+                on:change={handleAssetSelect}
+        >
           {#each assets as asset}
-            <option value={asset}>
+            <option value={asset.label}>
               {asset.label}
             </option>
           {/each}
@@ -522,9 +571,10 @@
         <h4 class="control-label">Network</h4>
         <select
           bind:value={scanAccountOptions['chainId']}
+          on:change={handleChainSelect}
           class="network-select"
         >
-          {#each chains as chain}
+          {#each chainsFilter as chain}
             <option value={chain.id}>
               {chain.label}
             </option>

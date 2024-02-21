@@ -10,24 +10,34 @@ import {
 import { Ledger } from "@polkadot/hw-ledger";
 import type { BigNumber } from 'ethers'
 
-import type {Account, Asset, ScanAccountsOptions} from '@subwallet_connect/hw-common'
+import type {Account, Asset, ScanAccountsOptions} from '@subwallet_connect/hw-common';
+import { supportedApps } from '@subwallet_connect/hw-common/src/utils';
 import { Subject} from 'rxjs';
 import { RequestArguments } from '@walletconnect/ethereum-provider/dist/types/types.js';
 import { isArray } from "@shapeshiftoss/hdwallet-core";
 
 
-const DEFAULT_PATH = "44'/354'/0'/0/0"
+
+const DEFAULT_PATH_POLKADOT = "m/44'/354'/0'/0"
+const DEFAULT_PATH_KUSAMA = "m/44'/434'/0'/0"
 
 const DEFAULT_BASE_PATHS = [
     {
         label: 'Polkadot',
-        value: DEFAULT_PATH
+        value: DEFAULT_PATH_POLKADOT
+    },
+    {
+      label: 'Kusama',
+      value: DEFAULT_PATH_KUSAMA
     }
 ]
 
 const assets = [
     {
-        label: 'DOT'
+        label: 'DOT',
+    },
+    {
+      label: 'KSM'
     }
 ]
 
@@ -126,19 +136,16 @@ function ledgerPolkadot({
                     this.accountIdxMap = {}
                   }
 
-                   async getAccount  ({ accountIdx, asset }: {
-                    accountIdx: number
-                    asset: Asset
-                  }): Promise<Account | undefined> {
+                   async getAccount  ({ accountIdxStart, asset }: Omit<ScanAccountsOptions, 'derivationPath'>): Promise<Account | undefined> {
 
                     let address = ''
                     try{
-                      const account= await this.ledger?.getAddress(false, accountIdx, 0);
+                      const account= await this.ledger?.getAddress(false, accountIdxStart, 0);
                       if(!account){
                         return ;
                       }
                       address = account.address;
-                      this.accountIdxMap = {...this.accountIdxMap, [address]: accountIdx};
+                      this.accountIdxMap = {...this.accountIdxMap, [address]: accountIdxStart};
                     }catch (e){
                       throw new ProviderRpcError({
                         code: 4001,
@@ -147,14 +154,14 @@ function ledgerPolkadot({
                     }
                      return {
                        address,
-                       derivationPath : getPath(accountIdx),
+                       derivationPath : getPath(accountIdxStart),
                        balance: {
                          asset: asset.label || 'DOT',
                          value: 0 as unknown  as BigNumber
                        }
                      }
                   }
-                     getAllAccounts = async ({asset, accountIdxStart}:  { asset: Asset, accountIdxStart: number}) => {
+                     getAllAccounts = async ({asset, accountIdxStart, chainId}: Omit<ScanAccountsOptions, 'derivationPath'>) => {
                         try {
                             let index = accountIdxStart || 0;
                             let zeroBalanceAccounts = 0
@@ -164,8 +171,9 @@ function ledgerPolkadot({
                             // Then adds 4 more 0 balance accounts to the array
                             while (zeroBalanceAccounts < consecutiveEmptyAccounts) {
                                 const acc = await this.getAccount({
-                                  accountIdx: index,
-                                  asset
+                                  accountIdxStart: index,
+                                  asset,
+                                  chainId,
                                 })
                                 if (
                                   acc
@@ -196,18 +204,28 @@ function ledgerPolkadot({
                         }: ScanAccountsOptions): Promise<Account[]> => {
                         currentChain = chains.find(({ id }) => id === chainId) || currentChain
 
-                        const accountResult = ( (await this.getAllAccounts({ asset, accountIdxStart }))?.filter((account) => account ) || []) as Account[]
+                       this.ledger = new Ledger('webusb', supportedApps[currentChain.id].name);
+                       if(!this.ledger){
+                         throw new ProviderRpcError({
+                           code: 4001,
+                           message: errorMessages[ERROOR_CHOICEPOLKADOT]
+                         })
+                       }
+
+                        const accountResult = ( (await this.getAllAccounts({ asset, accountIdxStart, chainId }))?.filter((account) => account ) || []) as Account[]
+
+                        this.emit('chainChanged', currentChain.id);
 
                         return accountResult;
                     }
-                     chainFilter = chains.filter( chain => chain.namespace === 'substrate')
+                     chainFilter = chains.filter( chain => chain.namespace === 'substrate' && !!supportedApps[chain.id])
 
 
                      getAccounts = async () => {
                         const accounts = await accountSelect({
                             basePaths: DEFAULT_BASE_PATHS,
                             assets,
-                            chains : [this.chainFilter[0]],
+                            chains : this.chainFilter,
                             scanAccounts : this.scanAccounts,
                             containerElement
                         })
@@ -244,13 +262,7 @@ function ledgerPolkadot({
                     }
                     async enable() {
                         try {
-                            this.ledger = new Ledger('webusb', 'polkadot');
-                            if(!this.ledger){
-                              throw new ProviderRpcError({
-                                code: 4001,
-                                message: errorMessages[ERROOR_CHOICEPOLKADOT]
-                              })
-                            }
+
                             // Triggers the account select modal if no accounts have been selected
                             const accounts = await this.getAccounts()
 

@@ -85,3 +85,10 @@ export type AccountsList = {
   all: Account[]
   filtered: Account[]
 }
+
+export interface AppParams {
+  name: string,
+  path: string,
+  asset: Asset
+}
+

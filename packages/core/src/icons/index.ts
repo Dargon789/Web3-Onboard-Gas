@@ -24,9 +24,11 @@ export { default as hydraxIcon } from './hydradx.js'
 export { default as kusamaIcon } from './kusama.js'
 export { default as phalaNetworkIcon } from './phala-network.js'
 export { default as polkadotIcon } from './polkadot.js'
-export { default as statemint } from './statemint.js'
+export { default as statemintIcon } from './statemint.js'
 export { default as turingNetworkIcon } from './turing-network.js'
 export { default as westendIcon } from './westend.js'
+export { default as rococoIcon } from './rococo.js'
+export { default as statemineIcon } from './statemine.js'
 
 // other
 export { default as hourglass } from './hourglass.js'

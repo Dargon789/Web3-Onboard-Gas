@@ -93,13 +93,11 @@ export function listenAccountsChanged(args: {
   const { provider, disconnected$, type } = args
 
   const addHandler = (handler: AccountsListener) => {
-    if( type === 'substrate' || typeof (provider as EIP1193Provider).on !== 'function') return ;
-    (provider as EIP1193Provider).on('accountsChanged', handler)
+    provider.on('accountsChanged', handler)
   }
 
   const removeHandler = (handler: AccountsListener) => {
-    if( type === 'substrate' || typeof (provider as EIP1193Provider).on !== 'function') return ;
-    (provider as EIP1193Provider).removeListener('accountsChanged', handler)
+    provider.removeListener('accountsChanged', handler)
   }
 
   return fromEventPattern<ProviderAccounts>(addHandler, removeHandler).pipe(
@@ -114,17 +112,15 @@ export function listenChainChanged(args: {
 }): Observable<ChainId> {
   const { provider, disconnected$, type } = args
   const addHandler = (handler: ChainListener) => {
-    if( type === 'substrate' || typeof (provider as EIP1193Provider).on !== 'function') return ;
-    (provider as EIP1193Provider).on('chainChanged', handler)
+    provider.on('chainChanged', handler)
   }
 
   const removeHandler = (handler: ChainListener) => {
-    if( type === 'substrate' || typeof (provider as EIP1193Provider).on !== 'function') return ;
-    (provider as EIP1193Provider).removeListener('chainChanged', handler)
+    provider.removeListener('chainChanged', handler)
   }
 
   return fromEventPattern<ChainId>(addHandler, removeHandler).pipe(
-      takeUntil(disconnected$)
+       takeUntil(disconnected$)
   )
 }
 
@@ -301,6 +297,7 @@ export function trackWallet(
 
   // Update chain on wallet when chainId changed
   chainChanged$.subscribe(async chainId => {
+    console.log('123', chainId);
     const { wallets } = state.get()
     const { chains, accounts } = wallets.find(wallet =>
       wallet.label === label && wallet.type === type)

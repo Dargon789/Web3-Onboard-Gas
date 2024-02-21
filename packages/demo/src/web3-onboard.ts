@@ -68,49 +68,6 @@ export default init({
   },
   projectId : '59b5826141a56b204e9e0a3f7e46641d',
 
-
-  chainsPolkadot:[
-    {
-      // hex encoded string, eg '0x1' for Ethereum Mainnet
-      id: '91b171bb158e2d3848fa23a9f1c25182',
-      // string indicating chain namespace. Defaults to 'evm' but will allow other chain namespaces in the future
-      namespace: 'substrate',
-      // the native token symbol, eg ETH, BNB, MATIC
-      token: 'DOT',
-      // used for display, eg Polkadot
-      label: 'Polkadot',
-      // used for get balance
-      rpcUrl: `polkadot.api.subscan.io`,
-      decimal: 10
-    },
-
-    {
-      id: 'afdc188f45c71dacbaa0b62e16a91f72' ,
-      token: 'HDX',
-      namespace: 'substrate',
-      label: 'HydraDX',
-      rpcUrl: 'hydradx.api.subscan.io',
-      decimal : 12
-    },
-    {
-      id: '9eb76c5184c4ab8679d2d5d819fdf90b',
-      token: 'ASTR',
-      label: 'Astar Network',
-      decimal: 18,
-      namespace: 'substrate',
-      rpcUrl: 'astar.api.subscan.io'
-    },
-    {
-      id: 'e143f23803ac50e8f6f8e62695d1ce9e' ,
-      token: 'WND',
-      decimal : 12,
-      label: 'Westend',
-      rpcUrl: 'westend.subscan.io',
-        namespace: 'substrate'
-    }
-
-  ],
-
   // An array of wallet modules that you would like to be presented to the user to select from when connecting a wallet.
   wallets: [
     subwalletWallet,
@@ -173,6 +130,59 @@ export default init({
     },
 
   ],
+
+
+  chainsPolkadot:[
+    {
+      // hex encoded string, eg '0x1' for Ethereum Mainnet
+      id: '91b171bb158e2d3848fa23a9f1c25182',
+      // string indicating chain namespace. Defaults to 'evm' but will allow other chain namespaces in the future
+      namespace: 'substrate',
+      // the native token symbol, eg ETH, BNB, MATIC
+      token: 'DOT',
+      // used for display, eg Polkadot
+      label: 'Polkadot',
+      // used for get balance
+      rpcUrl: `polkadot.api.subscan.io`,
+      decimal: 10
+    },
+    {
+      id: 'e143f23803ac50e8f6f8e62695d1ce9e' ,
+      token: 'WND',
+      decimal : 12,
+      label: 'Westend',
+      rpcUrl: 'westend.subscan.io',
+      namespace: 'substrate'
+    },
+
+    {
+      id: '68d56f15f85d3136970ec16946040bc1',
+      label: 'Polkadot Asset Hub',
+      namespace: 'substrate',
+      decimal: 10,
+      token: 'DOT',
+      rpcUrl: 'assethub-polkadot.subscan.io',
+    },
+
+    {
+      id: 'b0a8d493285c2df73290dfb7e61f870f',
+      label: 'Kusama',
+      decimal: 12,
+      namespace: 'substrate',
+      token: 'KSM',
+      rpcUrl: 'kusama.api.subscan.io'
+    },
+
+    {
+      id: '48239ef607d7928874027a43a6768920',
+      label: 'Kusama Asset Hub',
+      decimal: 12,
+      namespace: 'substrate',
+      token: 'KSM',
+      rpcUrl: 'assethub-kusama.subscan.io'
+    }
+  ],
+
   appMetadata: {
     // The name of your dApp
     name: 'SubWallet Connect',
