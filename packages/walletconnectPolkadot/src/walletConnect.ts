@@ -1,16 +1,12 @@
-import { isHexString } from './index.js'
+import {isHexString} from './index.js'
 
-import type { JQueryStyleEventEmitter } from 'rxjs/internal/observable/fromEvent'
+import type {JQueryStyleEventEmitter} from 'rxjs/internal/observable/fromEvent'
 import type {WalletConnectOptions} from './types.js'
-import type { CoreTypes } from '@walletconnect/types'
-import type {
-  Chain,
-  ProviderAccounts,
-  WalletInit,
- SubstrateProvider
-} from '@subwallet_connect/common'
-import {UniversalProviderOpts, RequestArguments} from "@walletconnect/universal-provider";
-import { Signer } from '@polkadot/types/types/extrinsic.js'
+import type {CoreTypes} from '@walletconnect/types'
+import type {Chain, ProviderAccounts, SubstrateProvider, WalletInit} from '@subwallet_connect/common'
+import {ProviderRpcErrorCode} from "@subwallet_connect/common";
+import {RequestArguments, UniversalProviderOpts} from "@walletconnect/universal-provider";
+import {Signer} from '@polkadot/types/types/extrinsic.js'
 
 // methods that require user interaction
 const methods = [
@@ -274,7 +270,8 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
 
 
           async signDummy(address: string, data: string, wallet?: Signer | undefined) {
-              const result = await this.request({method: 'polkadot_signMessage', params: {
+              const result = await this.request({
+                method: 'polkadot_signMessage', params: {
                   address,
                   data,
                   type: 'bytes'
@@ -355,11 +352,21 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
               }
 
               try {
+                if(!params || !(Array.isArray(params) && params.length === 2 )) {
+                  throw new ProviderRpcError({
+                    code: ProviderRpcErrorCode.INVALID_PARAMS,
+                    message: 'Your params is invalid to request this method'
+                  })
+                }
                 const result = await this.connector?.client.request({
                   topic: this.connector.session.topic,
                   request: {
                     method: 'polkadot_signMessage',
-                    params
+                    params: {
+                      address: params[0],
+                      message: params[1],
+                      type: 'bytes'
+                    }
                   },
                   chainId: `polkadot:${chains[0].id}`
                 })

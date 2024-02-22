@@ -30,8 +30,8 @@ const injected = injectedModule({
 
 
 const walletConnectPolkadot = walletConnectPolkadotModule({
-  projectId: '59b5826141a56b204e9e0a3f7e46641d',
-  dappUrl: 'https://thiendekaco.github.io/SubConnect'
+  projectId: '762e91498a11e0acc664cdd0fd2af181',
+  dappUrl: 'https://w3o-demo.subwallet.app/'
 })
 const metamaskSDKWallet = metamaskSDK({
   options: {
@@ -66,7 +66,7 @@ export default init({
       enabled: false
     }
   },
-  projectId : '59b5826141a56b204e9e0a3f7e46641d',
+  projectId : '762e91498a11e0acc664cdd0fd2af181',
 
   // An array of wallet modules that you would like to be presented to the user to select from when connecting a wallet.
   wallets: [
