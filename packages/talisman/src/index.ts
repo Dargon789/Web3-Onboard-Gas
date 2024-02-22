@@ -1,7 +1,7 @@
 import type { WalletInit, EIP1193Provider } from '@subwallet_connect/common'
 import { SubstrateProvider, WalletInterfaceSubstrate} from "@subwallet_connect/common";
 import { InjectedMetadata, InjectedWindow } from "@polkadot/extension-inject/types";
-import EventEmitter from "events";
+import EventEmitter from "eventemitter3";
 import { Signer } from "@polkadot/types/types";
 import { EXTENSION_NAME, DAPP_NAME, URL_INSTALL} from "./constant.js";
 

@@ -1,7 +1,7 @@
 import type { WalletInit, EIP1193Provider } from '@subwallet_connect/common'
 import { SubstrateProvider, WalletInterfaceSubstrate} from "@subwallet_connect/common";
 import { InjectedMetadata, InjectedWindow } from "@polkadot/extension-inject/types";
-import EventEmitter from "events";
+import EventEmitter from "eventemitter3";
 import { Signer } from "@polkadot/types/types";
 import { EXTENSION_NAME, DAPP_NAME, URL_INSTALL} from "./constant.js";
 
@@ -17,15 +17,15 @@ function SubWallet (): WalletInit {
       platforms: ['desktop'],
       getInterface: async (): Promise<WalletInterfaceSubstrate> => {
         const isInstalled = (extensionName: string) => {
-          const injectedWindow = window as unknown as Window & InjectedWindow;
-          const injectedExtension =
-            injectedWindow?.injectedWeb3[extensionName]
-          return !!injectedExtension;
-        }
+        const injectedWindow = window as unknown as Window & InjectedWindow;
+        const injectedExtension =
+          injectedWindow?.injectedWeb3[extensionName]
+        return !!injectedExtension;
+      }
 
         if(!isInstalled(EXTENSION_NAME)){
           window.open(URL_INSTALL, '_blank');
-          throw new Error('Please Install Polkadot{.js} wallet to use this wallet');
+          throw new Error('Please Install SubWallet wallet to use this wallet');
         }
         const getRawExtension = (extensionName: string) => {
           const injectedWindow = window as unknown as Window & InjectedWindow;
@@ -86,7 +86,6 @@ function SubWallet (): WalletInit {
       },
     }
   }
-
 }
 
 export default SubWallet

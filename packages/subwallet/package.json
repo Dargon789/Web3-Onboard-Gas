@@ -67,8 +67,7 @@
   },
   "dependencies": {
     "@polkadot/extension-inject": "^0.46.5",
-    "@subwallet_connect/common": "^1.0.2",
-    "events": "^3.3.0"
+    "@subwallet_connect/common": "^1.0.2"
   },
   "author": ""
 }

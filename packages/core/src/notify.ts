@@ -149,6 +149,7 @@ export function eventToType(eventCode: string | undefined): NotificationType {
     case 'txDropped':
     case 'nsfFail':
     case 'txUnderpriced':
+    case 'txErrorTransaction':
       return 'error'
     case 'txConfirmed':
       return 'success'

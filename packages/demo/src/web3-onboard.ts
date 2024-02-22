@@ -7,7 +7,8 @@ import metamaskSDK from '@subwallet_connect/metamask';
 import subwalletModule from '@subwallet_connect/subwallet';
 import talismanModule from '@subwallet_connect/talisman';
 import polkadot_jsModule from '@subwallet_connect/polkadot_js';
-import subwalletPolkadotModule from '@subwallet_connect/subwallet-polkadot'
+import subwalletPolkadotModule from '@subwallet_connect/subwallet-polkadot';
+// import polkadotVaultModule from '@subwallet_connect/polkadot-vault';
 import {TransactionHandlerReturn} from "@subwallet_connect/core/dist/types";
 import { SubWallet } from "../assets";
 
@@ -48,7 +49,7 @@ const subwalletWallet = subwalletModule();
 const polkadotWallet = polkadot_jsModule();
 const subwalletPolkadotWalet = subwalletPolkadotModule();
 const talismanWallet = talismanModule();
-
+// const polkadotVaultWallet = polkadotVaultModule();
 
 
 export default init({
@@ -59,11 +60,10 @@ export default init({
   },
   accountCenter: {
     desktop : {
-      enabled: true,
-      minimal : true
+      enabled: false,
     },
     mobile: {
-      enabled: true
+      enabled: false
     }
   },
   projectId : '59b5826141a56b204e9e0a3f7e46641d',
@@ -77,6 +77,7 @@ export default init({
     ledgerPolkadot_,
     talismanWallet,
     polkadotWallet,
+    // polkadotVaultWallet,
     injected
   ],
   // An array of Chains that your app supports

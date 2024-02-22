@@ -61,7 +61,7 @@ export async function preflightNotifications(
     if (transactionCost.gt(new BigNumber(balance))) {
       const eventCode = 'nsfFail'
 
-      addNotification(buildNotification(eventCode, id))
+      addNotification(buildNotification(eventCode, id, ''))
     }
   }
 
@@ -71,7 +71,7 @@ export async function preflightNotifications(
   if (txRequested) {
     const eventCode = 'txAwaitingApproval'
 
-    const newNotification = buildNotification(eventCode, txRequested.id)
+    const newNotification = buildNotification(eventCode, txRequested.id, '')
     addNotification(newNotification)
   }
 
@@ -84,18 +84,18 @@ export async function preflightNotifications(
     if (awaitingApproval) {
       const eventCode = 'txConfirmReminder'
 
-      const newNotification = buildNotification(eventCode, awaitingApproval.id)
+      const newNotification = buildNotification(eventCode, awaitingApproval.id, '')
       addNotification(newNotification)
     }
   }, reminderTimeout)
 
   const eventCode = 'txRequest'
-  addNotification(buildNotification(eventCode, id))
+  addNotification(buildNotification(eventCode, id, ''))
   const resultFn = (hash_: string) => {
     if (hash_) {
       hash = hash_;
       console.log(hash_);
-      addNotification(buildNotification('txConfirmed', id));
+      addNotification(buildNotification('txConfirmed', id, ''));
       return hash;
     }
   }
@@ -116,7 +116,7 @@ export async function preflightNotifications(
     }
     const { eventCode, errorMsg } = extractMessageFromError(error as CatchError)
 
-    addNotification(buildNotification(eventCode, id))
+    addNotification(buildNotification(eventCode, id, errorMsg))
     console.error(errorMsg)
     return
   }
@@ -128,13 +128,17 @@ export async function preflightNotifications(
   return hash;
 }
 
-const buildNotification = (eventCode: string, id: string): Notification => {
+const buildNotification = (
+  eventCode: string,
+  id: string,
+  errorMessage: string
+): Notification => {
   return {
     eventCode,
     type: eventToType(eventCode),
     id,
     key: createKey(id, eventCode),
-    message: createMessageText(eventCode),
+    message: createMessageText(eventCode) || errorMessage,
     startTime: Date.now(),
     network: Object.keys(networkToChainId).find(
       key => networkToChainId[key] === state.get().chains[0].id
@@ -189,7 +193,7 @@ export function extractMessageFromError(error: {
   }
 
   return {
-    eventCode: 'txError',
+    eventCode: 'txErrorTransaction',
     errorMsg: message
   }
 }
