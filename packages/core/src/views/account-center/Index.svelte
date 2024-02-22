@@ -7,7 +7,7 @@
   import TriggerLarge from './AcctCenterTriggerLarge.svelte'
   import TriggerSmall from './AcctCenterTriggerSmall.svelte'
 
-  let expanded = false
+  let expanded = false;
 
   const accountCenter$ = state
     .select('accountCenter')
