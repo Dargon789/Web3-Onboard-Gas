@@ -7,6 +7,7 @@ import { NetworkItemType, Theme, ThemeProps} from '../../../types';
 import { GeneralEmptyList } from "../../empty";
 import { BaseSelectModal } from "../../modal";
 import {ScreenContext} from "../../../context/ScreenContext";
+import {useConnectWallet} from "@subwallet_connect/react";
 
 interface Props extends ThemeProps {
   items: NetworkItemType[];
@@ -20,7 +21,9 @@ function Component (props: Props): React.ReactElement<Props> {
   const { className = '', itemSelected, items, modalId, disabled, onSelectItem } = props;
   const { token } = useTheme() as Theme;
   const { isWebUI } = useContext(ScreenContext);
+  const [{ wallet},] = useConnectWallet();
   const renderEmpty = useCallback(() => <GeneralEmptyList />, []);
+  const isLedgerWallet = useMemo(()=>  wallet?.label === 'Ledger' && wallet?.type === 'substrate' , [])
   const renderChainSelected = useCallback((item: NetworkItemType) => {
     return (
       <>
@@ -72,7 +75,7 @@ function Component (props: Props): React.ReactElement<Props> {
     <BaseSelectModal
       className={`${className} network-selector-modal ${disabled && '-disabled'}`}
       id={modalId}
-      disabled={disabled}
+      disabled={disabled || isLedgerWallet}
       inputClassName={`${className} network-selector-input`}
       itemKey={'slug'}
       items={items}

@@ -9,6 +9,8 @@ import talismanModule from '@subwallet_connect/talisman';
 import polkadot_jsModule from '@subwallet_connect/polkadot_js';
 import subwalletPolkadotModule from '@subwallet_connect/subwallet-polkadot';
 import polkadotVaultModule from '@subwallet_connect/polkadot-vault';
+import ledgerModule from '@subwallet_connect/ledger';
+import walletConnectModule from '@subwallet_connect/walletconnect';
 import {TransactionHandlerReturn} from "@subwallet_connect/core/dist/types";
 import { SubWallet } from "../assets";
 
@@ -50,7 +52,11 @@ const polkadotWallet = polkadot_jsModule();
 const subwalletPolkadotWalet = subwalletPolkadotModule();
 const talismanWallet = talismanModule();
 const polkadotVaultWallet = polkadotVaultModule();
-
+const ledger = ledgerModule({ projectId : '762e91498a11e0acc664cdd0fd2af181',   walletConnectVersion: 2 })
+const walletConnect = walletConnectModule({
+  projectId: '762e91498a11e0acc664cdd0fd2af181',
+  dappUrl: 'https://w3o-demo.subwallet.app/'
+})
 
 export default init({
   theme: "dark",
@@ -70,11 +76,13 @@ export default init({
 
   // An array of wallet modules that you would like to be presented to the user to select from when connecting a wallet.
   wallets: [
-    subwalletWallet,
     subwalletPolkadotWalet,
+    subwalletWallet,
     walletConnectPolkadot,
+    walletConnect,
     metamaskSDKWallet,
     ledgerPolkadot_,
+    ledger,
     talismanWallet,
     polkadotWallet,
     polkadotVaultWallet,
@@ -82,6 +90,13 @@ export default init({
   ],
   // An array of Chains that your app supports
   chains: [
+    {
+      id: '0x507',
+      rpcUrl: 'https://rpc.api.moonbase.moonbeam.network',
+      label: 'Moonbase Alpha',
+      token:  'DEV',
+      namespace : 'evm'
+    },
     {
       // hex encoded string, eg '0x1' for Ethereum Mainnet
       id: '0x1',
@@ -109,13 +124,6 @@ export default init({
       token : 'MOVR'
     },
     {
-      id: '0x507',
-      rpcUrl: 'https://rpc.api.moonbase.moonbeam.network',
-      label: 'Moonbase Alpha',
-      token:  'DEV',
-      namespace : 'evm'
-    },
-    {
       id: '0x250',
       rpcUrl: 'https://astar.public.blastapi.io',
       label: 'Astar',
@@ -135,6 +143,14 @@ export default init({
 
   chainsPolkadot:[
     {
+      id: '0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e' ,
+      token: 'WND',
+      decimal : 12,
+      label: 'Westend',
+      rpcUrl: 'westend.subscan.io',
+      namespace: 'substrate'
+    },
+    {
       // hex encoded string, eg '0x1' for Ethereum Mainnet
       id: '0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3',
       // string indicating chain namespace. Defaults to 'evm' but will allow other chain namespaces in the future
@@ -147,15 +163,6 @@ export default init({
       rpcUrl: `polkadot.api.subscan.io`,
       decimal: 10
     },
-    {
-      id: '0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e' ,
-      token: 'WND',
-      decimal : 12,
-      label: 'Westend',
-      rpcUrl: 'westend.subscan.io',
-      namespace: 'substrate'
-    },
-
     {
       id: '0x68d56f15f85d3136970ec16946040bc1752654e906147f7e43e9d539d7c3de2f',
       label: 'Polkadot Asset Hub',
