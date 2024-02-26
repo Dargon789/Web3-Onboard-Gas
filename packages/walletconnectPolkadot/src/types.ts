@@ -4,7 +4,7 @@ export type WalletConnectOptions = {
   /**
    * Optional function to handle WalletConnect URI when it becomes available
    */
-  handleUri?: (uri: string) => Promise<unknown>
+    handleUri?: (uri: string) => Promise<unknown>
   /**
    * Project ID associated with [WalletConnect account](https://cloud.walletconnect.com)
    */
