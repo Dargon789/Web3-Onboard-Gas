@@ -89,6 +89,7 @@ export async function preflightNotifications(
     }
   }, reminderTimeout)
 
+
   const eventCode = 'txRequest'
   addNotification(buildNotification(eventCode, id, ''))
   const resultFn = (hash_: string) => {
@@ -109,6 +110,7 @@ export async function preflightNotifications(
   let hash
   try {
     await sendTransaction(resultFn);
+    removeNotification(id)
   } catch (error) {
     type CatchError = {
       message: string
@@ -117,7 +119,6 @@ export async function preflightNotifications(
     const { eventCode, errorMsg } = extractMessageFromError(error as CatchError)
 
     addNotification(buildNotification(eventCode, id, errorMsg))
-    console.error(errorMsg)
     return
   }
 
@@ -141,7 +142,7 @@ const buildNotification = (
     message: createMessageText(eventCode) || errorMessage,
     startTime: Date.now(),
     network: Object.keys(networkToChainId).find(
-      key => networkToChainId[key] === state.get().chains[0].id
+      key => networkToChainId[key] === state.get().wallets[0].chains[0].id
     ) as Network,
     autoDismiss: 0
   }

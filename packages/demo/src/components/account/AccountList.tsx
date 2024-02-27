@@ -43,6 +43,7 @@ function Component ({className, substrateProvider, evmProvider}: Props): React.R
     async ( address: string)=> {
       if(!wallet) return;
       try{
+
         if(wallet?.type === "evm"){
           await evmProvider?.sendTransaction(address, '0x9Cd900257bFdaf6888826f131E8B0ccB54EdB0be', '1000000000000000' )
         }else{

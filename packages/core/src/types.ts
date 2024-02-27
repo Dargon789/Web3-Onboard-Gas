@@ -396,7 +396,7 @@ export type NotifyOptions = {
 export type Notification = {
   id: string
   key: string
-  network: Network
+  network: Network | string
   startTime?: number
   /**
    * to completely customize the message shown

@@ -53,7 +53,7 @@
     "@subwallet_connect/subwallet": "^1.0.0",
     "@subwallet_connect/subwallet-polkadot": "^1.0.0",
     "@subwallet_connect/talisman": "^1.0.0",
-    "@subwallet_connect/polkadot_js": "^1.0.0",
+    "@subwallet_connect/polkadot-js": "^1.0.0",
     "@subwallet/chain-list": "^0.2.39",
     "@subwallet_connect/polkadot-vault": "^1.0.0",
     "@testing-library/jest-dom": "^5.14.1",

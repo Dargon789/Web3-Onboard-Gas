@@ -2,11 +2,11 @@
 import injectedModule from '@subwallet_connect/injected-wallets';
 import { init } from '@subwallet_connect/react';
 import walletConnectPolkadotModule from '@subwallet_connect/walletconnect-polkadot';
-import ledgerPolkadot from "@subwallet_connect/ledgerpolkadot";
+import ledgerPolkadot from "@subwallet_connect/ledger-polkadot";
 import metamaskSDK from '@subwallet_connect/metamask';
 import subwalletModule from '@subwallet_connect/subwallet';
 import talismanModule from '@subwallet_connect/talisman';
-import polkadot_jsModule from '@subwallet_connect/polkadot_js';
+import polkadot_jsModule from '@subwallet_connect/polkadot-js';
 import subwalletPolkadotModule from '@subwallet_connect/subwallet-polkadot';
 import polkadotVaultModule from '@subwallet_connect/polkadot-vault';
 import ledgerModule from '@subwallet_connect/ledger';
