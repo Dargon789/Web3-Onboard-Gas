@@ -84,6 +84,9 @@ function Component({className}: Props): React.ReactElement {
               autoDismiss: 0
             })
           });
+        setTimeout(()=>{
+          dismiss();
+        }, 1500)
       }
     },
     [loadMetadata, wallet?.metadata]

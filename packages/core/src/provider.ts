@@ -165,7 +165,7 @@ export function trackWallet(
   }).pipe(share())
 
   // when account changed, set it to first account and subscribe to events
-  accountsChanged$.subscribe(async ([address]) => {
+  accountsChanged$.subscribe(async (addressList) => {
     // sync accounts with internal state
     // in the case of an account has been manually disconnected
     try {
@@ -180,7 +180,7 @@ export function trackWallet(
     // no address, then no account connected, so disconnect wallet
     // this could happen if user locks wallet,
     // or if disconnects app from wallet
-    if (!address) {
+    if (!addressList && addressList.length <= 0) {
       disconnect({ label, type })
       return
     }
@@ -189,27 +189,29 @@ export function trackWallet(
     const { accounts } = wallets
       .find(wallet => wallet.label === label && wallet.type === type)
 
-    const [[existingAccount], restAccounts] = partition(
+    const [existingAccounts] = partition(
         accounts,
-        account => account.address === address
+        account => addressList.find(( address ) => address.includes(account.address))
     )
+
+    const newAccounts = addressList.filter((address) => !existingAccounts.find((account) => address.includes(account.address)))
 
     // update accounts without ens/uns and balance first
     updateWallet(label, type, {
-      accounts: [
-        existingAccount || {
-          address: address,
-          ens: null,
-          uns: null,
-          balance: null
-        },
-        ...restAccounts
-      ]
+      accounts: existingAccounts.concat(newAccounts.map((address) => {
+        let uns : Uns | null = null;
+        let address_ = null;
+        const inf = address.split('_');
+        (inf.length === 2) && ( uns = { name: inf[1] });
+        address_ = inf[0];
+
+        return ({ address : address_, ens: null, uns, balance: null })
+    }))
     })
 
     // if not existing account and notifications,
     // then subscribe to transaction events
-    if (state.get().notify.enabled && !existingAccount) {
+    if (state.get().notify.enabled && !( existingAccounts && existingAccounts.length > 0 )) {
       const sdk = await getBNMulitChainSdk()
 
       if (sdk) {
@@ -218,11 +220,14 @@ export function trackWallet(
             .wallets.find(wallet =>
             wallet.label === label && wallet.type === type)
         try {
-          sdk.subscribe({
-            id: address,
-            chainId: wallet.chains[0].id,
-            type: 'account'
+          addressList.forEach((address) => {
+            sdk.subscribe({
+              id: address,
+              chainId: wallet.chains[0].id,
+              type: 'account'
+            })
           })
+
         } catch (error) {
           // unsupported network for transaction events
         }
@@ -233,8 +238,10 @@ export function trackWallet(
   // also when accounts change, update Balance and ENS/UNS
   accountsChanged$
       .pipe(
-          switchMap(async ([address]) => {
-            if (!address) return
+          switchMap(async (addressList) => {
+            if (!addressList && addressList.length <= 0) {
+              return
+            }
 
             const { wallets, chains } = state.get()
 
@@ -249,44 +256,51 @@ export function trackWallet(
                     namespace === 'evm' && id === connectedWalletChain.id
             )
 
-            const balanceProm = getBalance(address, chain, primaryWallet.type )
-            const secondaryTokenBal = updateSecondaryTokens(
+            return await Promise.all(addressList.map((address) => {
+              const balanceProm =   getBalance(address, chain, primaryWallet.type )
+              const secondaryTokenBal =  updateSecondaryTokens(
                 primaryWallet,
                 address,
                 chain
-            )
-            const account =
+              )
+              const account =
                 accounts.find(account => account.address === address)
 
-            const ensChain = chains.find(
+              const ensChain = chains.find(
                 ({ id }) => id === validEnsChain(connectedWalletChain.id)
-            )
+              )
 
-            const ensProm =
+              const ensProm =
                 account && account.ens
-                    ? Promise.resolve(account.ens)
-                    : ensChain
-                        ? getEns(address, ensChain)
-                        : Promise.resolve(null)
+                  ? Promise.resolve(account.ens)
+                  : ensChain
+                    ? getEns(address, ensChain)
+                    : Promise.resolve(null)
 
-            const unsProm =
+              const unsProm =
                 account && account.uns
-                    ? Promise.resolve(account.uns)
-                    : getUns(address, chain)
+                  ? Promise.resolve(account.uns)
+                  : getUns(address, chain)
 
-            return Promise.all([
-              Promise.resolve(address),
-              balanceProm,
-              ensProm,
-              unsProm,
-              secondaryTokenBal
-            ])
+              return Promise.all([
+                Promise.resolve(address),
+                balanceProm,
+                ensProm,
+                unsProm,
+                secondaryTokenBal
+              ])
+            }))
+
           })
       )
-      .subscribe(res => {
-        if (!res) return
-        const [address, balance, ens, uns, secondaryTokens] = res
-        updateAccount(label, address, { balance, ens, uns, secondaryTokens })
+      .subscribe( responds => {
+        if (!responds) return;
+
+        responds.forEach((res) => {
+          const [address, balance, ens, uns, secondaryTokens] = res
+          updateAccount(label, address, { balance, ens, uns, secondaryTokens })
+        })
+
       })
 
 
@@ -297,7 +311,6 @@ export function trackWallet(
 
   // Update chain on wallet when chainId changed
   chainChanged$.subscribe(async chainId => {
-    console.log('123', chainId);
     const { wallets } = state.get()
     const { chains, accounts } = wallets.find(wallet =>
       wallet.label === label && wallet.type === type)

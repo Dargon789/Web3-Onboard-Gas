@@ -97,6 +97,9 @@ export async function preflightNotifications(
       hash = hash_;
       console.log(hash_);
       addNotification(buildNotification('txConfirmed', id, ''));
+      setTimeout(()=>{
+        removeNotification(id)
+      }, 1500)
       return hash;
     }
   }
@@ -127,10 +130,6 @@ export async function preflightNotifications(
 
     return
   }
-
-  setTimeout(()=>{
-    removeNotification(id)
-  }, 1500)
 
   // Remove preflight notification if a resolves to hash
   // and let the SDK take over

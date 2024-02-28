@@ -229,7 +229,6 @@ export default init({
     desktop: {
       enabled: true,
       transactionHandler: (transaction) :TransactionHandlerReturn => {
-        console.log({ transaction })
         if (transaction.eventCode === 'txConfirmed') {
           return {
             autoDismiss: 0

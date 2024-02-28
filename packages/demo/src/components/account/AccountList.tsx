@@ -99,7 +99,7 @@ function Component ({className, substrateProvider, evmProvider, setAddressToTran
     }, [] as AccountMapType[])
 
     setAccountMap(accountMap || []);
-  }, [wallet]);
+  }, [wallet?.accounts]);
 
   const accountItem = useCallback(({ account, name }: AccountMapType) => {
     const key = `${account}_${name}`
@@ -141,7 +141,7 @@ function Component ({className, substrateProvider, evmProvider, setAddressToTran
         middleItem={_middleItem}
       />
     )
-  }, [wallet, onSignClicked, onTransactionClicked])
+  }, [wallet?.accounts, onSignClicked, onTransactionClicked])
 
 
   return (

@@ -66,14 +66,17 @@ function Component ({ className }: Props): React.ReactElement<Props> {
     }
   }, [walletMapByAccount]);
 
+
+
   const renderItem = useCallback((item: Account, _selected: boolean): React.ReactNode => {
     return (
       <AccountCardItem
+        iconWallet={walletMapByAccount[item.address]?.icon}
         account={item}
         isSelected={_selected}
       />
     );
-  }, []);
+  }, [walletMapByAccount]);
 
   const renderSelectedItem = useCallback((item: Account): React.ReactNode => {
 

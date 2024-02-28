@@ -7,7 +7,6 @@
   import { state } from '../../store/index.js'
   import { shareReplay, startWith } from 'rxjs'
   import { errorIcon } from '../../icons';
-  import QrCode from './QrCode.svelte';
   import { qrModalConnect$, uriConnect$ } from '../../streams.js';
   import { MOBILE_WINDOW_WIDTH } from '../../constants.js';
 
@@ -139,16 +138,11 @@
 <svelte:window bind:innerWidth={windowWidth} />
 
 <div
-    class:qr-container = { uri !== ''}
     class="container flex flex-column items-center"
 >
   <div
-    class:qr-connecting-container = { uri !== ''}
     class="connecting-container flex justify-between items-center"
   >
-    {#if (uri !== '' && windowWidth >= MOBILE_WINDOW_WIDTH)}
-      <QrCode uri={uri} logoImage={selectedWallet.icon}/>
-      {:else}
     <div class="flex">
       <div class="flex justify-center relative wallet-badges">
         <div class="relative">
@@ -192,7 +186,6 @@
       <div class="tick flex items-center">
         {@html errorIcon}
       </div>
-    {/if}
     {/if}
   </div>
     {#if (uri !== '')}

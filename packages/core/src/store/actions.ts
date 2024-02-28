@@ -361,7 +361,6 @@ export function removeNotification(id: Notification['id']): void {
   if (typeof id !== 'string') {
     throw new Error('Notification id must be of type string')
   }
-
   const action = {
     type: REMOVE_NOTIFICATION,
     payload: id

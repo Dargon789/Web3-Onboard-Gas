@@ -9,15 +9,17 @@ import useAccountAvatarTheme from "../../hooks/useAccountAvatarTheme";
 import type { Theme } from '../../types';
 import { toShort } from "@subwallet/react-ui/es/_util/address";
 import type { Account } from '@subwallet_connect/core/dist/types';
+import {LogoHeader} from "../../../assets";
 
 export interface _AccountCardItem {
   className?: string;
+  iconWallet: string;
   account: Account;
   isSelected?: boolean;
 }
 
 function Component (props: _AccountCardItem): React.ReactElement<_AccountCardItem> {
-  const { account, className, isSelected } = props;
+  const { account, className, isSelected, iconWallet } = props;
 
 
   const token = useContext<Theme>(ThemeContext as Context<Theme>).token;
@@ -43,10 +45,9 @@ function Component (props: _AccountCardItem): React.ReactElement<_AccountCardIte
           />
         </div>
         <div className='__item-center-part'>
-          <div className='__item-name'>
-            {account.uns?.name || account.ens?.name || toShort(account.address)}
-
-          </div>
+            <div className='__item-name'>
+              {account.uns?.name || account.ens?.name || toShort(account.address)}
+            </div>
           <div className='__item-address'>{toShort(account.address, 9, 9)}</div>
         </div>
         <div className='__item-right-part'>
@@ -62,6 +63,7 @@ function Component (props: _AccountCardItem): React.ReactElement<_AccountCardIte
               </div>
             )
           }
+          <div className={'__item-icon-wallet'} dangerouslySetInnerHTML={{__html: iconWallet}}/>
         </div>
       </div>
     </>
@@ -126,6 +128,12 @@ const AccountCardItem = styled(Component)<_AccountCardItem>(({ theme }) => {
 
     '&:hover': {
       background: token.colorBgInput,
+    },
+
+    '.__item-icon-wallet': {
+      width: 20,
+      height: 20,
+      margin: '0 12px'
     }
   };
 });

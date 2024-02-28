@@ -276,13 +276,19 @@
 
       // canceled previous request
       if (!address || address.length === 0) {
-        return;
+        connectionRejected = true;
+        throw new Error(`Can't get account from your wallet`)
       }
 
       const addressFilter = address.filter((a) => {
         return type === 'evm' ? a.toLowerCase().startsWith('0x') : !a.toLowerCase().startsWith('0x')
       })
 
+
+      if( addressFilter.length === 0 ){
+        connectionRejected = true;
+        throw new Error(`Can't get ${type} account from your wallet`)
+      }
       // store last connected wallet
       if (
         state.get().connect.autoConnectLastWallet ||

@@ -26,6 +26,7 @@ function Component ({className, onDisconnect}: Props) {
       id={modalId}
       center={true}
       closable={true}
+      onCancel={onCloseModal}
       className={CN(className, 'disconnect-modal-container')}
       title={'Disconnect wallet'}
     >

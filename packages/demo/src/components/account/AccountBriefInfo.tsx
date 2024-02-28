@@ -13,7 +13,6 @@ interface Props extends ThemeProps {
 }
 
 const Component: React.FC<Props> = ({ account, className, isDetail }: Props) => {
-  console.log(account)
   const isAccountName = useMemo(() => {
     return !!( account.ens?.name || account.uns?.name )
   }, [account])

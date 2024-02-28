@@ -48,7 +48,6 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
   , [defaultData]);
 
   const transferAmount = useWatchTransaction('value', form, defaultData);
-  const from = useWatchTransaction('from', form, defaultData);
   const to = useWatchTransaction('to', form, defaultData);
 
   useEffect(() => {
@@ -92,7 +91,7 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
   // Submit transaction
   const onSubmit: FormCallbacks<TransferParams>['onFinish'] = useCallback(async (values: TransferParams) => {
     setLoading(true);
-    const {  from: _from, to, value } = values;
+    const {   to, value } = values;
     let blockHash = '';
     if(!wallet) return;
 
@@ -105,7 +104,7 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
       const amount = getOutputValuesFromString(value, chainInfo.decimal || 18);
 
       if(wallet?.type === "evm"){
-        blockHash = await evmProvider?.sendTransaction(from, to, amount ) || ''
+        blockHash = await evmProvider?.sendTransaction(senderAccount.address, to, amount ) || ''
       }else{
           const ws = NetworkInfo[chainInfo.label as string].wsProvider;
           if(! ws) {
@@ -122,16 +121,16 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
         const getSigner = async ()=>{
           const provider = wallet.provider as SubstrateProvider;
           if(wallet.label === 'Ledger') {
-            wallet.signer = await substrateProvider?.getLedgerSigner(from, provider)
+            wallet.signer = await substrateProvider?.getLedgerSigner(senderAccount.address, provider)
           }
           if( wallet.label === 'WalletConnect') {
-            wallet.signer = await substrateProvider?.getWCSigner(from, provider);
+            wallet.signer = await substrateProvider?.getWCSigner(senderAccount.address, provider);
           }
           if(wallet.label === 'Polkadot Vault'){
-            wallet.signer = await substrateProvider?.getQrSigner(from, provider, chainId);
+            wallet.signer = await substrateProvider?.getQrSigner(senderAccount.address, provider, chainId);
           }
           return await substrateProvider?.sendTransaction(
-            from,
+            senderAccount.address,
             to,
             wallet.signer,
             amount
@@ -145,7 +144,7 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
       setLoading(false)
       blockHash !== '' && onCloseModal();
     }catch (e) {}
-  }, [wallet, chains]);
+  }, [wallet, chains, senderAccount ]);
 
   const isValidInput = useCallback((input: string) => {
     return !(isNaN(parseFloat(input)) || !input.match(/^-?\d*(\.\d+)?$/));
@@ -195,6 +194,7 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
         <Form
           className={'form-container form-space-sm'}
           form={form}
+          onFinish={onSubmit}
           initialValues={formDefault}
         >
           <Form.Item
@@ -259,7 +259,7 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
             />
           )}
           loading={loading}
-          onClick={() => onSubmit(form.getFieldsValue())}
+          onClick={form.submit}
           block={true}
         >
               Transfer

@@ -87,10 +87,7 @@
         position: fixed;
         top: 0;
         right: 0;
-        z-index: var(
-                --onboard-account-select-modal-z-index,
-                var(--account-select-modal-z-index)
-        );
+        z-index: 10000;
         display: flex;
         align-items: center;
         justify-content: center;

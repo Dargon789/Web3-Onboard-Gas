@@ -88,7 +88,7 @@ function Component (props: Props): React.ReactElement<Props> {
       searchFunction={searchFunction}
       searchMinCharactersCount={2}
       searchPlaceholder={('Network name')}
-      selected={itemSelected || ''}
+      selected={itemSelected || items[0].slug}
       shape={"round"}
       size='small'
       suffix={

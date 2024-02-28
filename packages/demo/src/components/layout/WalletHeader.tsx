@@ -39,7 +39,7 @@ function Component ({ visible, className }: Props): React.ReactElement<Props> {
     if(network){
       return NetworkInfo[network.label as string];
     }
-    return NetworkInfo[wallet?.type === 'evm' ? 'Ethereum Mainnet' : 'Polkadot']
+    return NetworkInfo[wallet?.type === 'evm' ? 'Moonbase Alpha' : 'Westend']
   }, [connectedChain, chains, wallet])
 
   const onSwitchNetwork = useCallback(async (slug: string) => {

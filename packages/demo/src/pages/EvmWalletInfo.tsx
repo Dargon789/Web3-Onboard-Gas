@@ -29,8 +29,8 @@ interface Props extends ThemeProps{};
 
 
 function Component ({className}: Props): React.ReactElement {
-  const [{wallet},] = useConnectWallet();
-  const [{chains}, setChain] = useSetChain();
+  const [{ wallet},connect,, updateBalance] = useConnectWallet();
+  const [{ chains}, setChain] = useSetChain();
   const navigate = useNavigate();
   const [ evmProvider, setEvmProvider ] = useState<evmApi>();
   const [ currentAccountToTransaction, setCurrentAccountToTransaction ] = useState<Account>();
@@ -53,16 +53,22 @@ function Component ({className}: Props): React.ReactElement {
       autoDismiss: 0
     });
     try{
-      await evmProvider?.requestPermissions()
-    }catch (e) {
+      await evmProvider?.requestPermissions();
+
       update({
         eventCode: 'dbUpdateSuccess',
+        message: `Request permission success`,
+        type: 'success',
+        autoDismiss: 1500
+      })
+    }catch (e) {
+      update({
+        eventCode: 'dbUpdateError',
         message: `${(e as Error).message}`,
         type: 'error',
-        autoDismiss: 0
+        autoDismiss: 1500
       })
     }
-
   }, [evmProvider]);
 
   return (

@@ -98,7 +98,6 @@ export class substrateApi {
 
     return {
       signPayload : async (payload: SignerPayloadJSON): Promise<SignerResult>  => {
-        console.log(payload)
         const raw = this.api?.registry.createType('ExtrinsicPayload', payload, { version: payload.version });
         const args = {} as RequestArguments;
         args.method = 'polkadot_sendTransaction';
