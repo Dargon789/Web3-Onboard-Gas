@@ -1,6 +1,6 @@
 import { Typography } from '@subwallet/react-ui';
 import SwAvatar from '@subwallet/react-ui/es/sw-avatar';
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
 import type { ThemeProps } from '../../types';
@@ -13,6 +13,11 @@ interface Props extends ThemeProps {
 }
 
 const Component: React.FC<Props> = ({ account, className, isDetail }: Props) => {
+  console.log(account)
+  const isAccountName = useMemo(() => {
+    return !!( account.ens?.name || account.uns?.name )
+  }, [account])
+
   return (
     <div className={className}>
       <div className='account-avatar'>
@@ -25,8 +30,9 @@ const Component: React.FC<Props> = ({ account, className, isDetail }: Props) => 
         className='account-name'
         ellipsis={true}
       >
-        {toShort(account.address, isDetail ? 10 : 6, isDetail ? 10 : 6) }
+        {  account.ens?.name || account.uns?.name || toShort(account.address,10,10)}
       </Typography.Text>
+      {isAccountName && <div className='account-address'>(...{account.address.slice(-3)})</div>}
     </div>
   );
 };
@@ -59,3 +65,4 @@ const AccountBriefInfo = styled(Component)<Props>(({ theme: { token } }: Props) 
 });
 
 export default AccountBriefInfo;
+

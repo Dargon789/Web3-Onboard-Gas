@@ -16,6 +16,7 @@ import { evmApi } from "../../utils/api/evmApi";
 import { substrateApi } from "../../utils/api/substrateApi";
 import { NetworkInfo } from "../../utils/network";
 import {TRANSACTION_MODAL} from "../../constants/modal";
+import {toShort} from "../../utils/style";
 
 
 
@@ -28,6 +29,7 @@ interface Props extends ThemeProps{
 
 type AccountMapType = {
   account: string,
+  name: string,
   index: number
 }
 
@@ -92,19 +94,20 @@ function Component ({className, substrateProvider, evmProvider, setAddressToTran
 
   useEffect(() => {
     const accountMap = wallet?.accounts.reduce((acc, account, index)=>{
-      acc.push({account: account.address, index})
+      acc.push({account: account.address, index, name: account.uns?.name || account.ens?.name || toShort(account.address)})
       return acc
     }, [] as AccountMapType[])
 
     setAccountMap(accountMap || []);
   }, [wallet]);
 
-  const accountItem = useCallback(({ account, index }: AccountMapType) => {
+  const accountItem = useCallback(({ account, name }: AccountMapType) => {
+    const key = `${account}_${name}`
     const _middleItem = (
       <div className={'__account-item-middle'}>
         <div className={'__account-item-info'}>
           <span className='__account-item__title'>Wallet name:</span>
-          <span className='__account-item__content'>Account { index + 1 }</span>
+          <span className='__account-item__content'>{ name }</span>
         </div>
         <div className={'__account-item-info'}>
           <span className='__account-item__title'>Address:</span>
@@ -133,7 +136,7 @@ function Component ({className, substrateProvider, evmProvider, setAddressToTran
 
     return(
       <Web3Block
-        key={index}
+        key={key}
         className={'__account-item'}
         middleItem={_middleItem}
       />

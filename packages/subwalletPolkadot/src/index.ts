@@ -47,12 +47,12 @@ function SubWallet (): WalletInit {
                 return;
               }
               const accounts = await rawExtension.accounts.get();
-
+              console.log(accounts, 'accounts');
               return {
                 signer: rawExtension.signer as Signer,
                 metadata: rawExtension.metadata as InjectedMetadata,
                 address: accounts.map(
-                  (account: { address: string }) => account.address
+                  (account) => `${account.address}_${account.name}`
                 )
               }
             } catch (e) {

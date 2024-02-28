@@ -995,7 +995,7 @@ const subwalletDOT: InjectedWalletModule = {
             signer: rawExtension.signer as Signer,
             metadata: rawExtension.metadata as InjectedMetadata,
             address: accounts.map(
-              (account: { address: string }) => account.address
+              (account) => `${account.address}_${account.name}`
             )
           }
         } catch (e) {
@@ -1073,7 +1073,7 @@ const talismanDOT: InjectedWalletModule = {
             signer: rawExtension.signer as Signer,
             metadata: rawExtension.metadata as InjectedMetadata,
             address: accounts.map(
-              (account: { address: string }) => account.address
+              (account) => `${account.address}_${account.name}`
             )
           }
         } catch (e) {
@@ -1152,7 +1152,7 @@ const polkadotjs: InjectedWalletModule = {
             signer: rawExtension.signer as Signer,
             metadata: rawExtension.metadata as InjectedMetadata,
             address: accounts.map(
-              (account: { address: string; }) => account.address
+              (account) => `${account.address}_${account.name}`
             )
           };
         } catch (e) {

@@ -42,7 +42,7 @@ function Component (props: _AccountCardItem): React.ReactElement<_AccountCardIte
           />
         </div>
         <div className='__item-center-part'>
-          <div className='__item-name'>{toShort(account.address)}</div>
+          <div className='__item-name'>{account.uns?.name || account.ens?.name || toShort(account.address)}</div>
           <div className='__item-address'>{toShort(account.address, 9, 9)}</div>
         </div>
         <div className='__item-right-part'>

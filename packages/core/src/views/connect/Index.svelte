@@ -54,7 +54,7 @@
   import type {
     ConnectedChain,
     ConnectOptions,
-    i18n, WalletConnectState,
+    i18n, Uns, WalletConnectState,
     WalletState,
     WalletWithLoadingIcon
   } from '../../types.js'
@@ -252,7 +252,7 @@
   async function connectWallet() {
     connectionRejected = false
 
-    const { provider, label , type } = selectedWallet
+    let { provider, label , type } = selectedWallet
     cancelPreviousConnect$.next()
     let chain: string | undefined = undefined;
 
@@ -344,8 +344,15 @@
       }
 
       const update: Pick<WalletState, 'accounts' | 'chains' | 'signer' | 'metadata'> = {
-        accounts: addressFilter.map((address) =>
-                ({ address, ens: null, uns: null, balance: null })),
+        accounts: addressFilter.map((address) => {
+          let uns : Uns | null = null;
+          let address_ = null;
+          const inf = address.split('_');
+          (inf.length === 2) && ( uns = { name: inf[1] });
+          address_ = inf[0];
+
+          return ({ address : address_, ens: null, uns, balance: null })
+        }),
         chains: [{ namespace: type, id: chain }],
         signer : signer,
         metadata: metadata
@@ -416,6 +423,7 @@
     let { balance, secondaryTokens } = accounts[0]
 
     if (balance === null) {
+      console.log('123123')
         await getBalance(address, appChain, type).then(balance => {
           updateAccount(selectedWallet.label, address, {
             balance
