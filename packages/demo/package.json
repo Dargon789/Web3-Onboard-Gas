@@ -75,7 +75,9 @@
     "styled-components": "^5.3.6",
     "rxjs": "^7.8.1",
     "usehooks-ts": "^2.15.1",
-    "bignumber.js": "^9.1.2"
+    "bignumber.js": "^9.1.2",
+    "@types/bn.js": "^5.1.5",
+    "bn.js": "^4.11.9"
   },
   "devDependencies": {
     "@types/jest": "^29.5.8",

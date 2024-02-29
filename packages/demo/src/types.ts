@@ -163,3 +163,10 @@ export interface TransferParams {
   to: string,
   value: string
 }
+
+
+export interface AmountData  {
+  value: string,
+  symbol: string,
+  decimals: number
+}

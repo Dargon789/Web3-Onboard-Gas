@@ -63,17 +63,16 @@ function Component ({className, substrateProvider, evmProvider}: Props): React.R
               eventCode: 'dbUpdateSuccess',
               message: `success message is success`,
               type: 'success',
-              autoDismiss: 0
+              autoDismiss: 2000
             })
-            setTimeout(()=> dismiss(), 3000)
           }catch (e) {
             update({
               eventCode: 'dbUpdateError',
               message: `Failed, error ${(e as Error).message}`,
               type: 'error',
-              autoDismiss: 0
+              autoDismiss: 2000
             })
-            dismiss()
+
           }
 
         }
