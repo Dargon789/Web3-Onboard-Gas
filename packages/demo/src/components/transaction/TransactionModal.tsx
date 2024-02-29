@@ -1,9 +1,9 @@
 import { ThemeProps, TransferParams, FormCallbacks, Theme } from "../../types";
 import {TRANSACTION_MODAL} from "../../constants/modal";
-import {BaseModal} from "../modal";
-import {Button, Form, Icon, Input, ModalContext} from '@subwallet/react-ui';
-import {useState, useCallback, useMemo, useEffect, useContext} from "react";
-import {useConnectWallet, useNotifications, useSetChain} from "@subwallet_connect/react";
+import { BaseModal} from "../modal";
+import { Button, Form, Icon, Input, ModalContext } from '@subwallet/react-ui';
+import { useState, useCallback, useMemo, useEffect, useContext } from "react";
+import { useConnectWallet, useNotifications, useSetChain } from "@subwallet_connect/react";
 import { Rule } from '@subwallet/react-ui/es/form';
 import { useWatchTransaction } from "../../hooks";
 import styled from 'styled-components';
@@ -13,8 +13,8 @@ import CN from "classnames";
 import AccountBriefInfo from "../account/AccountBriefInfo";
 import type { Account } from '@subwallet_connect/core/dist/types';
 import { PaperPlaneTilt } from "@phosphor-icons/react";
-import {NetworkInfo} from "../../utils/network";
-import { SubstrateProvider } from "@subwallet_connect/common";
+import { NetworkInfo } from "../../utils/network";
+import {EIP1193Provider, SubstrateProvider} from "@subwallet_connect/common";
 import { substrateApi } from "../../utils/api/substrateApi";
 import { evmApi } from "../../utils/api/evmApi";
 
@@ -24,13 +24,12 @@ export interface Props extends ThemeProps {
   evmProvider ?: evmApi,
 };
 
-const modalId = TRANSACTION_MODAL;
-
 
 
 function Component ({ className, senderAccount, evmProvider, substrateProvider }: Props) {
   const [{ wallet},] = useConnectWallet();
   const [{ chains }] = useSetChain();
+  const modalId = useMemo(() => `${senderAccount.address}`, [senderAccount.address, wallet])
   const [loading, setLoading] = useState(false);
   const [, customNotification, updateNotify,] = useNotifications();
   const [ defaultData, persistData ] = useState<TransferParams>({
@@ -67,17 +66,30 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
       return Promise.reject('Invalid recipient address');
     }
 
+    if((wallet?.type === 'evm' && !isEthereumAddress(_recipientAddress))
+      || (wallet?.type === 'substrate' && isEthereumAddress(_recipientAddress))){
+      return Promise.reject('Invalid recipient address type');
+    }
 
+    if(_recipientAddress === senderAccount.address) {
+      return Promise.reject('The receiving address and sending address must be different')
+    }
 
     return Promise.resolve();
-  }, [form]);
+  }, [form, wallet, senderAccount]);
 
   const validateAmount = useCallback((rule: Rule, amount: string): Promise<void> => {
-    if (!amount) {
+    if (!amount || !amount.trim()) {
       return Promise.reject('Amount is required');
     }
 
+    if ((new BigN(amount)).eq(new BigN(0))) {
+      return Promise.reject('Amount must be greater than 0');
+    }
 
+    if(!isValidInput(amount)){
+      return Promise.reject('Amount is invalid')
+    }
 
     return Promise.resolve();
   }, []);
@@ -144,7 +156,7 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
       setLoading(false)
       blockHash !== '' && onCloseModal();
     }catch (e) {}
-  }, [wallet, chains, senderAccount ]);
+  }, [wallet, chains, senderAccount, evmProvider, substrateProvider ]);
 
   const isValidInput = useCallback((input: string) => {
     return !(isNaN(parseFloat(input)) || !input.match(/^-?\d*(\.\d+)?$/));

@@ -6,6 +6,8 @@ import { RequestArguments } from "../../types";
 import { SIGN_METHODS } from "../methods";
 import { LedgerSignature } from "@polkadot/hw-ledger/types";
 import { blake2AsU8a } from '@polkadot/util-crypto';
+import { BN_HUNDRED, BN_ZERO, isFunction, nextTick } from '@polkadot/util';
+import BN from 'bn.js';
 export class substrateApi {
   private readonly api ?: ApiPromise;
 
@@ -25,9 +27,19 @@ export class substrateApi {
     if(!this.api || !this.api.isReady || !signer) return;
 
     const transferExtrinsic = this.api.tx.balances.transferKeepAlive(recipientAddress, amount)
+    const [ { partialFee }, balances ] = await Promise.all([
+      transferExtrinsic.paymentInfo(senderAddress),
+      this.api.derive.balances?.all(senderAddress)
+    ])
+    const adjFee = partialFee.muln(110).div(BN_HUNDRED);
+    const maxTransfer = balances.availableBalance.sub(adjFee);
+    console.log(maxTransfer.toString())
     try{
       const sendTransaction = async (fn: (hash: string) => void) => {
         let txHash_ = ''
+        if(!maxTransfer.gt(new BN(this.api?.consts.balances.existentialDeposit as any))){
+          throw new Error ('The account does not have enough free funds available to cover the transaction fees without dropping the balance below the account existential amount.')
+        }
         await transferExtrinsic.signAndSend(senderAddress, { signer }, ({ status, txHash }) => {
           if (status.isInBlock) {
             fn(txHash.toString());

@@ -5,20 +5,14 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 
 import {useConnectWallet, useNotifications, useSetChain} from "@subwallet_connect/react";
 import {useNavigate} from "react-router-dom";
-import {HeaderWalletInfo} from "../components/header/HeaderWalletInfo";
 import { ThemeProps } from '../types';
 import CN from "classnames";
 import styled from "styled-components";
 import AccountList from "../components/account/AccountList";
-import WalletMetadata from "../components/sub_action/metadata/WalletMetadata";
 import {PlusCircleOutlined} from "@ant-design/icons";
 import {Button, Web3Block} from "@subwallet/react-ui";
 import {EIP1193Provider} from "@subwallet_connect/common";
-import {METHOD_MAP} from "../utils/methods";
 import {evmApi} from "../utils/api/evmApi";
-import {NetworkInfo} from "../utils/network";
-import {substrateApi} from "../utils/api/substrateApi";
-import TransactionModal from "../components/transaction/TransactionModal";
 import type { Account } from '@subwallet_connect/core/dist/types';
 import {ScreenContext} from "../context/ScreenContext";
 
@@ -33,7 +27,6 @@ function Component ({className}: Props): React.ReactElement {
   const [{ chains}, setChain] = useSetChain();
   const navigate = useNavigate();
   const [ evmProvider, setEvmProvider ] = useState<evmApi>();
-  const [ currentAccountToTransaction, setCurrentAccountToTransaction ] = useState<Account>();
   const customNotification = useNotifications()[1];
   const { isWebUI } = useContext(ScreenContext);
 
@@ -81,7 +74,7 @@ function Component ({className}: Props): React.ReactElement {
             <div className={'__evm-wallet-info-label'}>
               Account List
             </div>
-            <AccountList evmProvider={evmProvider} setAddressToTransaction={setCurrentAccountToTransaction}/>
+            <AccountList evmProvider={evmProvider}/>
           </div>
           <div className={'__evm-wallet-info-box'}>
             <div className={'__evm-wallet-info-label'}>Permission</div>
@@ -100,9 +93,6 @@ function Component ({className}: Props): React.ReactElement {
           </div>
         </div>
       </div>
-      {
-        currentAccountToTransaction && <TransactionModal senderAccount={currentAccountToTransaction} evmProvider={evmProvider}/>
-      }
     </div>
 );
 }

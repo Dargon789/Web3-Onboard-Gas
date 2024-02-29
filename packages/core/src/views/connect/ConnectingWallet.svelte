@@ -22,7 +22,10 @@
   $: uri = '';
 
   uriConnect$.subscribe((_uri)=>{
-     uri = _uri
+     uri = _uri;
+     setTimeout(()=> {
+       openQrModal();
+     }, 500)
   })
 
   qrModalConnect$.subscribe( async ({ isOpen, modal })=>{
@@ -188,14 +191,6 @@
       </div>
     {/if}
   </div>
-    {#if (uri !== '')}
-      <div class="flex justify-between open-modal-footer absolute">
-        <div class="subtext footer-text">
-          Need the official WalletConnect modal?
-        </div>
-        <button on:click={openQrModal} class="button-open-modal onboard-button-primary " >Open</button>
-      </div>
-    {:else}
       <button
           on:click={() => {
             deselectWallet(selectedWallet.label)
@@ -206,5 +201,4 @@
         default: en.connect.connectingWallet.primaryButton
       })}</button
       >
-    {/if}
 </div>

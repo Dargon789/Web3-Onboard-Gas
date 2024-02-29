@@ -7,14 +7,11 @@ import AccountList from '../components/account/AccountList';
 import WalletMetadata from '../components/sub_action/metadata/WalletMetadata';
 import { useNavigate } from "react-router-dom";
 import {useConnectWallet, useSetChain} from "@subwallet_connect/react";
-import { HeaderWalletInfo } from "../components/header/HeaderWalletInfo";
 import styled from "styled-components";
 import {ThemeProps} from "../types";
 import CN from "classnames";
 import {NetworkInfo} from "../utils/network";
 import {substrateApi} from "../utils/api/substrateApi";
-import {Account} from "@subwallet_connect/core/dist/types";
-import TransactionModal from "../components/transaction/TransactionModal";
 import {ScreenContext} from "../context/ScreenContext";
 
 
@@ -25,7 +22,6 @@ function Component ({className}: Props): React.ReactElement {
   const navigate = useNavigate();
   const [ { wallet}] = useConnectWallet();
   const [ substrateProvider, setSubstrateProvider ] = useState<substrateApi>();
-  const [ currentAccountToTransaction, setCurrentAccountToTransaction ] = useState<Account>();
   const [{ chains }] = useSetChain();
   const { isWebUI } = useContext(ScreenContext);
 
@@ -51,7 +47,7 @@ function Component ({className}: Props): React.ReactElement {
         <div className={'__wallet-info-label'}>
           Account List
         </div>
-        <AccountList substrateProvider={substrateProvider} setAddressToTransaction={setCurrentAccountToTransaction}/>
+        <AccountList substrateProvider={substrateProvider}/>
       </div>
       <div className={'__wallet-info-box'}>
         {!! wallet?.metadata &&
@@ -64,9 +60,6 @@ function Component ({className}: Props): React.ReactElement {
         }
       </div>
     </div>
-    {
-      currentAccountToTransaction && <TransactionModal senderAccount={currentAccountToTransaction} substrateProvider={substrateProvider}/>
-    }
   </div>
   );
 }

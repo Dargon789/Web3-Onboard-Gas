@@ -11,32 +11,29 @@ import { SubstrateProvider } from "@subwallet_connect/common";
 import { GeneralEmptyList } from "../empty";
 import { ThemeProps } from "../../types";
 import CN from "classnames";
-import styled from "styled-components";
 import { evmApi } from "../../utils/api/evmApi";
 import { substrateApi } from "../../utils/api/substrateApi";
-import { NetworkInfo } from "../../utils/network";
-import {TRANSACTION_MODAL} from "../../constants/modal";
 import {toShort} from "../../utils/style";
+import TransactionModal from "../transaction/TransactionModal";
+import styled from "styled-components";
 
 
 
 interface Props extends ThemeProps{
   substrateProvider ?: substrateApi,
   evmProvider ?: evmApi,
-  setAddressToTransaction : (account?: Account) => void;
 };
 
 
 type AccountMapType = {
-  account: string,
+  address: string,
   name: string,
   index: number
 }
 
 
-const modalId = TRANSACTION_MODAL;
 
-function Component ({className, substrateProvider, evmProvider, setAddressToTransaction}: Props): React.ReactElement {
+function Component ({className, substrateProvider, evmProvider}: Props): React.ReactElement {
   const [{ wallet},] = useConnectWallet();
   const renderEmpty = useCallback(() => <GeneralEmptyList />, []);
   const [ accountsMap, setAccountMap ] = useState<AccountMapType[]>([])
@@ -84,9 +81,7 @@ function Component ({className, substrateProvider, evmProvider, setAddressToTran
   const onTransactionClicked = useCallback(
     (address_: string) => {
       return async () => {
-        const account = wallet?.accounts.find(({address}) => address === address_)
-        setAddressToTransaction(account);
-        activeModal(modalId);
+        activeModal(`${address_}`);
       };
     }, [wallet])
 
@@ -94,15 +89,15 @@ function Component ({className, substrateProvider, evmProvider, setAddressToTran
 
   useEffect(() => {
     const accountMap = wallet?.accounts.reduce((acc, account, index)=>{
-      acc.push({account: account.address, index, name: account.uns?.name || account.ens?.name || toShort(account.address)})
+      acc.push({address: account.address, index, name: account.uns?.name || account.ens?.name || toShort(account.address)})
       return acc
     }, [] as AccountMapType[])
 
     setAccountMap(accountMap || []);
   }, [wallet?.accounts]);
 
-  const accountItem = useCallback(({ account, name }: AccountMapType) => {
-    const key = `${account}_${name}`
+  const accountItem = useCallback(({ address, name }: AccountMapType) => {
+    const key = `${address}_${name}`
     const _middleItem = (
       <div className={'__account-item-middle'}>
         <div className={'__account-item-info'}>
@@ -111,12 +106,12 @@ function Component ({className, substrateProvider, evmProvider, setAddressToTran
         </div>
         <div className={'__account-item-info'}>
           <span className='__account-item__title'>Address:</span>
-          <span className='__account-item__content'>{account}</span>
+          <span className='__account-item__content'>{address}</span>
         </div>
         <div className={'__account-item-info'}>
           <Button
             className={CN('__wallet-btn', '__sub-wallet-sign-btn')}
-            onClick={onSignClicked(account)}
+            onClick={onSignClicked(address)}
             block={true}
           >
             Sign Dummy
@@ -124,7 +119,7 @@ function Component ({className, substrateProvider, evmProvider, setAddressToTran
 
           <Button
             className={CN('__wallet-btn', '__sub-wallet-transaction-btn')}
-            onClick={onTransactionClicked(account)}
+            onClick={onTransactionClicked(address)}
             block={true}
           >
             Transaction
@@ -133,25 +128,31 @@ function Component ({className, substrateProvider, evmProvider, setAddressToTran
       </div>
     )
 
+    const account = wallet?.accounts.find(({address: address_}) => address === address_)
 
     return(
-      <Web3Block
-        key={key}
-        className={'__account-item'}
-        middleItem={_middleItem}
-      />
+      <>
+        <Web3Block
+          key={key}
+          className={'__account-item'}
+          middleItem={_middleItem}
+        />
+        {account && <TransactionModal senderAccount={account}
+                           substrateProvider={substrateProvider}
+                           evmProvider={evmProvider}/>}
+      </>
+
     )
   }, [wallet?.accounts, onSignClicked, onTransactionClicked])
 
 
   return (
-   <SwList
-     className={CN('__account-list', className)}
-     list={accountsMap}
-     renderWhenEmpty={renderEmpty}
-     renderItem={accountItem}
-   />
-
+      <SwList
+        className={CN('__account-list', className)}
+        list={accountsMap}
+        renderWhenEmpty={renderEmpty}
+        renderItem={accountItem}
+      />
   );
 }
 
