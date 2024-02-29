@@ -13,6 +13,12 @@ export class evmApi {
     this.provider = new ethers.providers.Web3Provider(provider, 'any')
   }
 
+  public async getMaxTransfer (amount: string, senderAddress: string, recipientAddress: string) {
+    if(!this.provider) return '0';
+
+    return (await this.provider.getBalance(senderAddress)).toString();
+  }
+
 
   public async isAvailableAmount ( amount: string, senderAddress: string, recipientAddress: string ) {
     if(!this.provider) return false;
@@ -21,14 +27,14 @@ export class evmApi {
       value: amount
     }
 
-    const [ gas, price, balance ] = await Promise.all([
+    const [ gas, price ] = await Promise.all([
       this.provider.getGasPrice().then(res => new BigNumber(res.toString())),
       this.provider.estimateGas(txDetails).then(res =>  new BigNumber(res.toString())),
-      this.provider.getBalance(senderAddress)
     ])
     const transactionCost = gas.times(price).plus(amount);
+    const balance = new BigNumber(await this.getMaxTransfer(amount, senderAddress, recipientAddress));
 
-    return new BigNumber(balance.toString()).gt(transactionCost);
+    return balance.gt(transactionCost) && balance.gt(new BigNumber(amount));
   }
   public async sendTransaction (senderAddress: string, recipientAddress: string, amount: string ) {
     if(! this.provider) return;

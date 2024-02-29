@@ -108,7 +108,7 @@ export default init({
       // used for display, eg Ethereum Mainnet
       label: 'Ethereum Mainnet',
       // used for network requests
-      rpcUrl: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
+      rpcUrl: `https://ethereum.publicnode.com`,
       decimal: 18
     },
     {

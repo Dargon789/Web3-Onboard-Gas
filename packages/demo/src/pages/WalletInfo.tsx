@@ -20,7 +20,7 @@ interface Props extends ThemeProps {};
 
 function Component ({className}: Props): React.ReactElement {
   const navigate = useNavigate();
-  const [ { wallet}] = useConnectWallet();
+  const [ { wallet},, disconnect] = useConnectWallet();
   const [ substrateProvider, setSubstrateProvider ] = useState<substrateApi>();
   const [{ chains }] = useSetChain();
   const { isWebUI } = useContext(ScreenContext);
@@ -37,12 +37,12 @@ function Component ({className}: Props): React.ReactElement {
         }
       }
 
-    wallet.provider.on('accountsChanged', (accounts) => {
-      if(accounts.length === 0){
-        navigate("/welcome");
-      }
-    })
-  }, [wallet]);
+      wallet.provider.on('accountsChanged', (accounts) => {
+        if(!accounts || accounts.length === 0 ){
+          disconnect({ label: wallet.label, type: wallet.type })
+        }
+      })
+  }, [wallet, navigate]);
 
   return (
   <div className={CN('__wallet-info-page', className, {
@@ -53,7 +53,7 @@ function Component ({className}: Props): React.ReactElement {
         <div className={'__wallet-info-label'}>
           Account List
         </div>
-        <AccountList substrateProvider={substrateProvider}/>
+        {wallet?.accounts && wallet.accounts.length > 0 && <AccountList substrateProvider={substrateProvider}/>}
       </div>
       <div className={'__wallet-info-box'}>
         {!! wallet?.metadata &&

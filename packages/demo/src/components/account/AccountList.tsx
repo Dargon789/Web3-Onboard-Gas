@@ -16,6 +16,8 @@ import { substrateApi } from "../../utils/api/substrateApi";
 import {toShort} from "../../utils/style";
 import TransactionModal from "../transaction/TransactionModal";
 import styled from "styled-components";
+import {useNavigate} from "react-router-dom";
+import {TRANSACTION_MODAL} from "../../constants/modal";
 
 
 
@@ -32,11 +34,13 @@ type AccountMapType = {
 }
 
 
-
+const modalId = TRANSACTION_MODAL;
 function Component ({className, substrateProvider, evmProvider}: Props): React.ReactElement {
   const [{ wallet},] = useConnectWallet();
   const renderEmpty = useCallback(() => <GeneralEmptyList />, []);
   const [ accountsMap, setAccountMap ] = useState<AccountMapType[]>([])
+  const navigate = useNavigate();
+  const [ accountTransaction, setAccountTransaction ] = useState<Account>();
   const [{ chains }] = useSetChain();
   const [, customNotification, updateNotify,] = useNotifications();
   const { activeModal }  = useContext(ModalContext);
@@ -79,15 +83,19 @@ function Component ({className, substrateProvider, evmProvider}: Props): React.R
   );
 
   const onTransactionClicked = useCallback(
-    (address_: string) => {
+    (address: string) => {
       return async () => {
-        activeModal(`${address_}`);
+        const account = wallet?.accounts.find(({address: address_}) => address === address_);
+        setAccountTransaction(account)
+        account && activeModal(modalId);
       };
-    }, [wallet])
+    }, [activeModal, wallet])
+
 
 
 
   useEffect(() => {
+
     const accountMap = wallet?.accounts.reduce((acc, account, index)=>{
       acc.push({address: account.address, index, name: account.uns?.name || account.ens?.name || toShort(account.address)})
       return acc
@@ -128,7 +136,6 @@ function Component ({className, substrateProvider, evmProvider}: Props): React.R
       </div>
     )
 
-    const account = wallet?.accounts.find(({address: address_}) => address === address_)
     return(
       <>
         <Web3Block
@@ -136,22 +143,31 @@ function Component ({className, substrateProvider, evmProvider}: Props): React.R
           className={'__account-item'}
           middleItem={_middleItem}
         />
-        {account && <TransactionModal senderAccount={account}
-                           substrateProvider={substrateProvider}
-                           evmProvider={evmProvider}/>}
       </>
 
     )
-  }, [wallet?.accounts, onSignClicked, onTransactionClicked, substrateProvider, evmProvider])
+  }, [onSignClicked, onTransactionClicked])
 
 
   return (
-      <SwList
-        className={CN('__account-list', className)}
-        list={accountsMap}
-        renderWhenEmpty={renderEmpty}
-        renderItem={accountItem}
-      />
+    <>
+      {
+        accountsMap.length > 0 &&
+        <>
+            <SwList
+                className={CN('__account-list', className)}
+                list={accountsMap}
+                renderWhenEmpty={renderEmpty}
+                renderItem={accountItem}
+            />
+          {
+            accountTransaction && <TransactionModal senderAccount={accountTransaction} substrateProvider={substrateProvider} evmProvider={evmProvider} />
+          }
+        </>
+
+    }
+    </>
+
   );
 }
 

@@ -23,10 +23,11 @@ interface Props extends ThemeProps{};
 
 
 function Component ({className}: Props): React.ReactElement {
-  const [{ wallet, connecting},connect,, updateBalance] = useConnectWallet();
+  const [{ wallet},,disconnect] = useConnectWallet();
   const [{ chains}, setChain] = useSetChain();
   const navigate = useNavigate();
   const [ evmProvider, setEvmProvider ] = useState<evmApi>();
+  const [ listendAccountChanged, setListendAccounChanged ] = useState(false);
   const customNotification = useNotifications()[1];
   const { isWebUI } = useContext(ScreenContext);
 
@@ -36,11 +37,11 @@ function Component ({className}: Props): React.ReactElement {
     if(!wallet) return;
     setEvmProvider(new evmApi(wallet.provider as EIP1193Provider));
     wallet.provider.on('accountsChanged', (accounts) => {
-      if(accounts.length === 0){
-        navigate("/welcome");
+      if(!accounts || accounts.length === 0 ){
+        disconnect({ label: wallet.label, type: wallet.type })
       }
     })
-  }, [wallet]);
+  }, [wallet, navigate]);
 
 
   const requestPermission = useCallback(async ()=> {
@@ -79,7 +80,7 @@ function Component ({className}: Props): React.ReactElement {
             <div className={'__evm-wallet-info-label'}>
               Account List
             </div>
-            <AccountList evmProvider={evmProvider}/>
+            {wallet?.accounts && wallet.accounts.length > 0 && <AccountList evmProvider={evmProvider}/>}
           </div>
           <div className={'__evm-wallet-info-box'}>
             <div className={'__evm-wallet-info-label'}>Permission</div>

@@ -51,7 +51,7 @@ function Component ({ visible, className }: Props): React.ReactElement<Props> {
         try {
           await set({ chainId: network.id, chainNamespace: network.namespace })
         }catch (e) {
-
+          console.log(e)
         }
       }
     }
@@ -94,7 +94,7 @@ function Component ({ visible, className }: Props): React.ReactElement<Props> {
                 modalId={modalId}
                 onSelectItem={onSwitchNetwork}
               />
-              <SelectAccount />
+              {wallet?.accounts && wallet.accounts.length > 0 && <SelectAccount/>}
 
             </div>
           </>:

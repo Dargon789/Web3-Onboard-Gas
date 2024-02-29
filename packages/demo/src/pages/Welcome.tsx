@@ -24,9 +24,9 @@ function Component ({ className }: Props): React.ReactElement {
   const [{ wallet }, connect] = useConnectWallet()
   const { token } = useTheme() as Theme;
   useEffect(() => {
-    if (wallet?.type === 'substrate') {
+    if (wallet?.type === 'substrate' && wallet.accounts.length > 0) {
       navigate('/wallet-info');
-    } else if(wallet?.type === 'evm' ){
+    } else if(wallet?.type === 'evm' && wallet.accounts.length > 0 ){
       navigate('/evm-wallet-info');
     }
   }, [wallet]);

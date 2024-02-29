@@ -1,12 +1,12 @@
 import { ThemeProps, TransferParams, FormCallbacks, Theme } from "../../types";
 import {TRANSACTION_MODAL} from "../../constants/modal";
 import { BaseModal} from "../modal";
-import { Button, Form, Icon, Input, ModalContext } from '@subwallet/react-ui';
+import { Button, Form, Icon, Input, ModalContext, Number, ActivityIndicator } from '@subwallet/react-ui';
 import { useState, useCallback, useMemo, useEffect, useContext } from "react";
 import { useConnectWallet, useNotifications, useSetChain } from "@subwallet_connect/react";
 import { Rule } from '@subwallet/react-ui/es/form';
 import { useWatchTransaction } from "../../hooks";
-import styled from 'styled-components';
+import styled, {useTheme} from 'styled-components';
 import BigN from 'bignumber.js';
 import { isAddress, isEthereumAddress } from '@polkadot/util-crypto';
 import CN from "classnames";
@@ -14,9 +14,11 @@ import AccountBriefInfo from "../account/AccountBriefInfo";
 import type { Account } from '@subwallet_connect/core/dist/types';
 import { PaperPlaneTilt } from "@phosphor-icons/react";
 import { NetworkInfo } from "../../utils/network";
-import {EIP1193Provider, SubstrateProvider} from "@subwallet_connect/common";
+import { EIP1193Provider, SubstrateProvider } from "@subwallet_connect/common";
 import { substrateApi } from "../../utils/api/substrateApi";
 import { evmApi } from "../../utils/api/evmApi";
+import BN from "bn.js";
+import {BN_ZERO} from "@polkadot/util";
 
 export interface Props extends ThemeProps {
   senderAccount: Account;
@@ -24,22 +26,54 @@ export interface Props extends ThemeProps {
   evmProvider ?: evmApi,
 };
 
-
-
+export interface TypeFreeBalance  {
+  value: string,
+  symbol: string,
+  decimals: number
+}
+const DEFAULT_ADDRESS = '5GnUABVD7kt1wnmLiSeGcuSd5ESvmVnAjdMRrtvKxUGxuy6N'
+const modalId = TRANSACTION_MODAL;
 function Component ({ className, senderAccount, evmProvider, substrateProvider }: Props) {
   const [{ wallet},] = useConnectWallet();
   const [{ chains }] = useSetChain();
-  const modalId = useMemo(() => `${senderAccount.address}`, [senderAccount.address, wallet])
   const [loading, setLoading] = useState(false);
   const [, customNotification, updateNotify,] = useNotifications();
+  const [ availableBalance, setAvailableBalance ] = useState<TypeFreeBalance>()
+  const [ onReadyFreeBalance, setOnReadyFreeBalance ] = useState(false);
   const [ validatePass, setValidatePass ] = useState<{ to: boolean, amount: boolean}>({ to: false, amount: false })
-  const [ defaultData, persistData ] = useState<TransferParams>({
+  const defaultData = useMemo((): TransferParams => {
+    return ({
       from: senderAccount.address,
       to: '',
       value: ''
-    }
-  );
-  const { inactiveModal } = useContext(ModalContext);
+    })
+  }, [senderAccount])
+  const { token } = useTheme() as Theme;
+  const { inactiveModal, checkActive } = useContext(ModalContext);
+
+  const getMaxTransfer = useCallback(async () => {
+    if(!wallet) return ;
+    setOnReadyFreeBalance(false);
+    substrateProvider && await substrateProvider.isReady();
+
+    const { namespace: namespace_, id: chainId } = wallet.chains[0]
+    const chainInfo = chains.find(({id, namespace}) => id === chainId && namespace === namespace_);
+    const maxTransfer = (await (substrateProvider || evmProvider)?.getMaxTransfer( '0', senderAccount.address, DEFAULT_ADDRESS)) || '0';
+    const maxTransferBN = new BN(maxTransfer);
+    setAvailableBalance(
+{
+        symbol: chainInfo?.token || ( wallet.type === 'evm' ? 'ETH' : 'DOT') ,
+        value:  maxTransferBN.gt(BN_ZERO) ?  maxTransfer : '0',
+        decimals: chainInfo?.decimal || ( wallet.type === 'evm' ? 18 : 10)
+      }
+    )
+    setOnReadyFreeBalance(true);
+
+  }, [ wallet?.chains[0], substrateProvider, evmProvider, senderAccount.address])
+
+  useEffect(() => {
+    checkActive(modalId) && getMaxTransfer().then(r => {});
+  }, [checkActive(modalId), wallet?.chains[0].id, senderAccount.address]);
 
 
 
@@ -50,13 +84,6 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
   const transferAmount = useWatchTransaction('value', form, defaultData);
   const to = useWatchTransaction('to', form, defaultData);
 
-  useEffect(() => {
-    persistData({
-      from: senderAccount.address,
-      to: '',
-      value: ''
-    })
-  }, [senderAccount]);
 
   const validateRecipientAddress = useCallback(async (rule: Rule, _recipientAddress: string): Promise<void> => {
 
@@ -141,8 +168,14 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
 
 
   const onCloseModal = useCallback(() => {
-    inactiveModal(modalId)
-  }, [modalId, inactiveModal])
+    setAvailableBalance(undefined);
+    inactiveModal(modalId);
+    form.resetFields(['to', 'value']);
+  }, [ inactiveModal, form])
+
+  const onValueChange = useCallback(() => {
+
+  }, [])
 
 
 
@@ -164,17 +197,6 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
       if(wallet?.type === "evm"){
         blockHash = await evmProvider?.sendTransaction(senderAccount.address, to, amount ) || ''
       }else{
-          const ws = NetworkInfo[chainInfo.label as string].wsProvider;
-          if(! ws) {
-            const {} = customNotification({
-              type: 'error',
-              message:
-                'This network is not provide api',
-              autoDismiss: 2000
-            })
-
-            return ;
-          }
 
         const getSigner = async ()=>{
           const provider = wallet.provider as SubstrateProvider;
@@ -245,6 +267,7 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
       id={modalId}
       title={'Transaction'}
       closable={true}
+      maskClosable={false}
       onCancel={onCloseModal}
       className={CN(className, 'transaction-modal')}
       fullSizeOnMobile={true}
@@ -253,6 +276,7 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
         <Form
           className={'form-container form-space-sm'}
           form={form}
+          onValuesChange={onValueChange}
           onFinish={onSubmit}
           initialValues={formDefault}
         >
@@ -307,6 +331,23 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
               suffix={suffixAmountInput}
             />
           </Form.Item>
+
+            <div className={'__balance-transferable-item'}>
+            <span className='__label-balance-transferable'>Sender available balance:</span>
+              {
+                availableBalance && onReadyFreeBalance?
+                  <Number
+                    decimal={availableBalance.decimals}
+                    decimalColor={token.colorTextTertiary}
+                    intColor={token.colorTextTertiary}
+                    size={14}
+                    suffix={availableBalance.symbol}
+                    unitColor={token.colorTextTertiary}
+                    value={availableBalance.value}
+                   /> :
+                  <ActivityIndicator size={14} />
+              }
+          </div>
         </Form>
       </div>
       <div className={'__transaction-footer'}>
@@ -397,6 +438,15 @@ const TransactionModal = styled(Component)(({ theme: {token} }) => {
 
     '.__amount-transfer-input': {
       '-moz-appearance': 'textfield'
+    },
+    '.__balance-transferable-item': {
+      display: 'flex',
+      flexWrap: 'wrap',
+      color: token.colorTextTertiary,
+
+      '.__label-balance-transferable': {
+        marginRight: 3
+      },
     }
 
   });
