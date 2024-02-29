@@ -1,4 +1,4 @@
-import { ThemeProps, TransferParams, FormCallbacks, Theme } from "../../types";
+import { ThemeProps, TransferParams, FormCallbacks, Theme, AmountData } from "../../types";
 import {TRANSACTION_MODAL} from "../../constants/modal";
 import { BaseModal} from "../modal";
 import { Button, Form, Icon, Input, ModalContext, Number, ActivityIndicator } from '@subwallet/react-ui';
@@ -17,8 +17,10 @@ import { NetworkInfo } from "../../utils/network";
 import { EIP1193Provider, SubstrateProvider } from "@subwallet-connect/common";
 import { substrateApi } from "../../utils/api/substrateApi";
 import { evmApi } from "../../utils/api/evmApi";
+import { getMaxLengthText } from "../../utils/number";
 import BN from "bn.js";
 import {BN_ZERO} from "@polkadot/util";
+import { formatBalance } from "../../utils/number";
 
 export interface Props extends ThemeProps {
   senderAccount: Account;
@@ -26,21 +28,19 @@ export interface Props extends ThemeProps {
   evmProvider ?: evmApi,
 };
 
-export interface TypeFreeBalance  {
-  value: string,
-  symbol: string,
-  decimals: number
-}
+
 const DEFAULT_ADDRESS = '5GnUABVD7kt1wnmLiSeGcuSd5ESvmVnAjdMRrtvKxUGxuy6N'
 const modalId = TRANSACTION_MODAL;
 function Component ({ className, senderAccount, evmProvider, substrateProvider }: Props) {
   const [{ wallet},] = useConnectWallet();
   const [{ chains }] = useSetChain();
   const [loading, setLoading] = useState(false);
+  const [ validateTo, setValidateTo ] = useState(false);
+  const [ validateValue, setValidateValue ] = useState(false);
   const [, customNotification, updateNotify,] = useNotifications();
-  const [ availableBalance, setAvailableBalance ] = useState<TypeFreeBalance>()
+  const [ availableBalance, setAvailableBalance ] = useState<AmountData>()
   const [ onReadyFreeBalance, setOnReadyFreeBalance ] = useState(false);
-  const [ validatePass, setValidatePass ] = useState<{ to: boolean, amount: boolean}>({ to: false, amount: false })
+  const [ onError, setOnError ] = useState(false);
   const defaultData = useMemo((): TransferParams => {
     return ({
       from: senderAccount.address,
@@ -53,21 +53,32 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
 
   const getMaxTransfer = useCallback(async () => {
     if(!wallet) return ;
-    setOnReadyFreeBalance(false);
-    substrateProvider && await substrateProvider.isReady();
+    try{
+      setOnReadyFreeBalance(false);
+      substrateProvider && await substrateProvider.isReady();
 
-    const { namespace: namespace_, id: chainId } = wallet.chains[0]
-    const chainInfo = chains.find(({id, namespace}) => id === chainId && namespace === namespace_);
-    const maxTransfer = (await (substrateProvider || evmProvider)?.getMaxTransfer( '0', senderAccount.address, DEFAULT_ADDRESS)) || '0';
-    const maxTransferBN = new BN(maxTransfer);
-    setAvailableBalance(
-{
-        symbol: chainInfo?.token || ( wallet.type === 'evm' ? 'ETH' : 'DOT') ,
-        value:  maxTransferBN.gt(BN_ZERO) ?  maxTransfer : '0',
-        decimals: chainInfo?.decimal || ( wallet.type === 'evm' ? 18 : 10)
+      const { namespace: namespace_, id: chainId } = wallet.chains[0]
+      const chainInfo = chains.find(({id, namespace}) => id === chainId && namespace === namespace_);
+      const maxTransfer = (await (substrateProvider || evmProvider)?.getMaxTransfer( '0', senderAccount.address, DEFAULT_ADDRESS));
+      if(!maxTransfer) {
+        setOnError(true);
+        return;
       }
-    )
-    setOnReadyFreeBalance(true);
+      const maxTransferBN = new BN(maxTransfer);
+      setAvailableBalance(
+        {
+          symbol: chainInfo?.token || ( wallet.type === 'evm' ? 'ETH' : 'DOT') ,
+          value:  maxTransferBN.gt(BN_ZERO) ?  maxTransfer : '0',
+          decimals: chainInfo?.decimal || ( wallet.type === 'evm' ? 18 : 10)
+        }
+      )
+      setOnReadyFreeBalance(true);
+    }catch (e) {
+      setOnError(true)
+      return ;
+    }
+
+
 
   }, [ wallet?.chains[0], substrateProvider, evmProvider, senderAccount.address])
 
@@ -88,56 +99,54 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
   const validateRecipientAddress = useCallback(async (rule: Rule, _recipientAddress: string): Promise<void> => {
 
     if (!_recipientAddress) {
-      setValidatePass({...validatePass, to: false})
       return Promise.reject('Recipient address is required');
     }
 
     if (!isAddress(_recipientAddress)) {
-      setValidatePass({...validatePass, to: false})
       return Promise.reject('Invalid recipient address');
     }
 
     if((wallet?.type === 'evm' && !isEthereumAddress(_recipientAddress))
       || (wallet?.type === 'substrate' && isEthereumAddress(_recipientAddress))){
-      setValidatePass({...validatePass, to: false})
+      setValidateTo( false)
       return Promise.reject('Invalid recipient address type');
     }
 
     if(_recipientAddress === senderAccount.address) {
-      setValidatePass({...validatePass, to: false})
+      setValidateTo( false)
       return Promise.reject('The receiving address and sending address must be different')
     }
 
-    setValidatePass({...validatePass, to: true})
-    return Promise.resolve();
-  }, [form, wallet, senderAccount, validatePass]);
+    return Promise.resolve().then(() => {
+      setValidateTo(true);
+
+      return Promise.resolve()
+    });
+  }, [form, wallet, senderAccount]);
+
 
   const validateAmount = useCallback(async (rule: Rule, amount: string): Promise<void> => {
     if(!wallet ) return Promise.reject('Disconnected wallet');
 
     if (!isAddress(to)) {
-      setValidatePass({...validatePass, to: false})
+      setValidateValue(false)
       return Promise.reject('Invalid recipient address');
     }
 
     if((wallet?.type === 'evm' && !isEthereumAddress(to))
       || (wallet?.type === 'substrate' && isEthereumAddress(to))){
-      setValidatePass({...validatePass, to: false})
+      setValidateValue(false)
       return Promise.reject('Invalid recipient address type');
     }
 
     if (!amount || !amount.trim()) {
-      setValidatePass({...validatePass, amount: false})
+      setValidateValue(false)
       return Promise.reject('Amount is required');
     }
 
-    if ((new BigN(amount)).eq(new BigN(0))) {
-      setValidatePass({...validatePass, amount: false})
-      return Promise.reject('Amount must be greater than 0');
-    }
 
     if(!isValidInput(amount)){
-      setValidatePass({...validatePass, amount: false})
+      setValidateValue(false)
       return Promise.reject('Amount is invalid')
     }
 
@@ -147,7 +156,7 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
     if(substrateProvider && chainInfo){
       const isAvailableAmount = await substrateProvider.isAvailableAmount(getOutputValuesFromString(amount, chainInfo.decimal || 10), senderAccount.address, to);
       if(!isAvailableAmount) {
-        setValidatePass({...validatePass, amount: false})
+        setValidateValue(false)
         return Promise.reject(`You don't have enough balance to proceed`)
       }
     }
@@ -157,14 +166,18 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
     if(evmProvider && chainInfo){
       const isAvailableAmount = await evmProvider.isAvailableAmount(getOutputValuesFromString(amount, chainInfo.decimal || 18), senderAccount.address, to);
       if(!isAvailableAmount) {
-        setValidatePass({...validatePass, amount: false})
+        setValidateValue(false)
         return Promise.reject(`You don't have enough balance to proceed`)
       }
     }
 
-    setValidatePass({...validatePass, amount: true})
-    return Promise.resolve();
-  }, [senderAccount, to, substrateProvider, evmProvider, wallet?.chains[0], validatePass]);
+    return Promise.resolve().then(() => {
+      setValidateValue(true);
+
+      return Promise.resolve()
+    });
+  }, [senderAccount, to, substrateProvider, evmProvider, wallet?.chains[0], availableBalance]);
+
 
 
   const onCloseModal = useCallback(() => {
@@ -173,9 +186,37 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
     form.resetFields(['to', 'value']);
   }, [ inactiveModal, form])
 
-  const onValueChange = useCallback(() => {
+  const onValuesChange: FormCallbacks<TransferParams>['onValuesChange'] = useCallback(
+    (part: Partial<TransferParams>, values: TransferParams) => {
+      const validateField: string[] = [];
+      if(! wallet) return;
+      const {namespace: namespace_, id: chainId } = wallet.chains[0]
+      const chainInfo = chains.find(({id, namespace}) => id === chainId && namespace === namespace_);
+      if(!chainInfo) return;
 
-  }, [])
+      if(part.value){
+        let value= values.value;
+        const maxLength = getMaxLengthText(value, chainInfo.decimal || 10);
+
+        if (maxLength && value.length > maxLength) {
+          value = value.slice(0, maxLength);
+        }
+        setValidateValue(false);
+        form.setFieldValue('value', value);
+      }
+
+      if(part.to) {
+        setValidateTo(false)
+        form.setFieldValue('to', values.to);
+      }
+
+      if (validateField.length) {
+        form.validateFields(validateField).catch(() => {});
+      }
+
+    },
+    [form]
+  );
 
 
 
@@ -222,7 +263,6 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
 
       }
       setLoading(false)
-      setValidatePass({ amount: false, to: false})
       blockHash !== '' && onCloseModal();
     }catch (e) {}
   }, [wallet, chains, senderAccount, evmProvider, substrateProvider]);
@@ -276,8 +316,7 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
         <Form
           className={'form-container form-space-sm'}
           form={form}
-          onValuesChange={onValueChange}
-          onFinish={onSubmit}
+          onValuesChange={onValuesChange}
           initialValues={formDefault}
         >
           <Form.Item
@@ -333,26 +372,33 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
           </Form.Item>
 
             <div className={'__balance-transferable-item'}>
-            <span className='__label-balance-transferable'>Sender available balance:</span>
               {
-                availableBalance && onReadyFreeBalance?
-                  <Number
-                    decimal={availableBalance.decimals}
-                    decimalColor={token.colorTextTertiary}
-                    intColor={token.colorTextTertiary}
-                    size={14}
-                    suffix={availableBalance.symbol}
-                    unitColor={token.colorTextTertiary}
-                    value={availableBalance.value}
-                   /> :
-                  <ActivityIndicator size={14} />
+
+                  onError ? <span className={'__label-error-balance-transferable'}>Unable to get balance. Please re-enable the network</span>
+                    :
+                    <>
+                      <span className='__label-balance-transferable'>Sender available balance:</span>
+                      {
+                        availableBalance && onReadyFreeBalance?
+                          <Number
+                            decimal={availableBalance.decimals}
+                            decimalColor={token.colorTextTertiary}
+                            intColor={token.colorTextTertiary}
+                            size={14}
+                            suffix={availableBalance.symbol}
+                            unitColor={token.colorTextTertiary}
+                            value={availableBalance.value}
+                          /> :
+                          <ActivityIndicator size={14} />
+                      }
+                    </>
               }
           </div>
         </Form>
       </div>
       <div className={'__transaction-footer'}>
         <Button
-          disabled={!(validatePass.amount && validatePass.to)}
+          disabled={!validateTo || !validateValue}
           icon={(
             <Icon
               phosphorIcon={PaperPlaneTilt}
@@ -360,7 +406,7 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
             />
           )}
           loading={loading}
-          onClick={form.submit}
+          onClick={() => onSubmit({from: senderAccount.address, value: transferAmount, to })}
           block={true}
         >
               Transfer
@@ -444,9 +490,13 @@ const TransactionModal = styled(Component)(({ theme: {token} }) => {
       flexWrap: 'wrap',
       color: token.colorTextTertiary,
 
-      '.__label-balance-transferable': {
+      '.__label-balance-transferable, .__label-error-balance-transferable': {
         marginRight: 3
       },
+      '.__label-error-balance-transferable': {
+        color: token.colorError,
+        fontWeight: 600
+      }
     }
 
   });

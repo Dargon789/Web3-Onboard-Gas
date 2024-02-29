@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { EIP1193Provider, SubstrateProvider, WalletModule, Chain } from '@subwallet-connect/common'
-  import {  ProviderRpcErrorCode  } from '@subwallet-connect/common';
+  import {ProviderRpcErrorCode, ProviderRpcErrorMessage} from '@subwallet-connect/common';
   import EventEmitter from 'eventemitter3';
   import { BigNumber } from 'ethers'
   import { _ } from 'svelte-i18n'
@@ -370,11 +370,11 @@
       setStep('connectedWallet')
       scrollToTop()
     } catch (error) {
-      const { code } = error as { code: number; message: string }
+      const { code, message } = error as { code: number; message: string }
       scrollToTop()
 
       // user rejected account access
-      if (code === ProviderRpcErrorCode.ACCOUNT_ACCESS_REJECTED) {
+      if (code === ProviderRpcErrorCode.ACCOUNT_ACCESS_REJECTED || message === ProviderRpcErrorMessage.ACCOUNT_ACCESS_REJECTED) {
         connectionRejected = true
 
         if (autoSelect.disableModals) {

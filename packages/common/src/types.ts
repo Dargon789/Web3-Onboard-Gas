@@ -446,6 +446,10 @@ export enum ProviderRpcErrorCode {
   UNRECOGNIZED_CHAIN_ID = -32603
 }
 
+export enum ProviderRpcErrorMessage {
+  ACCOUNT_ACCESS_REJECTED = 'User Rejected Request'
+}
+
 export interface Chain {
   /**
    * String indicating chain namespace.
