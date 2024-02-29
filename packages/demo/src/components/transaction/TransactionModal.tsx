@@ -32,6 +32,7 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
   const modalId = useMemo(() => `${senderAccount.address}`, [senderAccount.address, wallet])
   const [loading, setLoading] = useState(false);
   const [, customNotification, updateNotify,] = useNotifications();
+  const [ validatePass, setValidatePass ] = useState<{ to: boolean, amount: boolean}>({ to: false, amount: false })
   const [ defaultData, persistData ] = useState<TransferParams>({
       from: senderAccount.address,
       to: '',
@@ -57,46 +58,91 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
     })
   }, [senderAccount]);
 
-  const validateRecipientAddress = useCallback((rule: Rule, _recipientAddress: string): Promise<void> => {
+  const validateRecipientAddress = useCallback(async (rule: Rule, _recipientAddress: string): Promise<void> => {
+
     if (!_recipientAddress) {
+      setValidatePass({...validatePass, to: false})
       return Promise.reject('Recipient address is required');
     }
 
     if (!isAddress(_recipientAddress)) {
+      setValidatePass({...validatePass, to: false})
       return Promise.reject('Invalid recipient address');
     }
 
     if((wallet?.type === 'evm' && !isEthereumAddress(_recipientAddress))
       || (wallet?.type === 'substrate' && isEthereumAddress(_recipientAddress))){
+      setValidatePass({...validatePass, to: false})
       return Promise.reject('Invalid recipient address type');
     }
 
     if(_recipientAddress === senderAccount.address) {
+      setValidatePass({...validatePass, to: false})
       return Promise.reject('The receiving address and sending address must be different')
     }
 
+    setValidatePass({...validatePass, to: true})
     return Promise.resolve();
-  }, [form, wallet, senderAccount]);
+  }, [form, wallet, senderAccount, validatePass]);
 
-  const validateAmount = useCallback((rule: Rule, amount: string): Promise<void> => {
+  const validateAmount = useCallback(async (rule: Rule, amount: string): Promise<void> => {
+    if(!wallet ) return Promise.reject('Disconnected wallet');
+
+    if (!isAddress(to)) {
+      setValidatePass({...validatePass, to: false})
+      return Promise.reject('Invalid recipient address');
+    }
+
+    if((wallet?.type === 'evm' && !isEthereumAddress(to))
+      || (wallet?.type === 'substrate' && isEthereumAddress(to))){
+      setValidatePass({...validatePass, to: false})
+      return Promise.reject('Invalid recipient address type');
+    }
+
     if (!amount || !amount.trim()) {
+      setValidatePass({...validatePass, amount: false})
       return Promise.reject('Amount is required');
     }
 
     if ((new BigN(amount)).eq(new BigN(0))) {
+      setValidatePass({...validatePass, amount: false})
       return Promise.reject('Amount must be greater than 0');
     }
 
     if(!isValidInput(amount)){
+      setValidatePass({...validatePass, amount: false})
       return Promise.reject('Amount is invalid')
     }
 
+
+    const { namespace: namespace_, id: chainId } = wallet?.chains[0]
+    const chainInfo = chains.find(({id, namespace}) => id === chainId && namespace === namespace_)
+    if(substrateProvider && chainInfo){
+      const isAvailableAmount = await substrateProvider.isAvailableAmount(getOutputValuesFromString(amount, chainInfo.decimal || 10), senderAccount.address, to);
+      if(!isAvailableAmount) {
+        setValidatePass({...validatePass, amount: false})
+        return Promise.reject(`You don't have enough balance to proceed`)
+      }
+    }
+
+
+
+    if(evmProvider && chainInfo){
+      const isAvailableAmount = await evmProvider.isAvailableAmount(getOutputValuesFromString(amount, chainInfo.decimal || 18), senderAccount.address, to);
+      if(!isAvailableAmount) {
+        setValidatePass({...validatePass, amount: false})
+        return Promise.reject(`You don't have enough balance to proceed`)
+      }
+    }
+
+    setValidatePass({...validatePass, amount: true})
     return Promise.resolve();
-  }, []);
+  }, [senderAccount, to, substrateProvider, evmProvider, wallet?.chains[0], validatePass]);
+
 
   const onCloseModal = useCallback(() => {
     inactiveModal(modalId)
-  }, [])
+  }, [modalId, inactiveModal])
 
 
 
@@ -154,9 +200,10 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
 
       }
       setLoading(false)
+      setValidatePass({ amount: false, to: false})
       blockHash !== '' && onCloseModal();
     }catch (e) {}
-  }, [wallet, chains, senderAccount, evmProvider, substrateProvider ]);
+  }, [wallet, chains, senderAccount, evmProvider, substrateProvider]);
 
   const isValidInput = useCallback((input: string) => {
     return !(isNaN(parseFloat(input)) || !input.match(/^-?\d*(\.\d+)?$/));
@@ -253,6 +300,7 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
           >
             <Input
               placeholder={'Amount'}
+              type={'number'}
               className={'__amount-transfer-input'}
               onBlur={form.submit}
               tooltip={'Amount'}
@@ -263,7 +311,7 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
       </div>
       <div className={'__transaction-footer'}>
         <Button
-          disabled={false}
+          disabled={!(validatePass.amount && validatePass.to)}
           icon={(
             <Icon
               phosphorIcon={PaperPlaneTilt}
@@ -340,8 +388,16 @@ const TransactionModal = styled(Component)(({ theme: {token} }) => {
     '.__amount-token': {
       color: token.colorSuccessText,
       marginRight: token.marginSM
-    }
+    },
 
+  '.__amount-transfer-input::-webkit-outer-spin-button, .__amount-transfer-input::-webkit-inner-spin-button ': {
+      '-webkit-appearance': 'none',
+      margin: 0
+    },
+
+    '.__amount-transfer-input': {
+      '-moz-appearance': 'textfield'
+    }
 
   });
 });

@@ -36,6 +36,12 @@ function Component ({className}: Props): React.ReactElement {
           setSubstrateProvider(new substrateApi(ws));
         }
       }
+
+    wallet.provider.on('accountsChanged', (accounts) => {
+      if(accounts.length === 0){
+        navigate("/welcome");
+      }
+    })
   }, [wallet]);
 
   return (

@@ -47,7 +47,13 @@ function SubWallet (): WalletInit {
                 return;
               }
               const accounts = await rawExtension.accounts.get();
-              console.log(accounts, 'accounts');
+
+              rawExtension.accounts.subscribe(account => {
+                emitter.emit('accountsChanged', account.map(
+                  (account) => `${account.address}_${account.name}`
+                ))
+              })
+
               return {
                 signer: rawExtension.signer as Signer,
                 metadata: rawExtension.metadata as InjectedMetadata,

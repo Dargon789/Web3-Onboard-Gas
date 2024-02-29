@@ -4,7 +4,7 @@ import type {EIP1193Provider} from "@subwallet_connect/common";
 import web3Onboard from '../../web3-onboard';
 import {RequestArguments} from "../../types";
 import {METHOD_MAP, SIGN_METHODS} from "../methods";
-
+import BigNumber from 'bignumber.js'
 
 export class evmApi {
   private readonly provider ?: Web3Provider;
@@ -13,6 +13,23 @@ export class evmApi {
     this.provider = new ethers.providers.Web3Provider(provider, 'any')
   }
 
+
+  public async isAvailableAmount ( amount: string, senderAddress: string, recipientAddress: string ) {
+    if(!this.provider) return false;
+    const txDetails = {
+      to: recipientAddress,
+      value: amount
+    }
+
+    const [ gas, price, balance ] = await Promise.all([
+      this.provider.getGasPrice().then(res => new BigNumber(res.toString())),
+      this.provider.estimateGas(txDetails).then(res =>  new BigNumber(res.toString())),
+      this.provider.getBalance(senderAddress)
+    ])
+    const transactionCost = gas.times(price).plus(amount);
+
+    return new BigNumber(balance.toString()).gt(transactionCost);
+  }
   public async sendTransaction (senderAddress: string, recipientAddress: string, amount: string ) {
     if(! this.provider) return;
 

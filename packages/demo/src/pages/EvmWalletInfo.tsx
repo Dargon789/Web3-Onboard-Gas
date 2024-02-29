@@ -23,7 +23,7 @@ interface Props extends ThemeProps{};
 
 
 function Component ({className}: Props): React.ReactElement {
-  const [{ wallet},connect,, updateBalance] = useConnectWallet();
+  const [{ wallet, connecting},connect,, updateBalance] = useConnectWallet();
   const [{ chains}, setChain] = useSetChain();
   const navigate = useNavigate();
   const [ evmProvider, setEvmProvider ] = useState<evmApi>();
@@ -35,8 +35,13 @@ function Component ({className}: Props): React.ReactElement {
     wallet?.type === "substrate" && navigate("/wallet-info");
     if(!wallet) return;
     setEvmProvider(new evmApi(wallet.provider as EIP1193Provider));
-
+    wallet.provider.on('accountsChanged', (accounts) => {
+      if(accounts.length === 0){
+        navigate("/welcome");
+      }
+    })
   }, [wallet]);
+
 
   const requestPermission = useCallback(async ()=> {
     const { update, dismiss } = customNotification({

@@ -129,7 +129,6 @@ function Component ({className, substrateProvider, evmProvider}: Props): React.R
     )
 
     const account = wallet?.accounts.find(({address: address_}) => address === address_)
-
     return(
       <>
         <Web3Block
@@ -143,7 +142,7 @@ function Component ({className, substrateProvider, evmProvider}: Props): React.R
       </>
 
     )
-  }, [wallet?.accounts, onSignClicked, onTransactionClicked])
+  }, [wallet?.accounts, onSignClicked, onTransactionClicked, substrateProvider, evmProvider])
 
 
   return (

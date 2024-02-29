@@ -22,24 +22,31 @@ export class substrateApi {
     return this.api?.isReady
   }
 
-
-  public async sendTransaction (senderAddress: string, recipientAddress: string, signer: Signer | undefined, amount: string ){
-    if(!this.api || !this.api.isReady || !signer) return;
+  public async isAvailableAmount ( amount: string, senderAddress: string, recipientAddress: string ) {
+    if(!this.api || !this.api.isReady ) return false;
 
     const transferExtrinsic = this.api.tx.balances.transferKeepAlive(recipientAddress, amount)
     const [ { partialFee }, balances ] = await Promise.all([
       transferExtrinsic.paymentInfo(senderAddress),
       this.api.derive.balances?.all(senderAddress)
     ])
+
     const adjFee = partialFee.muln(110).div(BN_HUNDRED);
     const maxTransfer = balances.availableBalance.sub(adjFee);
-    console.log(maxTransfer.toString())
+    console.log(maxTransfer.toString());
+
+    return !!(maxTransfer.gt(new BN(this.api?.consts.balances.existentialDeposit as any)))
+  }
+
+
+  public async sendTransaction (senderAddress: string, recipientAddress: string, signer: Signer | undefined, amount: string ){
+    if(!this.api || !this.api.isReady || !signer) return;
+
+    const transferExtrinsic = this.api.tx.balances.transferKeepAlive(recipientAddress, amount)
     try{
       const sendTransaction = async (fn: (hash: string) => void) => {
         let txHash_ = ''
-        if(!maxTransfer.gt(new BN(this.api?.consts.balances.existentialDeposit as any))){
-          throw new Error ('The account does not have enough free funds available to cover the transaction fees without dropping the balance below the account existential amount.')
-        }
+
         await transferExtrinsic.signAndSend(senderAddress, { signer }, ({ status, txHash }) => {
           if (status.isInBlock) {
             fn(txHash.toString());
