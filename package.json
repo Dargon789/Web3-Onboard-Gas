@@ -1,6 +1,6 @@
 {
-  "name": "web3-onboard-monorepo",
-  "version": "2.24.18",
+  "name": "subwallet-connect-monorepo",
+  "version": "1.0.1",
   "private": true,
   "workspaces": {
     "packages": [
@@ -11,9 +11,11 @@
       "**/csstype"
     ]
   },
-  "description": "Web3-Onboard makes it simple to connect Ethereum hardware and software wallets to your dapp. Features standardised spec compliant web3 providers for all supported wallets, framework agnostic modern javascript UI with code splitting, CSS customization, multi-chain and multi-account support, reactive wallet state subscriptions and real-time transaction state change notifications.",
+  "description": "SubWallet-Connect fork from Web3-Onboard. It makes it simple to connect not only Ethereum but also Polkadot hardware and software wallets to your dapp. Features standardised spec compliant web3 providers for all supported wallets, framework agnostic modern javascript UI with code splitting, CSS customization, multi-chain and multi-account support, reactive wallet state subscriptions and real-time transaction state change notifications.",
   "keywords": [
     "Ethereum",
+    "Polkadot",
+    "SubWallet",
     "Web3",
     "EVM",
     "dapp",
@@ -46,11 +48,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/blocknative/web3-onboard.git",
+    "url": "https://github.com/Koniverse/SubWallet-Connect.git",
     "directory": "packages/core"
   },
   "homepage": "https://onboard.blocknative.com",
-  "bugs": "https://github.com/blocknative/web3-onboard/issues",
+  "bugs": "https://github.com/Koniverse/SubWallet-Connect/issues",
   "scripts": {
     "install-m1-mac": "yarn install --ignore-optional",
     "format": "prettier --write 'packages/**/*.ts'",
@@ -59,7 +61,9 @@
     "type-check": "yarn wsrun type-check",
     "file-check": "yarn install --check-files",
     "check-all": "yarn build && yarn file-check && yarn type-check",
-    "test-playwright": "cd test && yarn && yarn playwright test"
+    "test-playwright": "cd test && yarn && yarn playwright test",
+    "update-version": "node scripts/update-version.js",
+    "publish-version": "node scripts/publish-version.js"
   },
   "devDependencies": {
     "prettier": "^2.4.1",
