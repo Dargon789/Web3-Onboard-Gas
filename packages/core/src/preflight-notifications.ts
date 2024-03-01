@@ -56,6 +56,7 @@ export async function preflightNotifications(
   // check sufficient balance if required parameters are available
   if (balance && gas && price) {
     const transactionCost = gas.times(price).plus(value)
+    console.log(gas, price, balance);
 
     // if transaction cost is greater than the current balance
     if (transactionCost.gt(new BigNumber(balance))) {

@@ -18,8 +18,8 @@ type Props = ThemeProps;
 
 const renderEmpty = () => <GeneralEmptyList />;
 
-export const searchAccountFunction = (item: string, searchText: string): boolean => {
-  return item.toLowerCase().includes(searchText.toLowerCase()) || (item || '').toLowerCase().includes(searchText.toLowerCase());
+export const searchAccountFunction = (item: Account, searchText: string): boolean => {
+  return item.address.toLowerCase().includes(searchText.toLowerCase());
 };
 
 const modalId = SELECT_ACCOUNT_MODAL;

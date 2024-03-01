@@ -46,9 +46,9 @@ export const NetworkInfo : Record<string, NetworkItemType> = {
     name: "Moonbase Alpha",
     namespace: 'evm'
   },
-  'Astar': {
-    slug: 'astar',
-    name: 'Astar',
+  'Astar - EVM': {
+    slug: 'astarEvm',
+    name: 'Astar - EVM',
     namespace: 'evm'
   },
   'Shiden': {

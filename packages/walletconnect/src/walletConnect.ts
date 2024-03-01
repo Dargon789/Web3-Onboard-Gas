@@ -236,8 +236,9 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                 .pipe(takeUntil(this.disconnected$))
                 .subscribe(async uri => {
                   try {
-                    this.emit('uriChanged', uri)
-                    handleUri && (await handleUri(uri))
+                    this.emit('uriChanged', uri);
+                    this.emit('qrModalState', true);
+                    handleUri && (await handleUri(uri));
                   } catch (error) {
                     throw `An error occurred when handling the URI. Error: ${error}`
                   }
@@ -268,19 +269,23 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                     fromEvent(
                       this.connector as JQueryStyleEventEmitter<
                         any,
-                        { chainId: number }
+                        { chainId: number,
+                          modal: any
+                        }
                       >,
                       'connect',
-                      (payload: { chainId: number | string }) => payload
+                      (payload: { chainId: number | string , modal: any}) => payload
                     )
                       .pipe(take(1))
                       .subscribe({
-                        next: ({ chainId }) => {
+                        next: ({ chainId, modal }) => {
+                          console.log(modal)
                           this.emit('accountsChanged', this.connector.accounts)
                           const hexChainId = isHexString(chainId)
                             ? chainId
                             : `0x${chainId.toString(16)}`
-                          this.emit('qrModalState', false)
+                          this.emit('qrModalState', false);
+                          this.emit('uriChanged', '');
                           this.emit('chainChanged', hexChainId)
                           resolve(this.connector.accounts)
                         },
@@ -298,15 +303,17 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                             message: 'User rejected the request.'
                           })
                         )
+                        this.emit('qrModalState', false);
                       })
                     } else {
                       // update ethereum provider to load accounts & chainId
-                      const accounts = this.connector.accounts
-                      const chainId = this.connector.chainId
+                      const accounts = this.connector.accounts;
+                      const chainId = this.connector.chainId;
                       instance = this.connector.session
-                      const hexChainId = `0x${chainId.toString(16)}`
-                      this.emit('qrModalState', false)
-                      this.emit('chainChanged', hexChainId)
+                      const hexChainId = `0x${chainId.toString(16)}`;
+                      this.emit('qrModalState', false);
+                      this.emit('uriChanged', '');
+                      this.emit('chainChanged', hexChainId);
                       return resolve(accounts)
                     }
                   }

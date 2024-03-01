@@ -165,9 +165,17 @@ export function trackWallet(
   }).pipe(share())
 
   // when account changed, set it to first account and subscribe to events
-  accountsChanged$.subscribe(async (addressList) => {
+  accountsChanged$.subscribe(async (addressList_) => {
+
+    if (!addressList_ && addressList_.length <= 0) {
+      disconnect({ label, type })
+      return
+    }
     // sync accounts with internal state
-    // in the case of an account has been manually disconnected
+    // in the case of an account has been manually disconnected;
+    const addressList = addressList_ .filter((a) => {
+      return type === 'evm' ? a.toLowerCase().startsWith('0x') : !a.toLowerCase().startsWith('0x')
+    })
     try {
       await syncWalletConnectedAccounts(label, type)
     } catch (error) {
@@ -181,20 +189,31 @@ export function trackWallet(
     // this could happen if user locks wallet,
     // or if disconnects app from wallet
     if (!addressList && addressList.length <= 0) {
-      disconnect({ label, type })
-      return
+      await disconnect({ label, type })
+      return;
     }
 
     const { wallets } = state.get()
-    const { accounts } = wallets
+    const walletFinded  = wallets
       .find(wallet => wallet.label === label && wallet.type === type)
+
+    if(!walletFinded) {
+      await disconnect({ label, type });
+      return;
+    }
+    const { accounts  } = walletFinded;
 
     const [existingAccounts] = partition(
         accounts,
-        account => addressList.find(( address ) => address.includes(account.address))
+        account => addressList.find(
+          ( address ) => address.includes(account.address)
+        )
     )
 
-    const newAccounts = addressList.filter((address) => !existingAccounts.find((account) => address.includes(account.address)))
+    const newAccounts = addressList.filter(
+      (address) =>
+        !existingAccounts.find((account) => address.includes(account.address)
+      ))
 
     // update accounts without ens/uns and balance first
     updateWallet(label, type, {
@@ -211,7 +230,8 @@ export function trackWallet(
 
     // if not existing account and notifications,
     // then subscribe to transaction events
-    if (state.get().notify.enabled && !( existingAccounts && existingAccounts.length > 0 )) {
+    if (state.get().notify.enabled
+      && !( existingAccounts && existingAccounts.length > 0 )) {
       const sdk = await getBNMulitChainSdk()
 
       if (sdk) {
@@ -238,7 +258,17 @@ export function trackWallet(
   // also when accounts change, update Balance and ENS/UNS
   accountsChanged$
       .pipe(
-          switchMap(async (addressList) => {
+          switchMap(async (addressList_) => {
+
+            if (!addressList_ && addressList_.length <= 0) {
+              return
+            }
+
+
+            const addressList = addressList_ .filter((a) => {
+              return type === 'evm' ? a.toLowerCase().startsWith('0x') : !a.toLowerCase().startsWith('0x')
+            })
+
             if (!addressList && addressList.length <= 0) {
               return
             }
@@ -257,7 +287,9 @@ export function trackWallet(
             )
 
             return await Promise.all(addressList.map((address) => {
-              const balanceProm =   getBalance(address, chain, primaryWallet.type )
+              const balanceProm =   getBalance(
+                address, chain, primaryWallet.type
+              )
               const secondaryTokenBal =  updateSecondaryTokens(
                 primaryWallet,
                 address,

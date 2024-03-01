@@ -129,8 +129,8 @@ export default init({
     },
     {
       id: '0x250',
-      rpcUrl: 'https://astar.public.blastapi.io',
-      label: 'Astar',
+      rpcUrl: 'https://astar.api.onfinality.io/public',
+      label: 'Astar - EVM',
       namespace : 'evm',
       token:  'ASTR',
       decimal: 18

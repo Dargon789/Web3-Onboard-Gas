@@ -241,7 +241,8 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
               .pipe(takeUntil(this.disconnected$))
               .subscribe(async uri => {
                 try {
-                  this.emit('uriChanged', uri)
+                  this.emit('uriChanged', uri);
+                  this.emit('qrModalState', true);
                   handleUri && (await handleUri(uri))
                 } catch (error) {
                   throw `An error occurred when handling the URI. Error: ${error}`
@@ -309,9 +310,10 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                     .subscribe({
                       next: (payload) => {
                         console.log(payload)
-                        this.emit('accountsChanged', generateAccountAddress())
-                        this.emit('chainChanged', chains[0].id)
-                        this.emit('qrModalState', false)
+                        this.emit('accountsChanged', generateAccountAddress());
+                        this.emit('chainChanged', chains[0].id);
+                        this.emit('qrModalState', false);
+                        this.emit('uriChanged', '');
                         resolve(generateAccountAddress())
                       },
                       error: reject
@@ -338,11 +340,12 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                     })
                   } else {
                     // update substrate provider to load accounts & chainId
-                    const accounts = generateAccountAddress()
-                    const chainId = chains[0].id
-                    instance = this.connector.session
-                    this.emit('chainChanged', chainId)
-                    this.emit('qrModalState', false)
+                    const accounts = generateAccountAddress();
+                    const chainId = chains[0].id;
+                    instance = this.connector.session;
+                    this.emit('chainChanged', chainId);
+                    this.emit('qrModalState', false);
+                    this.emit('uriChanged', '');
                     return resolve(accounts)
                   }
                 }

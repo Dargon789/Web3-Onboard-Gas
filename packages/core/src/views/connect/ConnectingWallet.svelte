@@ -5,7 +5,7 @@
   import WalletAppBadge from '../shared/WalletAppBadge.svelte'
   import en from '../../i18n/en.json'
   import { state } from '../../store/index.js'
-  import { shareReplay, startWith } from 'rxjs'
+  import { shareReplay, startWith, withLatestFrom } from 'rxjs'
   import { errorIcon } from '../../icons';
   import { qrModalConnect$, uriConnect$ } from '../../streams.js';
   import { MOBILE_WINDOW_WIDTH } from '../../constants.js';
@@ -19,19 +19,16 @@
 
   let windowWidth: number
 
-  $: uri = '';
 
-  uriConnect$.subscribe((_uri)=>{
-     uri = _uri;
-     setTimeout(()=> {
-       openQrModal();
-     }, 500)
-  })
 
-  qrModalConnect$.subscribe( async ({ isOpen, modal })=>{
+  qrModalConnect$
+  .pipe(withLatestFrom(uriConnect$))
+  .subscribe(([{ isOpen, modal }, uri])=>{
     if(isOpen && modal && uri !== ''){
       try{
-        await modal.openModal({ uri })
+        setTimeout(()=>{
+          modal.openModal({ uri })
+        }, 500)
       }catch (e) {
         console.log(e)
       }
@@ -40,12 +37,7 @@
     }
   })
 
-  function openQrModal() {
-    qrModalConnect$.next({
-      ...qrModalConnect$.value,
-      isOpen: true
-    })
-  }
+
   const appMetadata$ = state
     .select('appMetadata')
     .pipe(startWith(state.get().appMetadata), shareReplay(1))

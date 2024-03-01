@@ -201,6 +201,8 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
         if (maxLength && value.length > maxLength) {
           value = value.slice(0, maxLength);
         }
+
+        value = value.replace(/[^0-9.]/g, '');
         setValidateValue(false);
         form.setFieldValue('value', value);
       }
@@ -363,7 +365,6 @@ function Component ({ className, senderAccount, evmProvider, substrateProvider }
           >
             <Input
               placeholder={'Amount'}
-              type={'number'}
               className={'__amount-transfer-input'}
               onBlur={form.submit}
               tooltip={'Amount'}

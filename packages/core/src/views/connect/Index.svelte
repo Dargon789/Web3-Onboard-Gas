@@ -1,20 +1,26 @@
 <script lang="ts">
-  import type { EIP1193Provider, SubstrateProvider, WalletModule, Chain } from '@subwallet-connect/common'
-  import {ProviderRpcErrorCode, ProviderRpcErrorMessage} from '@subwallet-connect/common';
+  import type { EIP1193Provider, SubstrateProvider, WalletModule } from '@subwallet-connect/common'
+  import { ProviderRpcError, ProviderRpcErrorCode, ProviderRpcErrorMessage } from '@subwallet-connect/common';
   import EventEmitter from 'eventemitter3';
   import { BigNumber } from 'ethers'
   import { _ } from 'svelte-i18n'
   import en from '../../i18n/en.json'
-  import { enable, listenAccountsChanged, listenChainChanged } from '../../provider.js'
-  import { state } from '../../store/index.js'
-  import {  connectWallet$, onDestroy$, uriConnect$, qrModalConnect$, disconnectWallet$ } from '../../streams.js'
-  import { addWallet, updateAccount } from '../../store/actions.js'
   import {
-    validEnsChain,
-    isSVG,
-    setLocalStore,
-    getLocalStore
-  } from '../../utils.js'
+    enable,
+    getBalance,
+    getChainId,
+    getEns,
+    getUns,
+    listenAccountsChanged,
+    listenStateModal,
+    listenUriChange,
+    requestAccounts,
+    trackWallet
+  } from '../../provider.js'
+  import { state } from '../../store/index.js'
+  import { connectWallet$, onDestroy$, qrModalConnect$, uriConnect$ } from '../../streams.js'
+  import { addWallet, updateAccount } from '../../store/actions.js'
+  import { getLocalStore, isSVG, setLocalStore, validEnsChain } from '../../utils.js'
   import CloseButton from '../shared/CloseButton.svelte'
   import Modal from '../shared/Modal.svelte'
   import Agreement from './Agreement.svelte'
@@ -40,26 +46,8 @@
     takeUntil
   } from 'rxjs'
 
-  import {
-    getChainId,
-    requestAccounts,
-    trackWallet,
-    getBalance,
-    getEns,
-    getUns,
-    listenStateModal,
-    listenUriChange
-  } from '../../provider.js'
-
-  import type {
-    ConnectedChain,
-    ConnectOptions,
-    i18n, Uns, WalletConnectState,
-    WalletState,
-    WalletWithLoadingIcon
-  } from '../../types.js'
+  import type { ConnectOptions, i18n, Uns, WalletConnectState, WalletState, WalletWithLoadingIcon } from '../../types.js'
   import { updateSecondaryTokens } from '../../update-balances'
-
 
 
   export let autoSelect: ConnectOptions['autoSelect']
@@ -262,6 +250,14 @@
         chain = chainId
       }
     })
+    if(qrModalConnect$.value.modal){
+      qrModalConnect$.value.modal
+     .subscribeModal(({ open }) => {
+        if(!open && !(selectedWallet.accounts && selectedWallet.accounts.length !== 0)){
+          connectionRejected = true;
+        }
+      })
+    }
 
     try {
 
@@ -274,8 +270,6 @@
           address : undefined
         })))
       ]);
-      console.log(valueResponse, '1231')
-
       if(!valueResponse ) return;
 
       const { address, signer, metadata } = valueResponse;

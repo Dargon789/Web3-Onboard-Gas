@@ -1,10 +1,11 @@
 import {ethers} from 'ethers'
-import type {Web3Provider} from '@ethersproject/providers';
-import type {EIP1193Provider} from "@subwallet-connect/common";
+import type { Web3Provider } from '@ethersproject/providers';
+import type { EIP1193Provider } from "@subwallet-connect/common";
 import web3Onboard from '../../web3-onboard';
-import {RequestArguments} from "../../types";
-import {METHOD_MAP, SIGN_METHODS} from "../methods";
+import { RequestArguments } from "../../types";
+import { METHOD_MAP, SIGN_METHODS } from "../methods";
 import BigNumber from 'bignumber.js'
+import type  { TxDetails } from "@subwallet-connect/core/src/types";
 
 export class evmApi {
   private readonly provider ?: Web3Provider;
@@ -19,6 +20,18 @@ export class evmApi {
     return (await this.provider.getBalance(senderAddress)).toString();
   }
 
+  private async getEstimateGas (txDetails: TxDetails) {
+    if(! this.provider) return Promise.resolve('0');
+
+    return  this.provider.estimateGas(txDetails).then((rs) => rs.toString());
+  }
+  private async getGasPrice () {
+    if(! this.provider) return Promise.resolve('0');
+
+    return  this.provider.getGasPrice().then((rs) => rs.toString());
+  }
+
+
 
   public async isAvailableAmount ( amount: string, senderAddress: string, recipientAddress: string ) {
     if(!this.provider) return false;
@@ -28,8 +41,8 @@ export class evmApi {
     }
 
     const [ gas, price ] = await Promise.all([
-      this.provider.getGasPrice().then(res => new BigNumber(res.toString())),
-      this.provider.estimateGas(txDetails).then(res =>  new BigNumber(res.toString())),
+      this.getEstimateGas(txDetails).then(res =>  new BigNumber(res.toString())),
+      this.getGasPrice().then(res => new BigNumber(res.toString())),
     ])
     const transactionCost = gas.times(price).plus(amount);
     const balance = new BigNumber(await this.getMaxTransfer(amount, senderAddress, recipientAddress));
@@ -39,7 +52,7 @@ export class evmApi {
   public async sendTransaction (senderAddress: string, recipientAddress: string, amount: string ) {
     if(! this.provider) return;
 
-    const signer = this.provider.getUncheckedSigner();
+    const signer = this.provider.getSigner(senderAddress);
     const txDetails = {
       to: recipientAddress,
       value: amount
@@ -49,11 +62,23 @@ export class evmApi {
       fn(tx.hash);
       return tx.hash;
     }
+    const gasPrice = () => this.getGasPrice();
 
-    return await web3Onboard.state.actions.preflightNotifications({
-      sendTransaction,
-      txDetails: txDetails
-    })
+    const estimateGas = () => this.getEstimateGas(txDetails);
+
+
+    const balanceValue = await this.getMaxTransfer(amount, senderAddress, recipientAddress)
+
+    // convert to hook when available
+    const transactionHash =
+      await web3Onboard.state.actions.preflightNotifications({
+        sendTransaction,
+        gasPrice,
+        estimateGas,
+        balance: balanceValue,
+        txDetails: txDetails
+      })
+
   }
 
 
