@@ -98,8 +98,7 @@
     animation: moveUp .5s ease-in-out;
   }
 
-  .modal.modal-notify .modal-footer{
-      padding: var(--spacing-4);
+  .modal.modal-notify{
   }
 
   .modal.modal-notify .modal-content {

@@ -105,9 +105,7 @@
     }
 
     :global(.button-neutral-solid) {
-        width: 100%;
         border-radius: 8px;
-        height: 52px;
         margin-top: 0 !important;
         background: var(--gray-800);
         padding: var(--spacing-4);
@@ -116,8 +114,6 @@
     }
 
     :global(.button-neutral-solid-b) {
-        width: 100%;
-        height: 52px;
         padding: var(--spacing-4);
         margin-top: 0 !important;
         background: var(--onboard-gray-100, var(--gray-100));

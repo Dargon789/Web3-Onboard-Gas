@@ -12,7 +12,7 @@ import polkadotVaultModule from '@subwallet-connect/polkadot-vault';
 import ledgerModule from '@subwallet-connect/ledger';
 import walletConnectModule from '@subwallet-connect/walletconnect';
 import {TransactionHandlerReturn} from "@subwallet-connect/core/dist/types";
-import { SubWallet } from "../assets";
+import { SubWallet, LogoSubWallet } from "../assets";
 
 // Example key • Replace with your infura key
 const INFURA_KEY = '302750fdd8644da3b50aa6daa0b89336'
@@ -202,6 +202,10 @@ export default init({
     name: 'SubConnect',
 
     icon: SubWallet,
+
+    logo: LogoSubWallet,
+
+
 
     description: 'Demo app for SubWalletConnect V2',
     // The url to a getting started guide for app

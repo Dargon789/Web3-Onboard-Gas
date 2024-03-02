@@ -32,7 +32,7 @@
         font-family: var(--onboard-font-family-normal, var(--font-family-normal));
         font-size: var(--onboard-font-size-5, var(--font-size-5));
         line-height: 24px;
-        padding: 16px 34px;
+        padding: 16px 16px 0px 16px;
         text-align: center;
     }
 
@@ -61,7 +61,7 @@
 <div class="scan-qr-container">
     <Modal close={onDismiss} maskClose={true}>
         <div class="title" slot="title">
-           Scan QrCode
+           Scan QR Code
         </div>
         <div class="content" slot="content">
             <ScanQRCode

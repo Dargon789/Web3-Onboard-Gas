@@ -10,9 +10,10 @@
     import { payloadUri$ } from '../streams.js';
     import type { PayloadParams } from '../types.js';
     import { CMD } from '../constants.js';
+    import { qrCodeIcon } from '../icon/index.js';
 
 
-     let uri : Uint8Array;
+    let uri : Uint8Array;
     export let onEnable: () => void
     export let onDismiss: () => void
     let node : any;
@@ -57,7 +58,7 @@
         font-family: var(--onboard-font-family-normal, var(--font-family-normal));
         font-size: var(--onboard-font-size-5, var(--font-size-5));
         line-height: 24px;
-        padding: 16px 34px;
+        padding: 16px 16px 0 16px;
         text-align: center;
     }
 
@@ -94,6 +95,8 @@
     button{
         display: flex;
         justify-content: center;
+        gap: var(--spacing-5);
+        padding: var(--spacing-4);
     }
 
     .container {
@@ -152,7 +155,7 @@
     {#if (valueHash)}
         <Modal close={onDismiss} maskClose={true}>
             <div class="title" slot="title">
-                Confirm
+                    CONFIRM
             </div>
             <div class="content" slot="content">
                 <div class="container flex items-center qrCode">
@@ -172,8 +175,8 @@
             </div>
 
             <div class="button-action items-center" slot="footer">
-                <button class="button-neutral-confirm" on:click={onEnable}>
-                    Scan Qrcode
+                <button class="button-neutral-confirm button-icon" on:click={onEnable}>
+                    {@html qrCodeIcon} Approve
                 </button>
 
                 <button class="right button-neutral-solid" on:click={onDismiss}>

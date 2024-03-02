@@ -112,7 +112,8 @@ const mountModalConnect = (
         /* SPACING */
         --margin-4: 1rem;
         --margin-5: 0.5rem;
-      
+        --spacing-4: 1rem;
+        --spacing-5: 0.5rem;
 
         /* MODAL POSITION */
         --account-select-modal-z-index: 20;
