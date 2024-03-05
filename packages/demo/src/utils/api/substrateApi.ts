@@ -33,7 +33,7 @@ export class substrateApi {
   }
 
   public async isAvailableAmount ( amount: string, senderAddress: string, recipientAddress: string ) {
-
+    if(!this.api) return false;
     const transferExtrinsic = this.api.tx.balances.transferKeepAlive(recipientAddress, amount)
     const [ { partialFee }, balances ] = await Promise.all([
       transferExtrinsic.paymentInfo(senderAddress),

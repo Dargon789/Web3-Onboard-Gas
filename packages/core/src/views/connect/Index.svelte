@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { EIP1193Provider, SubstrateProvider, WalletModule } from '@subwallet-connect/common'
-  import { ProviderRpcError, ProviderRpcErrorCode, ProviderRpcErrorMessage } from '@subwallet-connect/common';
+  import { ProviderRpcErrorCode, ProviderRpcErrorMessage } from '@subwallet-connect/common';
   import EventEmitter from 'eventemitter3';
   import { BigNumber } from 'ethers'
   import { _ } from 'svelte-i18n'
@@ -188,8 +188,27 @@
       connectingErrorMessage = ''
       scrollToTop()
       // change step on next event loop
-      listenUriChange({ provider, uriConnect$ })
-      listenStateModal({ provider, qrModalConnect$ })
+      const removeUriListener =  listenUriChange(
+              { provider, uriConnect$ }
+      );
+      const removeStateModalListener = listenStateModal(
+              { provider, qrModalConnect$ }
+      );
+
+      if(qrModalConnect$.value.modal){
+        qrModalConnect$.value.modal
+                .subscribeModal(async ({ open }) => {
+                  if(!open
+                  && !(selectedWallet?.accounts
+                  && selectedWallet.accounts.length !== 0))
+                  {
+                    connectionRejected = true;
+                    removeStateModalListener();
+                    removeUriListener();
+                  }
+                })
+      }
+
       setTimeout(() => setStep('connectingWallet'), 1)
     } catch (error) {
       const { message } = error as { message: string }
@@ -205,7 +224,8 @@
 
 
   function deselectWallet() {
-    selectedWallet = null
+    selectedWallet = null;
+    qrModalConnect$.next({ ...qrModalConnect$.value, isOpen: false });
   }
 
   function updateSelectedWallet(update: Partial<WalletState> | WalletState) {
@@ -250,14 +270,6 @@
         chain = chainId
       }
     })
-    if(qrModalConnect$.value.modal){
-      qrModalConnect$.value.modal
-     .subscribeModal(({ open }) => {
-        if(!open && !(selectedWallet.accounts && selectedWallet.accounts.length !== 0)){
-          connectionRejected = true;
-        }
-      })
-    }
 
     try {
 
@@ -373,12 +385,13 @@
       const { code, message } = error as { code: number; message: string }
       scrollToTop()
       console.log(error);
+      qrModalConnect$.next({ ...qrModalConnect$.value, isOpen: false });
 
       // user rejected account access
       if (code === ProviderRpcErrorCode.ACCOUNT_ACCESS_REJECTED
               || message === ProviderRpcErrorMessage.ACCOUNT_ACCESS_REJECTED
       ) {
-        connectionRejected = true
+        connectionRejected = true;
 
         if (autoSelect.disableModals) {
           connectWallet$.next({ inProgress: false })
@@ -487,7 +500,7 @@
     //     return;
     //   }
     // }
-    setTimeout(() => connectWallet$.next({ inProgress: false }), 500)
+    setTimeout(() => connectWallet$.next({ inProgress: false }), 100)
   }
 
 

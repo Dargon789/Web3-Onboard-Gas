@@ -1,7 +1,6 @@
 <script lang="ts">
   import Spinner from './Spinner.svelte'
   export let scanAccounts: () => Promise<void>
-  export let getMoreAccounts: () => Promise<void>
   export let loadingAccounts: boolean
   export let showEmptyAddresses: boolean
   export let errorFromScan: string
@@ -260,15 +259,6 @@
       {#if !loadingAccounts}
         Scan Accounts
       {/if}
-    </button>
-
-    <button
-            class="more-btn"
-            id="more-accounts"
-            disabled={loadingAccounts}
-            on:click={getMoreAccounts}
-    >
-      Load More
     </button>
   </div>
 

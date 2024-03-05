@@ -157,15 +157,10 @@ export default init({
       namespace: 'substrate'
     },
     {
-      // hex encoded string, eg '0x1' for Ethereum Mainnet
       id: '0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3',
-      // string indicating chain namespace. Defaults to 'evm' but will allow other chain namespaces in the future
       namespace: 'substrate',
-      // the native token symbol, eg ETH, BNB, MATIC
       token: 'DOT',
-      // used for display, eg Polkadot
       label: 'Polkadot',
-      // used for get balance
       rpcUrl: `polkadot.api.subscan.io`,
       decimal: 10
     },

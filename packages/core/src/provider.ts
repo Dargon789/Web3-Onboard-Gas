@@ -12,13 +12,13 @@ import type {
 import { weiToEth } from '@subwallet-connect/common'
 import { disconnectWallet$, qrModalConnect$, uriConnect$ } from './streams.js'
 import { updateAccount, updateWallet } from './store/actions.js'
-import { validEnsChain } from './utils.js'
-import disconnect from './disconnect.js'
-import { state } from './store/index.js'
+import { validEnsChain } from './utils.js';
+import disconnect from './disconnect.js';
+import { state } from './store/index.js';
 import { getBNMulitChainSdk } from './services.js'
 import { configuration } from './configuration.js'
 import { getBalanceSubstrate } from './utils.js';
-import { BN } from 'bn.js'
+import BN from 'bn.js';
 
 
 import type {
@@ -114,7 +114,6 @@ export function listenChainChanged(args: {
   const addHandler = (handler: ChainListener) => {
     provider.on('chainChanged', handler)
   }
-
   const removeHandler = (handler: ChainListener) => {
     provider.removeListener('chainChanged', handler)
   }
@@ -127,23 +126,42 @@ export function listenChainChanged(args: {
 export function listenUriChange(args: {
   provider: EIP1193Provider | SubstrateProvider
   uriConnect$: BehaviorSubject<string>
-}): void {
+}): () => void {
   const { provider, uriConnect$ } = args
 
-    provider.on('uriChanged', (uri : string)=> {
-      uriConnect$.next(uri)
-    });
+  const handler = (uri : string) => {
+    uriConnect$.next(uri)
+  }
+
+  provider.on('uriChanged', handler);
+
+
+  const removeHandler = () => {
+    provider.removeListener('uriChanged', handler)
+  }
+
+  return removeHandler
+
 }
 
 export function listenStateModal(args: {
   provider: EIP1193Provider | SubstrateProvider
   qrModalConnect$: BehaviorSubject<ModalQrConnect>
-}): void {
-  const { provider, qrModalConnect$ } = args
+}) : () => void {
+  const { provider, qrModalConnect$ } = args;
 
-  provider.on('qrModalState', (state : boolean)=>{
+  const handler = (state : boolean)=>{
     qrModalConnect$.next({ ...qrModalConnect$.value, isOpen : state })
-  })
+  };
+
+
+    provider.on('qrModalState', handler)
+
+  const removeHandler = () => {
+    provider.removeListener('qrModalState', handler)
+  }
+
+  return removeHandler
 }
 
 

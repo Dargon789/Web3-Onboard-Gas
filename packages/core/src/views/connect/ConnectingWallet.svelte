@@ -23,10 +23,10 @@
 
   qrModalConnect$
   .pipe(withLatestFrom(uriConnect$))
-  .subscribe(([{ isOpen, modal }, uri])=>{
+  .subscribe(async ([{ isOpen, modal }, uri])=>{
     if(isOpen && modal && uri !== ''){
       try{
-          modal.openModal({ uri })
+          await modal.openModal({ uri });
       }catch (e) {
         console.log(e)
       }

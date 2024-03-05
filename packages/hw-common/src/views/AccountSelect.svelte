@@ -107,7 +107,8 @@
     try {
       errorFromScan = ''
       loadingAccounts = true
-      const allAccounts = await scanAccounts(scanAccountOptions)
+      scanAccountOptions.accountIdxStart += 10;
+      const allAccounts = await scanAccounts(scanAccountOptions);
       const allAccountsFilter = allAccounts.filter(account => {
         return parseFloat(weiToEth(account.balance.value.toString())) > 0
       })
@@ -137,11 +138,6 @@
     if (!accountSelected) return
     accounts$.next(accountSelected)
     resetModal()
-  }
-
-  const getMoreAccount = async () => {
-    scanAccountOptions.accountIdxStart += 10;
-    await scanAccountsWrap()
   }
 
   const dismiss = () => {
@@ -586,7 +582,6 @@
       <div class="w-100 table-container">
         <TableHeader
           scanAccounts={scanAccountsWrap}
-          getMoreAccounts={getMoreAccount}
           {loadingAccounts}
           {errorFromScan}
           bind:showEmptyAddresses

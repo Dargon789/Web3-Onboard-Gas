@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // eslint-disable-next-line header/header
-import {Button, ModalContext, SwList, Web3Block} from "@subwallet/react-ui";
+import { Button, ModalContext, SwList, Web3Block} from "@subwallet/react-ui";
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import type { Account } from '@subwallet-connect/core/dist/types';
 import { useConnectWallet, useNotifications, useSetChain } from "@subwallet-connect/react";
@@ -18,6 +18,7 @@ import TransactionModal from "../transaction/TransactionModal";
 import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
 import {TRANSACTION_MODAL} from "../../constants/modal";
+import SwAvatar from "@subwallet/react-ui/es/sw-avatar";
 
 
 
@@ -109,7 +110,15 @@ function Component ({className, substrateProvider, evmProvider}: Props): React.R
       <div className={'__account-item-middle'}>
         <div className={'__account-item-info'}>
           <span className='__account-item__title'>Wallet name:</span>
-          <span className='__account-item__content'>{ name }</span>
+          <span className='__account-item__content'>
+            <SwAvatar
+              size={24}
+              value={address}
+            />
+            <span className={'__account-item-name'}>
+                   { name }
+            </span>
+          </span>
         </div>
         <div className={'__account-item-info'}>
           <span className='__account-item__title'>Address:</span>
@@ -212,6 +221,9 @@ export const AccountList = styled(Component)<Props>( ({theme: {token}}) => {
 
 
       '.__account-item__content': {
+        display: 'flex',
+        gap: token.paddingSM/2,
+        alignItems: 'center',
         textOverflow: 'ellipsis',
         fontSize: token.fontSizeHeading6,
         overflow: 'hidden',
@@ -227,7 +239,8 @@ export const AccountList = styled(Component)<Props>( ({theme: {token}}) => {
         '&:hover': {
           backgroundColor: "#363636"
         }
-      }
+      },
+
     }
 })
 

@@ -308,12 +308,11 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                     .pipe(take(1))
                     .subscribe({
                       next: (payload) => {
-                        console.log(payload)
                         this.emit('accountsChanged', generateAccountAddress());
                         this.emit('chainChanged', chains[0].id);
                         this.emit('qrModalState', false);
                         this.emit('uriChanged', '');
-                        resolve(generateAccountAddress())
+                        resolve(generateAccountAddress());
                       },
                       error: reject
                     })
@@ -336,7 +335,9 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                           message: 'User rejected the request.'
                         })
                       )
+                      this.emit('qrModalState', false);
                     })
+                    console.log(this.connector.session)
                   } else {
                     // update substrate provider to load accounts & chainId
                     const accounts = generateAccountAddress();

@@ -134,6 +134,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
           optionalChains: optionalChainsParsed,
           optionalMethods,
           showQrModal: false,
+          relayUrl: 'wss://relay.walletconnect.com',
           rpcMap: chains
             .map(({ id, rpcUrl }) => ({ id, rpcUrl }))
             .reduce((rpcMap: Record<number, string>, { id, rpcUrl }) => {
