@@ -568,7 +568,7 @@ export async function getBalance(
       try{
 
         const balancedData = await getBalanceSubstrate(
-            { url : chain.rpcUrl, data : { address : address }
+            { url : chain.blockExplorerUrl, data : { address : address }
             }
         )
 

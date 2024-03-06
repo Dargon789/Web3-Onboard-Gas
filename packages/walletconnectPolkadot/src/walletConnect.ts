@@ -326,7 +326,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                           chains: convertChainIdToCaipId(),
                           events: ['chainChanged", "accountsChanged', 'connect']
                         },
-                      }
+                      },
                     }).catch(err => {
                       console.error('err creating new session: ', err)
                       reject(

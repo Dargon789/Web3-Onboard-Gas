@@ -153,7 +153,7 @@ export default init({
       token: 'WND',
       decimal : 12,
       label: 'Westend',
-      rpcUrl: 'westend.subscan.io',
+      blockExplorerUrl: 'westend.subscan.io',
       namespace: 'substrate'
     },
     {
@@ -161,7 +161,7 @@ export default init({
       namespace: 'substrate',
       token: 'DOT',
       label: 'Polkadot',
-      rpcUrl: `polkadot.api.subscan.io`,
+      blockExplorerUrl: `polkadot.api.subscan.io`,
       decimal: 10
     },
     {
@@ -170,7 +170,7 @@ export default init({
       namespace: 'substrate',
       decimal: 10,
       token: 'DOT',
-      rpcUrl: 'assethub-polkadot.subscan.io',
+      blockExplorerUrl: 'assethub-polkadot.subscan.io',
     },
 
     {
@@ -179,7 +179,7 @@ export default init({
       decimal: 12,
       namespace: 'substrate',
       token: 'KSM',
-      rpcUrl: 'kusama.api.subscan.io'
+      blockExplorerUrl: 'kusama.api.subscan.io'
     },
 
     {
@@ -188,7 +188,7 @@ export default init({
       decimal: 12,
       namespace: 'substrate',
       token: 'KSM',
-      rpcUrl: 'assethub-kusama.subscan.io'
+      blockExplorerUrl: 'assethub-kusama.subscan.io'
     }
   ],
 

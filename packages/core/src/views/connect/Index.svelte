@@ -187,28 +187,6 @@
 
       connectingErrorMessage = ''
       scrollToTop()
-      // change step on next event loop
-      const removeUriListener =  listenUriChange(
-              { provider, uriConnect$ }
-      );
-      const removeStateModalListener = listenStateModal(
-              { provider, qrModalConnect$ }
-      );
-
-      if(qrModalConnect$.value.modal){
-        qrModalConnect$.value.modal
-                .subscribeModal(async ({ open }) => {
-                  if(!open
-                  && !(selectedWallet?.accounts
-                  && selectedWallet.accounts.length !== 0))
-                  {
-                    connectionRejected = true;
-                    removeStateModalListener();
-                    removeUriListener();
-                  }
-                })
-      }
-
       setTimeout(() => setStep('connectingWallet'), 1)
     } catch (error) {
       const { message } = error as { message: string }
@@ -261,6 +239,27 @@
     connectionRejected = false
 
     let { provider, label , type } = selectedWallet
+    // change step on next event loop
+    const removeUriListener =  listenUriChange(
+            { provider, uriConnect$ }
+    );
+    const removeStateModalListener = listenStateModal(
+            { provider, qrModalConnect$ }
+    );
+
+    if(qrModalConnect$.value.modal){
+      qrModalConnect$.value.modal
+              .subscribeModal(async ({ open }) => {
+                if(!open
+                        && !(selectedWallet?.accounts
+                                && selectedWallet.accounts.length !== 0))
+                {
+                  connectionRejected = true;
+                  removeStateModalListener();
+                  removeUriListener();
+                }
+              })
+    }
     cancelPreviousConnect$.next()
     let chain: string | undefined = undefined;
 
