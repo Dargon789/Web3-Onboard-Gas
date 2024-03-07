@@ -276,6 +276,13 @@ function ledger(options?: LedgerOptionsWCv2): WalletInit {
                 })
               }
 
+              if(!this.connector.session){
+                throw new ProviderRpcError({
+                  code: ProviderRpcErrorCode.UNSUPPORTED_METHOD,
+                  message: `Your session has expired, you need to reload to create a new session.`
+                })
+              }
+
               return this.connector.request<Promise<any>>({
                 method,
                 params

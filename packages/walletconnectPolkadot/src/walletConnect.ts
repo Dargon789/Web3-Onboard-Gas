@@ -327,6 +327,13 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                           events: ['chainChanged", "accountsChanged', 'connect']
                         },
                       },
+                      optionalNamespaces: {
+                        polkadot: {
+                          methods: optionalMethods,
+                          chains: convertChainIdToCaipId(),
+                          events: ['chainChanged", "accountsChanged', 'connect']
+                        },
+                      }
                     }).catch(err => {
                       console.error('err creating new session: ', err)
                       reject(
@@ -351,6 +358,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                 }
               )
             }
+
 
             if (method === 'polkadot_signMessage') {
 

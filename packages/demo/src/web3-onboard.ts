@@ -106,7 +106,7 @@ export default init({
       // the native token symbol, eg ETH, BNB, MATIC
       token: 'ETH',
       // used for display, eg Ethereum Mainnet
-      label: 'Ethereum Mainnet',
+      label: 'Ethereum',
       // used for network requests
       rpcUrl: `https://ethereum.publicnode.com`,
       decimal: 18
@@ -142,8 +142,7 @@ export default init({
       token: 'SDN',
       namespace : 'evm',
       decimal: 18
-    },
-
+    }
   ],
 
 

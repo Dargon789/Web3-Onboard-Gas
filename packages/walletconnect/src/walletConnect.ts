@@ -58,11 +58,11 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
 
         const { ProviderRpcError, ProviderRpcErrorCode } = await import(
           '@subwallet-connect/common'
-        )
+          )
 
         const { default: EthereumProvider, REQUIRED_METHODS } = await import(
           '@walletconnect/ethereum-provider'
-        )
+          )
 
         const { Subject, fromEvent } = await import('rxjs')
         const { takeUntil, take } = await import('rxjs/operators')
@@ -72,10 +72,10 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
           const url = dappUrl || appMetadata.explore || ''
 
           !url &&
-            !url.length &&
-            console.warn(
-              `It is strongly recommended to supply a dappUrl as it is required by some wallets (i.e. MetaMask) to allow connection.`
-            )
+          !url.length &&
+          console.warn(
+            `It is strongly recommended to supply a dappUrl as it is required by some wallets (i.e. MetaMask) to allow connection.`
+          )
           const wcMetaData: CoreTypes.Metadata = {
             name: appMetadata.name,
             description: appMetadata.description || '',
@@ -95,6 +95,8 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
           return wcMetaData
         }
 
+        const requiredChainForLedger = [1, 137, 56, 42161, 10, 43114, 5]
+
         // default to mainnet
         const requiredChainsParsed: number[] =
           Array.isArray(requiredChains) &&
@@ -102,8 +104,9 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
           requiredChains.every(num => !isNaN(num))
             ? // @ts-ignore
               // Required as WC package does not support hex numbers
-              requiredChains.map(chainID => parseInt(chainID))
-            : []
+            requiredChains.map(chainID => parseInt(chainID))
+            : chains.map(({ id }) => parseInt(id, 16))
+              .filter(value => requiredChainForLedger.find((value_) => value_ === value))
 
         // Defaults to the chains provided within the web3-onboard init chain property
         const optionalChainsParsed: number[] =
@@ -112,7 +115,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
           optionalChains.every(num => !isNaN(num))
             ? // @ts-ignore
               // Required as WC package does not support hex numbers
-              optionalChains.map(chainID => parseInt(chainID))
+            optionalChains.map(chainID => parseInt(chainID))
             : chains.map(({ id }) => parseInt(id, 16))
 
         const requiredMethodsSet = new Set(
@@ -160,9 +163,9 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
           private disconnected$: InstanceType<typeof Subject>
 
           constructor({
-            connector,
-            chains
-          }: {
+                        connector,
+                        chains
+                      }: {
             connector: InstanceType<typeof EthereumProvider>
             chains: Chain[]
           }) {
@@ -214,7 +217,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                   this.emit('accountsChanged', [])
                   this.disconnected$.next(true)
                   typeof localStorage !== 'undefined' &&
-                    localStorage.removeItem('walletconnect')
+                  localStorage.removeItem('walletconnect')
                 },
                 error: console.warn
               })
@@ -264,6 +267,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
               }
 
               if (method === 'eth_requestAccounts') {
+
                 return new Promise<ProviderAccounts>(
                   async (resolve, reject) => {
                     // Subscribe to connection events
