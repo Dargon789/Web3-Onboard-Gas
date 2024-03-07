@@ -23,7 +23,7 @@ function Component (props: Props): React.ReactElement<Props> {
   const { isWebUI } = useContext(ScreenContext);
   const [{ wallet},] = useConnectWallet();
   const renderEmpty = useCallback(() => <GeneralEmptyList />, []);
-  const isLedgerWallet = useMemo(()=>  wallet?.label === 'Ledger' && wallet?.type === 'substrate' , [])
+  const isLedgerWallet = useMemo(()=>  wallet?.label === 'Ledger' , [])
   const renderChainSelected = useCallback((item: NetworkItemType) => {
     return (
       <>

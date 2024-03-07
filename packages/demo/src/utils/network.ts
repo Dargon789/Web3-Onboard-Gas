@@ -26,9 +26,9 @@ export const NetworkInfo : Record<string, NetworkItemType> = {
     namespace: 'substrate',
     wsProvider: "wss://westend-rpc.polkadot.io"
   },
-  'Ethereum Mainnet': {
+  'Ethereum': {
     slug: 'ethereum',
-    name: 'Ethereum Mainnet',
+    name: 'Ethereum',
     namespace: 'evm'
   },
   'Moonbeam': {
@@ -56,11 +56,17 @@ export const NetworkInfo : Record<string, NetworkItemType> = {
     name: 'Shiden',
     namespace: 'evm'
   },
-  'Mumbai': {
+  'Polygon': {
     slug: 'polygon',
     name: 'Polygon',
     namespace: 'evm'
   },
+  'Binance': {
+    slug: 'binance',
+    name: 'Binance',
+    namespace: 'evm'
+  },
+
   'Polkadot Asset Hub': {
     slug: 'statemint',
     namespace: 'substrate',

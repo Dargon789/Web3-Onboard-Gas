@@ -161,7 +161,6 @@
 
       const { chains } = state.get()
 
-
       const { provider, instance } = await getInterface({
         chains:  chains.filter((chain) => chain.namespace === type),
         BigNumber,
@@ -182,7 +181,7 @@
         instance,
         accounts: [],
         chains: [{ namespace: type, id: (type === 'evm' ?
-                  '0x1' : '0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3') }]
+        '0x1' : '0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3') }]
       }
 
       connectingErrorMessage = ''
@@ -249,16 +248,16 @@
 
     if(qrModalConnect$.value.modal){
       qrModalConnect$.value.modal
-              .subscribeModal(async ({ open }) => {
-                if(!open
-                        && !(selectedWallet?.accounts
-                                && selectedWallet.accounts.length !== 0))
-                {
-                  connectionRejected = true;
-                  removeStateModalListener();
-                  removeUriListener();
-                }
-              })
+        .subscribeModal(async ({ open }) => {
+          if(!open
+            && !(selectedWallet?.accounts
+            && selectedWallet.accounts.length !== 0))
+          {
+            connectionRejected = true;
+            removeStateModalListener();
+            removeUriListener();
+          }
+        })
     }
     cancelPreviousConnect$.next()
     let chain: string | undefined = undefined;
@@ -271,8 +270,6 @@
     })
 
     try {
-
-
       const valueResponse = await Promise.race([
         // resolved account
         type === 'evm' ? await requestAccounts(provider as EIP1193Provider) : await enable(provider as SubstrateProvider) ,
