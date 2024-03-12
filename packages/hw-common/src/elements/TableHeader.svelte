@@ -203,7 +203,7 @@
 
     .table-controls {
       height: 3.5rem;
-      justify-content: space-between;
+      justify-content: flex-end;
     }
 
     input[type='checkbox'] {
@@ -232,17 +232,17 @@
 </style>
 
 <div class="table-controls">
-  <div class="checkbox-container">
-    <input
-      id="show-empty-addresses"
-      type="checkbox"
-      bind:checked={showEmptyAddresses}
-      class="checkbox-input"
-    />
-    <label for="show-empty-addresses" class="ml2 cursor-pointer font-5"
-      >Show Empty Addresses</label
-    >
-  </div>
+<!--  <div class="checkbox-container">-->
+<!--    <input-->
+<!--      id="show-empty-addresses"-->
+<!--      type="checkbox"-->
+<!--      bind:checked={showEmptyAddresses}-->
+<!--      class="checkbox-input"-->
+<!--    />-->
+<!--    <label for="show-empty-addresses" class="ml2 cursor-pointer font-5"-->
+<!--      >Show Empty Addresses</label-->
+<!--    >-->
+<!--  </div>-->
   {#if errorFromScan}
     <span class="error-msg">{errorFromScan}</span>
   {/if}
