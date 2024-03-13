@@ -44,6 +44,7 @@ function Component ( { className } : Props): React.ReactElement<null> {
       })}>
         <Outlet />
       </div>
+      <WalletFooter />
     </div>
   </div>
   );
@@ -54,6 +55,7 @@ const Layout = styled(Component)<Props>( ({ theme: { extendToken, token} }: Them
     backgroundColor: token.colorBgDefault,
     position: 'relative',
     height: '100vh',
+    padding: '0 16px',
     '.__main-content': {
       height: '100%',
       margin: 'auto',
@@ -111,14 +113,10 @@ const Layout = styled(Component)<Props>( ({ theme: { extendToken, token} }: Them
 
     },
 
-    '@media(max-width : 1660px and min-width: 768px)' : {
-      '.__main-layout': {
-        padding: '0 16px'
-      }
-
-    },
 
     '&.-isMobile':{
+      padding: 0,
+
       '.__main-content.-isConnected': {
         padding: `0 ${token.padding}px`,
       },

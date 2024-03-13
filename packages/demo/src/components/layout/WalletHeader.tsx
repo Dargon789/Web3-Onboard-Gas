@@ -139,8 +139,8 @@ const WalletHeader = styled(Component)<Props>(({theme : {token}}) => {
     },
 
     '.wallet-header-content.-isConnected': {
-      maxWidth: 1600,
-      padding: '24px 0px',
+      maxWidth: 1632,
+      padding: '24px 16px',
       margin: 'auto',
 
       '.__header-title': {
@@ -193,7 +193,9 @@ const WalletHeader = styled(Component)<Props>(({theme : {token}}) => {
       '.wallet-header-content.-isConnected': {
         flexDirection: 'column',
         alignItems: 'flex-start',
-        gap: token.paddingSM
+        gap: token.paddingSM,
+        paddingLeft: 0,
+        paddingRight: 0
       },
 
       '.__header-action': {

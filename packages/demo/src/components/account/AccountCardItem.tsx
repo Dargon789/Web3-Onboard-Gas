@@ -133,7 +133,11 @@ const AccountCardItem = styled(Component)<_AccountCardItem>(({ theme }) => {
     '.__item-icon-wallet': {
       width: 20,
       height: 20,
-      margin: '0 12px'
+      margin: '0 12px',
+
+      'svg': {
+        borderRadius: '40% !important'
+      }
     }
   };
 });

@@ -53,10 +53,7 @@
 
   .transaction-status {
     color: var(--notify-onboard-transaction-status, inherit);
-    line-height: var(
-      --notify-onboard-font-size-5,
-      var(--onboard-font-size-5, var(--font-size-5))
-    );
+    line-height: 24px;
     font-weight: 400;
     overflow: hidden;
     width: 200px;

@@ -47,6 +47,7 @@
     color: var(--w3o-text-color, inherit);
     display: flex;
     justify-content: center;
+    width: 165px;
     align-items: center;
     cursor: pointer;
   }

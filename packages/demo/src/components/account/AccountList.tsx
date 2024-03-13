@@ -19,6 +19,7 @@ import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
 import {TRANSACTION_MODAL} from "../../constants/modal";
 import SwAvatar from "@subwallet/react-ui/es/sw-avatar";
+import {ScreenContext} from "../../context/ScreenContext";
 
 
 
@@ -38,6 +39,7 @@ type AccountMapType = {
 const modalId = TRANSACTION_MODAL;
 function Component ({className, substrateProvider, evmProvider}: Props): React.ReactElement {
   const [{ wallet},] = useConnectWallet();
+  const { isWebUI } = useContext(ScreenContext);
   const renderEmpty = useCallback(() => <GeneralEmptyList />, []);
   const [ accountsMap, setAccountMap ] = useState<AccountMapType[]>([])
   const navigate = useNavigate();
@@ -163,7 +165,9 @@ function Component ({className, substrateProvider, evmProvider}: Props): React.R
         accountsMap.length > 0 &&
         <>
             <SwList
-                className={CN('__account-list', className)}
+                className={CN('__account-list', className, {
+                  '-isWeb': isWebUI
+                })}
                 list={accountsMap}
                 renderWhenEmpty={renderEmpty}
                 renderItem={accountItem}
@@ -184,7 +188,11 @@ export const AccountList = styled(Component)<Props>( ({theme: {token}}) => {
 
       '&.__account-list': {
         position: 'relative',
-        width: '100%'
+        width: '100%',
+      },
+
+      '&.-isWeb': {
+        marginBottom: 200
       },
 
       '.__account-item': {
