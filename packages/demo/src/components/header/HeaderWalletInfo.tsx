@@ -85,8 +85,8 @@ export const HeaderWalletInfo = styled(Component)<Props>(({theme: {token}}) => {
       display: 'flex',
       justifyContent: 'space-between',
       width: '100%',
-      maxWidth: 1600,
-      padding: `${token.paddingMD + 4}px 0 `,
+      maxWidth: 1632,
+      padding: `${token.paddingMD + 4}px 16px `,
       position: 'fixed',
       marginTop: 80,
       backgroundColor: token.colorBgDefault,
@@ -110,6 +110,8 @@ export const HeaderWalletInfo = styled(Component)<Props>(({theme: {token}}) => {
 
     '&.-isMobile': {
       position: 'relative',
+      paddingLeft: 0,
+      paddingRight: 0,
       width: '100%',
       marginTop: 0
     },

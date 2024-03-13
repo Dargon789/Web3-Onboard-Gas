@@ -71,7 +71,7 @@ function Component({className}: Props): React.ReactElement {
               eventCode: 'dbUpdateSuccess',
               message: `Metadata updated successfully`,
               type: 'success',
-              autoDismiss: 0
+              autoDismiss: 1000
             })
             loadMetadata();
           })
@@ -81,12 +81,10 @@ function Component({className}: Props): React.ReactElement {
               eventCode: 'dbUpdateSuccess',
               message: `${(error as Error).message.includes('Rejected') ? 'Rejected by user' : 'Add Metadata Failed or Cancelled!' }`,
               type: 'error',
-              autoDismiss: 0
+              autoDismiss: 1000
             })
           });
-        setTimeout(()=>{
-          dismiss();
-        }, 1500)
+
       }
     },
     [loadMetadata, wallet?.metadata]

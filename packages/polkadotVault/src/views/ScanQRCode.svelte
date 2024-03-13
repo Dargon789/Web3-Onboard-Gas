@@ -200,7 +200,7 @@
 
     .button-neutral-confirm, .button-neutral-solid {
         font-weight: 600;
-        padding: 16px;
+        padding: 16px 13px;
     }
 
     .action-footer{
@@ -209,6 +209,7 @@
         gap: 24px;
         align-items: center;
         width: 100%;
+        padding: 0 2px;
     }
 
     .cant-scan {

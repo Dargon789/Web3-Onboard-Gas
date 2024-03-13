@@ -84,7 +84,7 @@ function Component ({className}: Props): React.ReactElement {
           </div>
 
             <div className={'__evm-wallet-info-box'}>
-              {wallet?.label !== 'WalletConnect' &&
+              {wallet?.label !== 'WalletConnect' && wallet?.label !== 'Ledger' &&
                 <>
                   <div className={'__evm-wallet-info-label'}>Permission</div>
                   <Web3Block

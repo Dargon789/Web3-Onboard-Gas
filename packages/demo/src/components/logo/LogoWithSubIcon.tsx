@@ -38,7 +38,10 @@ const LogoWithSubIcon = styled(Component)<Props>(({theme: {token}}) => {
       position: 'relative',
       width: '100%',
       height: '100%',
-      zIndex: 0
+      zIndex: 0,
+      'svg': {
+        borderRadius: '35% !important'
+      }
     },
 
     '.__wallet-logo-sub': {
