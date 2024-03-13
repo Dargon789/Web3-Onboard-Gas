@@ -1,6 +1,6 @@
 {
   "name": "@subwallet-connect/core",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Web3-Onboard makes it simple to connect Ethereum hardware and software wallets to your dapp. Features standardized spec compliant web3 providers for all supported wallets, framework agnostic modern javascript UI with code splitting, CSS customization, multi-chain and multi-account support, reactive wallet state subscriptions and real-time transaction state change notifications.",
   "keywords": [
     "Ethereum",
@@ -65,9 +65,9 @@
     "@rollup/plugin-node-resolve": "^13.0.6",
     "@rollup/plugin-replace": "^3.0.0",
     "@rollup/plugin-typescript": "^8.0.0",
-    "@subwallet-connect/gas": "^1.0.2",
-    "@subwallet-connect/transaction-preview": "^1.0.2",
-    "@subwallet-connect/unstoppable-resolution": "^1.0.2",
+    "@subwallet-connect/gas": "^1.0.3",
+    "@subwallet-connect/transaction-preview": "^1.0.3",
+    "@subwallet-connect/unstoppable-resolution": "^1.0.3",
     "@tsconfig/svelte": "^2.0.0",
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.partition": "^4.6.6",
@@ -86,7 +86,7 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@subwallet-connect/common": "^1.0.2",
+    "@subwallet-connect/common": "^1.0.3",
     "axios": "^1.6.5",
     "bignumber.js": "^9.0.0",
     "bn.js": "^4.11.9",
