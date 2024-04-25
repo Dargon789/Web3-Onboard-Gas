@@ -11,7 +11,7 @@ import {Ledger} from "@polkadot/hw-ledger";
 import type {BigNumber} from 'ethers'
 
 import type {Account, ScanAccountsOptions} from '@subwallet-connect/hw-common';
-import {supportedApps} from '@subwallet-connect/hw-common/src/utils';
+import {supportedApps} from '@subwallet-connect/hw-common';
 import {Subject} from 'rxjs';
 import {RequestArguments} from '@walletconnect/ethereum-provider/dist/types/types.js';
 import {isArray} from "@shapeshiftoss/hdwallet-core";
