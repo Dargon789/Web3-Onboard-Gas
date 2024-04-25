@@ -1,6 +1,6 @@
 {
   "name": "@subwallet-connect/transaction-preview",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "In app preview of Ethereum transactions",
   "keywords": [
     "Ethereum",
@@ -82,7 +82,7 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@subwallet-connect/common": "^1.0.3",
+    "@subwallet-connect/common": "^1.0.4",
     "bnc-sdk": "^4.6.7",
     "bowser": "^2.11.0",
     "joi": "17.9.1",

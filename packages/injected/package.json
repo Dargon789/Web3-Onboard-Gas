@@ -1,6 +1,6 @@
 {
   "name": "@subwallet-connect/injected-wallets",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Injected wallet module for connecting browser extension and mobile wallets to Web3-Onboard. Web3-Onboard makes it simple to connect Ethereum hardware and software wallets to your dapp. Features standardised spec compliant web3 providers for all supported wallets, framework agnostic modern javascript UI with code splitting, CSS customization, multi-chain and multi-account support, reactive wallet state subscriptions and real-time transaction state change notifications.",
   "keywords": [
     "Ethereum",
@@ -70,7 +70,7 @@
   },
   "dependencies": {
     "@polkadot/extension-inject": "^0.46.5",
-    "@subwallet-connect/common": "^1.0.3",
+    "@subwallet-connect/common": "^1.0.4",
     "joi": "17.9.1",
     "lodash.uniqby": "^4.7.0"
   },

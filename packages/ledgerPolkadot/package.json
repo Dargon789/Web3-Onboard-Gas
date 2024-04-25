@@ -1,6 +1,6 @@
 {
   "name": "@subwallet-connect/ledger-polkadot",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Ledger hardware wallet module for connecting to Web3-Onboard. Web3-Onboard makes it simple to connect Ethereum hardware and software wallets to your dapp. Features standardized spec compliant web3 providers for all supported wallets, framework agnostic modern javascript UI with code splitting, CSS customization, multi-chain and multi-account support, reactive wallet state subscriptions and real-time transaction state change notifications.",
   "keywords": [
     "Ethereum",
@@ -66,7 +66,7 @@
     "@ethersproject/providers": "5.5.0",
     "@shapeshiftoss/hdwallet-core": "v1.52.6",
     "@shapeshiftoss/hdwallet-ledger": "v1.52.2",
-    "@subwallet-connect/common": "^1.0.3",
+    "@subwallet-connect/common": "^1.0.4",
     "@polkadot/hw-ledger": "^12.6.2",
     "buffer": "^6.0.3",
     "https-browserify": "^1.0.0",
@@ -76,7 +76,7 @@
     "rxjs": "^7.5.2",
     "stream": "^0.0.2",
     "stream-browserify": "^3.0.0",
-    "@subwallet-connect/hw-common": "^1.0.3"
+    "@subwallet-connect/hw-common": "^1.0.4"
   },
   "author": ""
 }
