@@ -1,6 +1,6 @@
 {
   "name": "@subwallet-connect/gas",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Estimate the gas prices needed to get a transaction in to the next block for Ethereum Mainnet and Polygon Matic Mainnet.",
   "keywords": [
     "gas",
@@ -34,7 +34,7 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@subwallet-connect/common": "^1.0.4",
+    "@subwallet-connect/common": "^1.0.5",
     "rxjs": "^7.5.2",
     "joi": "17.8.1"
   },

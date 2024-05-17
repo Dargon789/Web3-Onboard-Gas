@@ -4,6 +4,8 @@ const path = require('path');
 
 const prefix = '@subwallet-connect';
 
+console.log('Publishing packages...', process.env.NPM_TOKEN);
+
 // Function to publish a package
 async function publishPackage(packagePath) {
   try {
