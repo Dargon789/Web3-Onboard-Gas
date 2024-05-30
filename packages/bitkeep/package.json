@@ -1,6 +1,6 @@
 {
   "name": "@subwallet-connect/subwallet_bitkeep",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Bitkeep Wallet SDK wallet module for connecting to Web3-Onboard. Web3-Onboard makes it simple to connect Ethereum hardware and software wallets to your dapp. Features standardized spec compliant web3 providers for all supported wallets, framework agnostic modern javascript UI with code splitting, CSS customization, multi-chain and multi-account support, reactive wallet state subscriptions and real-time transaction state change notifications.",
   "keywords": [
     "Ethereum",
@@ -64,7 +64,7 @@
   },
   "dependencies": {
     "@bitget-wallet/web3-sdk": "^0.0.8",
-    "@subwallet-connect/common": "^1.0.6"
+    "@subwallet-connect/common": "^1.0.7"
   },
   "author": ""
 }
