@@ -11,6 +11,7 @@ import subwalletPolkadotModule from '@subwallet-connect/subwallet-polkadot';
 import polkadotVaultModule from '@subwallet-connect/polkadot-vault';
 import ledgerModule from '@subwallet-connect/ledger';
 import walletConnectModule from '@subwallet-connect/walletconnect';
+import OpenBitModule from '@subwallet-connect/openbit';
 import {TransactionHandlerReturn} from "@subwallet-connect/core/dist/types";
 import { SubWallet, LogoSubWallet } from "../assets";
 
@@ -53,6 +54,7 @@ const subwalletPolkadotWalet = subwalletPolkadotModule();
 const talismanWallet = talismanModule();
 const polkadotVaultWallet = polkadotVaultModule();
 const ledger = ledgerModule({ projectId : '59b5826141a56b204e9e0a3f7e46641d',   walletConnectVersion: 2 })
+const openBitWallet = OpenBitModule();
 const walletConnect = walletConnectModule({
   projectId: '59b5826141a56b204e9e0a3f7e46641d',
   dappUrl: 'https://w3o-demo.subwallet.app/'
@@ -91,6 +93,7 @@ export default init({
     ledger,
     talismanWallet,
     polkadotWallet,
+    openBitWallet,
     polkadotVaultWallet,
     injected
   ],

@@ -56,6 +56,7 @@
     "@subwallet-connect/talisman": "^1.0.6",
     "@subwallet-connect/polkadot-js": "^1.0.6",
     "@subwallet-connect/polkadot-vault": "^1.0.6",
+    "@subwallet-connect/openbit": "^0.0.1",
     "@subwallet/chain-list": "^0.2.39",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",

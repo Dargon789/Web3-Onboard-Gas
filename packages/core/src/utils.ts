@@ -583,6 +583,10 @@ export async function getBalanceSubstrate({ url, data } : clientAxiosProps){
   'Zeal': {
     platform: ['Extension'],
     namespace: 'zeal'
+  },
+  'OpenBit': {
+    platform: ['Extension'],
+    namespace: 'OpenBit'
   }
 }
 
