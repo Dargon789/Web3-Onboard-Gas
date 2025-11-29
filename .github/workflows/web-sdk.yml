@@ -1,4 +1,4 @@
-name: web-sdk
+name: Web-SDK
 on:
   pull_request:
     branches:
@@ -18,15 +18,19 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Build
+      - name: Web-SDK
         uses: actions/setup-node@v3
         with:
           node-version: '18''20''22'
-          cache: 'yarn''pnpm'     
-      - name:  0xsequence/connect
-        id: build 
+          cache: 'yarn''npm''pnpm'     
+      - name:  Web SDK 
+        id:  Install the Web SDK dependencies 
         run: |
-          npm install @0xsequence/connect @0xsequence/hooks wagmi ethers@6.13.0 viem 0xsequence @tanstack/react-query
+          npm install @0xsequence/connect @0xsequence/hooks wagmi ethers viem 0xsequence @tanstack/react-query
+          # or
+          pnpm install @0xsequence/connect @0xsequence/hooks wagmi ethers viem 0xsequence @tanstack/react-query
+          # or
+          yarn add @0xsequence/connect @0xsequence/hooks wagmi ethers viem 0xsequence @tanstack/react-query
 
       # === Deploy static pages ===
       - name: Deploy to Cloudflare Pages
