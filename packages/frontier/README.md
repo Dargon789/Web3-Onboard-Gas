@@ -1,4 +1,4 @@
-# @web3-onboard/frontier
+# @subwallet-connect/frontier
 
 ## Wallet module for connecting Frontier Wallet through web3-onboard
 
@@ -7,16 +7,16 @@ Frontier Wallet SDK wallet module for connecting to Web3-Onboard. Web3-Onboard m
 ### Install
 
 **NPM**
-`npm i @web3-onboard/core @web3-onboard/frontier`
+`npm i @subwallet-connect/core @subwallet-connect/frontier`
 
 **Yarn**
-`yarn add @web3-onboard/core @web3-onboard/frontier`
+`yarn add @subwallet-connect/core @subwallet-connect/frontier`
 
 ## Usage
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import frontierModule from '@web3-onboard/frontier'
+import Onboard from '@subwallet-connect/core'
+import frontierModule from '@subwallet-connect/frontier'
 
 const frontier = frontierModule()
 

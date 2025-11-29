@@ -1,6 +1,7 @@
 import * as React from 'react'
-import Web3Onboard from '@web3-onboard/core'
-import type { InitOptions, OnboardAPI } from '@web3-onboard/core'
+import { useContext } from "react";
+import Web3Onboard from '@subwallet-connect/core'
+import type { InitOptions, OnboardAPI } from '@subwallet-connect/core'
 
 const HOOK_ERROR_MESSAGE =
   'Must call the provided initialization method`init` method before using hooks.'
@@ -24,6 +25,8 @@ export function Web3OnboardProvider({
   children,
   web3Onboard
 }: React.PropsWithChildren<Web3OnboardProviderProps>) {
+
+
   // Set the flag indicating that we are using the context provider rather than raw hooks
   usingContextProvider = true
   // Set the global web3Onboard instance to null as we are going to use the provided instance
@@ -31,7 +34,9 @@ export function Web3OnboardProvider({
   web3OnboardGlobal = undefined
   return (
     <Context.Provider value={web3Onboard as unknown as OnboardAPI}>
-      {children}
+      <React.Fragment>
+        {children}
+      </React.Fragment>
     </Context.Provider>
   )
 }
@@ -39,7 +44,7 @@ export function Web3OnboardProvider({
 export function useWeb3Onboard(): OnboardAPI {
   // Use the context provided instance or the global instance
   const web3Onboard = usingContextProvider
-    ? React.useContext(Context)
+    ? useContext(Context)
     : web3OnboardGlobal
 
   if (!web3Onboard) {

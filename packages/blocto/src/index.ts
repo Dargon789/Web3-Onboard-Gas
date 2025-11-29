@@ -1,15 +1,16 @@
-import type { WalletInit } from '@web3-onboard/common'
+import type { WalletInit } from '@subwallet-connect/common'
 
 function BloctoWallet(): WalletInit {
   if (typeof window === 'undefined') return () => null
   return () => {
     return {
+      type : 'evm',
       label: 'Blocto',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains }) => {
         const { default: BloctoSDK } = await import('@blocto/sdk')
 
-        const { createEIP1193Provider } = await import('@web3-onboard/common')
+        const { createEIP1193Provider } = await import('@subwallet-connect/common')
 
         const [defaultChain] = chains
 

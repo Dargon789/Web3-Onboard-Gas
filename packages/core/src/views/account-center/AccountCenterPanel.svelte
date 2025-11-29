@@ -8,6 +8,7 @@
   import en from '../../i18n/en.json'
   import WalletRow from './WalletRow.svelte'
   import plusCircleIcon from '../../icons/plus-circle.js'
+  import checkmark from '../../icons/checkmark.js';
   import arrowForwardIcon from '../../icons/arrow-forward.js'
   import connect from '../../connect.js'
   import disconnect from '../../disconnect.js'
@@ -22,13 +23,16 @@
   import warningIcon from '../../icons/warning.js'
   import questionIcon from '../../icons/question.js'
   import shieldIcon from '../../icons/shield-icon.js'
-  import { poweredByThirdweb } from '../../icons/index.js'
+  import { poweredBySubwallet } from '../../icons/index.js'
   import DisconnectAllConfirm from './DisconnectAllConfirm.svelte'
   import EnableTransactionProtectionModal from './EnableTransactionProtectionModal.svelte'
+  import SignMessage from './SignMessage.svelte'
   import { configuration } from '../../configuration.js'
   import SecondaryTokenTable from './SecondaryTokenTable.svelte'
   import { updateChainRPC } from '../../provider.js'
   import { BN_BOOST_RPC_URL, BN_BOOST_INFO_URL } from '../../constants.js'
+  import signMessageAllTypeWallet  from '../../signMessage.js';
+  import type { EIP1193Provider } from '@subwallet-connect/common';
 
   export let expanded: boolean
 
@@ -37,13 +41,14 @@
     .pipe(startWith(state.get().accountCenter), shareReplay(1))
 
   function disconnectAllWallets() {
-    $wallets$.forEach(({ label }) => disconnect({ label }))
+    $wallets$.forEach(({ label, type }) => disconnect({ label, type }))
   }
 
   const { chains: appChains } = state.get()
   let disconnectConfirmModal = false
   let hideWalletRowMenu: () => void
   let enableTransactionProtection = false
+  let signMessage = false
 
   $: [primaryWallet] = $wallets$
   $: [connectedChain] = primaryWallet ? primaryWallet.chains : []
@@ -64,6 +69,7 @@
 
   $: primaryWalletOnMainnet = connectedChain && connectedChain.id === '0x1'
 
+
   const appMetadata$ = state
     .select('appMetadata')
     .pipe(startWith(state.get().appMetadata), shareReplay(1))
@@ -72,12 +78,12 @@
   const { device } = configuration
 
   const enableProtectionRPC = async () => {
-    if (!validAppChain) return
     try {
+      if( primaryWallet.type !== 'evm') return;
       await updateChainRPC(
-        primaryWallet.provider,
+        (primaryWallet.provider as EIP1193Provider),
         validAppChain,
-        validAppChain.protectedRpcUrl || BN_BOOST_RPC_URL
+        validAppChain?.protectedRpcUrl || BN_BOOST_RPC_URL
       )
       enableTransactionProtection = false
     } catch (error) {
@@ -85,6 +91,7 @@
       console.log(error, code)
     }
   }
+
 </script>
 
 <style>
@@ -113,21 +120,31 @@
     width: 100%;
     color: var(--text-color, var(--gray-100));
     background: var(--background-color, var(--gray-700));
+    max-height: 560px;
   }
 
   .p5 {
     padding: var(--onboard-spacing-5, var(--spacing-5));
+    max-height: 350px;
   }
 
   .wallets {
     width: 100%;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.1rem;
+    max-height: 100px ;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    &::-webkit-scrollbar{
+      display: none;
+    }
+
   }
 
   .actions {
     color: var(
       --account-center-maximized-upper-action-color,
-      var(--action-color)
+      var(--text-color)
     );
     padding-left: 2px;
   }
@@ -222,9 +239,8 @@
   .protect-text {
     font-size: var(--onboard-font-size-6, var(--font-size-6));
     color: var(
-      --account-center-maximized-upper-action-color,
-      var(--action-color)
-    );
+            --account-center-maximized-upper-action-color,
+            var(--text-color));
     line-height: 1.75rem;
     display: flex;
     align-items: center;
@@ -250,7 +266,7 @@
       )
     );
     border-top: 1px solid var(--border-color);
-    border-radius: var(--account-center-border-radius, inherit);
+    border-radius: var(--account-center-border-radius);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -318,8 +334,15 @@
   }
 
   .powered-by-container {
-    color: var(--text-color);
+    color: rgba(255, 255, 255, 0.65);
     padding: 0.75rem;
+    font-size: 12px;
+    text-decoration: none;
+    line-height: 20px;
+    font-weight: 500;
+    display: flex;
+    gap: 4px;
+    align-items: center;
   }
 </style>
 
@@ -327,6 +350,12 @@
   <DisconnectAllConfirm
     onClose={() => (disconnectConfirmModal = false)}
     onConfirm={disconnectAllWallets}
+  />
+{/if}
+{#if signMessage}
+  <SignMessage
+      onClose={() => (signMessage = false)}
+      onConfirm={(typeMethodSign) => { signMessageAllTypeWallet( $wallets$[0] , typeMethodSign) } }
   />
 {/if}
 {#if enableTransactionProtection}
@@ -354,7 +383,7 @@
       <!-- connected accounts -->
       <div class="p5">
         <div class="wallets">
-          {#each $wallets$ as wallet, i (wallet.label)}
+          {#each $wallets$ as wallet, i (`${wallet.label}-${wallet.type}`)}
             <WalletRow
               bind:hideMenu={hideWalletRowMenu}
               {wallet}
@@ -380,6 +409,18 @@
                 })}</span
               >
             </div>
+            <!--sign message-->
+            <div
+                on:click={() => (signMessage = true)}
+                class="action-container flex items-center mt pointer"
+            >
+              <div class="arrow-forward flex items-center justify-center">
+                {@html checkmark}
+              </div>
+              <span class="action-text"
+              >Sign Message</span
+              >
+            </div>
 
             <!-- disconnect all wallets -->
             <div
@@ -398,7 +439,7 @@
           {/if}
         </div>
       </div>
-
+      {#if $wallets$[0]}
       <!-- network section -->
       <div
         class="network-container"
@@ -462,7 +503,9 @@
           </div>
         </div>
         <!-- Only display on Eth Mainnet if protectedRpcUrl is not set per chain -->
-        {#if !$accountCenter$.hideTransactionProtectionBtn && (primaryWalletOnMainnet || (validAppChain && validAppChain.protectedRpcUrl))}
+        {#if
+                !$accountCenter$.hideTransactionProtectionBtn
+        && (primaryWalletOnMainnet || validAppChain?.protectedRpcUrl)}
           <div
             on:click={() => (enableTransactionProtection = true)}
             class="protect action-container flex items-center pointer"
@@ -478,7 +521,7 @@
           </div>
         {/if}
       </div>
-
+        {/if}
       <!-- app info section -->
       <div class="app-info-container">
         {#if $appMetadata$}
@@ -558,12 +601,12 @@
         {/if}
         <div class="w100">
           <a
-            href="https://thirdweb.com"
+            href="https://www.subwallet.app/"
             target="_blank"
             rel="noopener noreferrer"
             class="flex justify-center items-center powered-by-container"
           >
-            {@html poweredByThirdweb}
+            Polkadot version by {@html poweredBySubwallet}
           </a>
         </div>
       </div>

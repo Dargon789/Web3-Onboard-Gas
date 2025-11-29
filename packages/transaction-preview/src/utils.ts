@@ -5,7 +5,7 @@ import type {
   DeviceBrowser,
   DeviceOS,
   DeviceType
-} from '@web3-onboard/common'
+} from '@subwallet-connect/common'
 
 /**
  * Takes in TransactionRequest and converts all Hex values to numbers

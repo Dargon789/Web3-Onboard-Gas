@@ -1,8 +1,4 @@
-import {
-  type WalletInit,
-  type EIP1193Provider,
-  createDownloadMessage
-} from '@web3-onboard/common'
+import type { WalletInit, EIP1193Provider } from '@subwallet-connect/common'
 import { CustomWindow } from './types.js'
 declare const window: CustomWindow
 
@@ -12,9 +8,10 @@ function frontier(): WalletInit {
   return () => {
     return {
       label: 'Frontier',
+      type: 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async () => {
-        const { createEIP1193Provider } = await import('@web3-onboard/common')
+        const { createEIP1193Provider } = await import('@subwallet-connect/common')
         const ethereumInjectionExists = window.hasOwnProperty('ethereum')
 
         let provider: EIP1193Provider
@@ -28,12 +25,8 @@ function frontier(): WalletInit {
         } else {
           // frontier extension is not installed
           // send user to install page
-          throw new Error(
-            createDownloadMessage(
-              'Frontier',
-              'https://frontier.xyz/browser-extension'
-            )
-          )
+          window.open('https://frontier.xyz/browser-extension', '_blank')
+          throw new Error('Please Install Frontier to use this wallet')
         }
 
         return { provider }

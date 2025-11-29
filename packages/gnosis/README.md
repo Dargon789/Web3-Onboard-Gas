@@ -1,10 +1,10 @@
-# @web3-onboard/gnosis
+# @subwallet-connect/gnosis
 
 ## Wallet module for connecting Safe to web3-onboard
 
 ### Install
 
-`npm i @web3-onboard/gnosis @safe-global/safe-apps-provider @safe-global/safe-apps-sdk`
+`npm i @subwallet-connect/gnosis @safe-global/safe-apps-provider @safe-global/safe-apps-sdk`
 
 ### Options
 
@@ -17,8 +17,8 @@ type GnosisOptions = {
 ### Usage
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import safeModule from '@web3-onboard/gnosis'
+import Onboard from '@subwallet-connect/core'
+import safeModule from '@subwallet-connect/gnosis'
 
 const safe = safeModule()
 

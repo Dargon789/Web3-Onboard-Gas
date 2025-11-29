@@ -1,4 +1,4 @@
-import { WalletInit, EIP1193Provider, weiToEth } from '@web3-onboard/common'
+import type { WalletInit, EIP1193Provider } from '@subwallet-connect/common'
 import type { MagicInitOptions } from './types.js'
 import { validateMagicInitOptions } from './validation.js'
 
@@ -16,8 +16,9 @@ function magic(options: MagicInitOptions): WalletInit {
   return () => {
     return {
       label: walletName,
+      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
-      getInterface: async ({ EventEmitter, chains }) => {
+      getInterface: async ({ EventEmitter, BigNumber, chains }) => {
         const { Magic, RPCErrorCode } = await import('magic-sdk')
         const loginModal = (await import('./login-modal.js')).default
         const brandingHTML = (await import('./branding.js')).default
@@ -26,7 +27,7 @@ function magic(options: MagicInitOptions): WalletInit {
           createEIP1193Provider,
           ProviderRpcErrorCode,
           ProviderRpcError
-        } = await import('@web3-onboard/common')
+        } = await import('@subwallet-connect/common')
 
         const emitter = new EventEmitter()
 
@@ -97,7 +98,9 @@ function magic(options: MagicInitOptions): WalletInit {
                 method: 'eth_getBalance',
                 params: [activeAddress, 'latest']
               })
-              return balance ? weiToEth(balance) : '0'
+              return balance
+                ? BigNumber.from(balance).mul('1000000000000000000').toString()
+                : '0'
             },
             wallet_switchEthereumChain: async ({ params }) => {
               const chain = chains.find(({ id }) => id === params[0].chainId)

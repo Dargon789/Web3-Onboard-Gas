@@ -168,15 +168,11 @@
         <WalletAppBadge
           size={32}
           padding={4}
-          background="green"
+          background="transparent"
           border="darkGreen"
           radius={8}
           icon={primaryWallet ? primaryWallet.icon : ''}
         />
-      </div>
-
-      <div style="right: -4px; bottom: -4px;" class="drop-shadow absolute">
-        <SuccessStatusIcon size={14} />
       </div>
     </div>
 

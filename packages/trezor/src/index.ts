@@ -1,4 +1,4 @@
-import { Account, Asset, ScanAccountsOptions } from '@web3-onboard/hw-common'
+import { Account, Asset, ScanAccountsOptions } from '@subwallet-connect/hw-common'
 import type { StaticJsonRpcProvider } from '@ethersproject/providers'
 import type { TransactionRequest } from '@ethersproject/providers'
 import type {
@@ -17,7 +17,7 @@ import type {
   Platform,
   TransactionObject,
   WalletInit
-} from '@web3-onboard/common'
+} from '@subwallet-connect/common'
 
 interface TrezorOptions {
   email: string
@@ -91,10 +91,11 @@ const getAddresses = async (
   account: AccountData,
   asset: Asset,
   provider: StaticJsonRpcProvider,
-  consecutiveEmptyAccounts: number
+  consecutiveEmptyAccounts: number,
+  accountIdxStart: number
 ): Promise<Account[]> => {
   const accounts = []
-  let index = 0
+  let index = accountIdxStart
   let zeroBalanceAccounts = 0
 
   // Iterates until a 0 balance account is found
@@ -152,31 +153,32 @@ function trezor(options: TrezorOptions): WalletInit {
 
     return {
       label: 'Trezor',
+      type : 'evm',
       getIcon,
       getInterface: async ({ EventEmitter, chains }) => {
         const { default: Trezor } = await import('@trezor/connect-web')
-        const { Transaction, FeeMarketEIP1559Transaction } = await import(
+        const {  Transaction, FeeMarketEIP1559Transaction } = await import(
           '@ethereumjs/tx'
-        )
+          )
 
         const { createEIP1193Provider, ProviderRpcError } = await import(
-          '@web3-onboard/common'
-        )
+          '@subwallet-connect/common'
+          )
 
-        const { accountSelect } = await import('@web3-onboard/hw-common')
+        const { accountSelect } = await import('@subwallet-connect/hw-common')
 
         const {
           getCommon,
           bigNumberFieldsToStrings,
           getHardwareWalletProvider
-        } = await import('@web3-onboard/hw-common')
+        } = await import('@subwallet-connect/hw-common')
 
         const ethUtil = await import('ethereumjs-util')
         const { compress } = (await import('eth-crypto')).publicKey
 
         const { StaticJsonRpcProvider } = await import(
           '@ethersproject/providers'
-        )
+          )
 
         // @ts-ignore
         const TrezorConnect = Trezor.default || Trezor
@@ -197,7 +199,8 @@ function trezor(options: TrezorOptions): WalletInit {
         const scanAccounts = async ({
           derivationPath,
           chainId,
-          asset
+          asset,
+          accountIdxStart
         }: ScanAccountsOptions): Promise<Account[]> => {
           currentChain = chains.find(({ id }) => id === chainId) || currentChain
           ethersProvider = new StaticJsonRpcProvider(currentChain.rpcUrl)
@@ -228,7 +231,8 @@ function trezor(options: TrezorOptions): WalletInit {
             },
             asset,
             ethersProvider,
-            consecutiveEmptyAccounts
+            consecutiveEmptyAccounts,
+            accountIdxStart
           )
         }
 
@@ -486,7 +490,7 @@ function trezor(options: TrezorOptions): WalletInit {
                 reject(
                   new Error(
                     (response.payload && response.payload.error) ||
-                      'There was an error signing a message'
+                    'There was an error signing a message'
                   )
                 )
               }

@@ -1,4 +1,4 @@
-import type { WalletInit, EIP1193Provider } from '@web3-onboard/common'
+import type { WalletInit, EIP1193Provider } from '@subwallet-connect/common'
 
 let bitgetWalletDependencies: any = null
 let bitgetWalletAdapter: any = null
@@ -23,6 +23,7 @@ function bitgetWallet(): WalletInit {
   return () => {
     return {
       label: 'Bitget Wallet',
+      type : 'evm',
       getIcon: async () => {
         const { WalletInfo } = await loadBitgetWalletDependencies()
         return WalletInfo.logolist.svg[256];

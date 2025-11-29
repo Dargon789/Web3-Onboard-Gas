@@ -2,11 +2,8 @@ import type {
   WalletInit,
   SimpleEventEmitter,
   EIP1193Provider
-} from '@web3-onboard/common'
-import {
-  createDownloadMessage,
-  createEIP1193Provider
-} from '@web3-onboard/common'
+} from '@subwallet-connect/common'
+import { createEIP1193Provider } from '@subwallet-connect/common'
 import { CustomWindow } from './types.js'
 declare const window: CustomWindow
 
@@ -15,6 +12,7 @@ function enkrypt(): WalletInit {
   return () => {
     return {
       label: 'Enkrypt',
+      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async () => {
         const enkryptExists = window.hasOwnProperty('enkrypt')
@@ -37,9 +35,8 @@ function enkrypt(): WalletInit {
             provider
           }
         } else {
-          throw new Error(
-            createDownloadMessage('Enkrypt', 'https://enkrypt.com')
-          )
+          window.open('https://enkrypt.com', '_blank')
+          throw new Error('Please Install Enkrypt to use this wallet')
         }
       }
     }

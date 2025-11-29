@@ -1,4 +1,4 @@
-# @web3-onboard/frame
+# @subwallet-connect/frame
 
 ## Wallet module for connecting Frame to web3-onboard
 
@@ -6,13 +6,13 @@
 
 ### Install
 
-`npm i @web3-onboard/core @web3-onboard/frame`
+`npm i @subwallet-connect/core @subwallet-connect/frame`
 
 ### Usage
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import frameModule from '@web3-onboard/frame'
+import Onboard from '@subwallet-connect/core'
+import frameModule from '@subwallet-connect/frame'
 
 const frame = frameModule()
 
@@ -33,8 +33,8 @@ console.log(connectedWallets)
 You may decide that on certain platforms you do not want to display this wallet as a selectable option. To do that you can use the `filter` init option which is an array of platforms that you would like this wallet to **not** be displayed to the end user:
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import frameModule from '@web3-onboard/frame'
+import Onboard from '@subwallet-connect/core'
+import frameModule from '@subwallet-connect/frame'
 
 const frame = frameModule({ filter: ['iOS', 'Android'] })
 

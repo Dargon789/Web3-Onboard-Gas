@@ -13,7 +13,7 @@
     width: 2rem;
     border-radius: 2rem;
     cursor: pointer;
-    color: var(--onboard-close-button-color, inherit);
+    color: var(--onboard-close-button-color, transparent);
   }
 
   .close-button:hover::before {

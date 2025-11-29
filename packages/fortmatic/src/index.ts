@@ -1,10 +1,4 @@
-import {
-  WalletInit,
-  APIKey,
-  EIP1193Provider,
-  ProviderAccounts,
-  weiToEth
-} from '@web3-onboard/common'
+import type { WalletInit, APIKey, EIP1193Provider } from '@subwallet-connect/common'
 
 function fortmatic(options: APIKey): WalletInit {
   const { apiKey } = options
@@ -12,14 +6,15 @@ function fortmatic(options: APIKey): WalletInit {
   return () => {
     return {
       label: 'Fortmatic',
+      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
-      getInterface: async ({ EventEmitter, chains }) => {
+      getInterface: async ({ EventEmitter, BigNumber, chains }) => {
         const { default: Fortmatic } = await import('fortmatic')
         const {
           createEIP1193Provider,
           ProviderRpcErrorCode,
           ProviderRpcError
-        } = await import('@web3-onboard/common')
+        } = await import('@subwallet-connect/common')
 
         const emitter = new EventEmitter()
 
@@ -35,8 +30,7 @@ function fortmatic(options: APIKey): WalletInit {
           const patchedProvider = createEIP1193Provider(fortmaticProvider, {
             eth_requestAccounts: async () => {
               try {
-                const accounts =
-                  (await instance.user.login()) as ProviderAccounts
+                const accounts = await instance.user.login()
                 return accounts
               } catch (error) {
                 const { code } = error as { code: number }
@@ -53,7 +47,11 @@ function fortmatic(options: APIKey): WalletInit {
             eth_selectAccounts: null,
             eth_getBalance: async () => {
               const [balance] = await instance.user.getBalances()
-              return balance ? weiToEth(balance.crypto_amount) : '0'
+              return balance
+                ? BigNumber.from(balance.crypto_amount)
+                  .mul('1000000000000000000')
+                  .toString()
+                : '0'
             },
             wallet_switchEthereumChain: async ({ params }) => {
               const chain = chains.find(({ id }) => id === params[0].chainId)

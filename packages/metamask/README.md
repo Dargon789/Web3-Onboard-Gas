@@ -1,4 +1,4 @@
-# @web3-onboard/metamask
+# @subwallet-connect/metamask
 
 ## Wallet module for connecting MetaMask Wallet SDK to web3-onboard
 The MetaMask Web3-Onboard module provides a reliable, secure, and seamless connection from your dapp to the MetaMask browser extension and MetaMask Mobile.
@@ -8,10 +8,10 @@ See [MetaMask SDK Developer Docs](https://docs.metamask.io/wallet/how-to/connect
 
 ### Install
 
-`npm i @web3-onboard/metamask`
+`npm i @subwallet-connect/metamask`
 
-### If using this package with the `@web3-onboard/injected-wallets` module
-_When utilizing this package alongside the `@web3-onboard/injected-wallets` module, ensure to list this package prior to the initialized injected-wallets module within the wallets list of the Web3-Onboard init._ 
+### If using this package with the `@subwallet-connect/injected-wallets` module
+_When utilizing this package alongside the `@subwallet-connect/injected-wallets` module, ensure to list this package prior to the initialized injected-wallets module within the wallets list of the Web3-Onboard init._ 
 _This order prioritizes the SDK when a MetaMask browser wallet is detected, allowing the SDK to take precedence._
 
 ## Options
@@ -34,8 +34,8 @@ interface MetaMaskSDKOptions {
 ## Usage
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import metamaskSDK from '@web3-onboard/metamask'
+import Onboard from '@subwallet-connect/core'
+import metamaskSDK from '@subwallet-connect/metamask'
 
 // initialize the module with options
 const metamaskSDKWallet = metamaskSDK({options: {

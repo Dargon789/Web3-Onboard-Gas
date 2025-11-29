@@ -1,23 +1,24 @@
-import type { WalletInit, EIP1193Provider } from '@web3-onboard/common'
+import type { WalletInit, EIP1193Provider } from '@subwallet-connect/common'
 
 function mew(): WalletInit {
   return () => {
     return {
       label: 'MEW Wallet',
+      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains, EventEmitter }) => {
         const {
           createEIP1193Provider,
           ProviderRpcError,
           ProviderRpcErrorCode
-        } = await import('@web3-onboard/common')
+        } = await import('@subwallet-connect/common')
 
         const { firstValueFrom, fromEvent } = await import('rxjs')
         const { map, take } = await import('rxjs/operators')
 
         const { default: MEWWallet } = await import(
           '@myetherwallet/mewconnect-web-client'
-        )
+          )
 
         const [chain] = chains
         const mewConnect = new MEWWallet.Provider({
@@ -69,6 +70,6 @@ function mew(): WalletInit {
 }
 
 /**
- * @deprecated Use @web3-onboard/mew-wallet
+ * @deprecated Use @subwallet-connect/mew-wallet
  */
 export default mew

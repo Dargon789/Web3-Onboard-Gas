@@ -1,0 +1,43 @@
+name: SubWallet Build
+on:
+  pull_request:
+    branches:
+      - main
+      - sw-dev
+  push:
+    branches:
+      - main
+      - sw-dev
+
+jobs:
+  master:
+    if: "! startsWith(github.event.head_commit.message, '[CI Skip]')"
+    runs-on: ubuntu-22.04
+    name: Build and Deploy
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Build
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'yarn'
+      - name: Build
+        id: build
+        run: |
+          yarn install
+          yarn build
+
+      # === Deploy static pages ===
+      - name: Deploy to Cloudflare Pages
+        id: cloudflare_deployment
+        uses: cloudflare/pages-action@v1
+        with:
+            apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+            accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+            projectName: 'w3o'
+            gitHubToken: ${{ secrets.GH_AUTOMATION_TOKEN }}
+            branch: 'main'
+            directory: './packages/demo/build'
+            wranglerVersion: '3'

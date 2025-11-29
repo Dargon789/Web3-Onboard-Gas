@@ -66,7 +66,8 @@
     display: flex;
     flex-flow: row nowrap;
     width: 80px;
-    padding: 0.75rem;
+    align-items: center;
+    padding: 0.75rem 0.75rem 0.75rem 0.9rem;
   }
   .drop-shadow {
     filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.2));
@@ -84,7 +85,7 @@
     <!-- app and wallet icon badge -->
     <div class="drop-shadow">
       <WalletAppBadge
-        size={32}
+        size={30}
         padding={4}
         background={'white'}
         border="darkGreen"
@@ -97,16 +98,16 @@
         <WalletAppBadge
           size={32}
           padding={4}
-          background="green"
+          background="transparent"
           border="darkGreen"
           radius={8}
           icon={primaryWallet ? primaryWallet.icon : ''}
         />
       </div>
 
-      <div class="check-icon-wrapper drop-shadow">
-        <SuccessStatusIcon size={14} />
-      </div>
+<!--      <div class="check-icon-wrapper drop-shadow">-->
+<!--        <SuccessStatusIcon size={14} />-->
+<!--      </div>-->
     </div>
   </div>
 </div>

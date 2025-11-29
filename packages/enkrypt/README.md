@@ -1,20 +1,20 @@
-# @web3-onboard/enkrypt
+# @subwallet-connect/enkrypt
 
 ## Wallet module for connecting Enkrypt wallet through web3-onboard
 
 ### Install
 
 **NPM**
-`npm i @web3-onboard/core @web3-onboard/enkrypt`
+`npm i @subwallet-connect/core @subwallet-connect/enkrypt`
 
 **Yarn**
-`yarn add @web3-onboard/core @web3-onboard/enkrypt`
+`yarn add @subwallet-connect/core @subwallet-connect/enkrypt`
 
 ## Usage
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import enrkypt from '@web3-onboard/enkrypt'
+import Onboard from '@subwallet-connect/core'
+import enrkypt from '@subwallet-connect/enkrypt'
 
 const enrkyptModule = enrkypt()
 

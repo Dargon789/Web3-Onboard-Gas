@@ -6,12 +6,12 @@ import {
   type WalletInit,
   type WalletModule,
   type ValidateReturn,
-  type AppMetadata,
   chainNamespaceValidation,
   chainIdValidation,
   chainValidation,
-  validate
-} from '@web3-onboard/common'
+  validate,
+  type AppMetadata
+} from '@subwallet-connect/common'
 
 import type {
   InitOptions,
@@ -20,11 +20,13 @@ import type {
   DisconnectOptions,
   ConnectOptionsString,
   AccountCenter,
+  TransactionHandlerReturn,
   NotifyOptions,
   Notification,
   CustomNotification,
   CustomNotificationUpdate,
   Notify,
+  PreflightNotificationsOptions,
   ConnectModalOptions,
   Theme
 } from './types.js'
@@ -96,8 +98,7 @@ const wallet = Joi.object({
   provider: unknownObject,
   instance: unknownObject,
   accounts,
-  chains: Joi.array().items(connectedChain),
-  wagmiConnector: unknownObject
+  chains: Joi.array().items(connectedChain)
 })
   .required()
   .error(new Error('wallet must be defined'))
@@ -155,13 +156,14 @@ const commonPositions = Joi.string().valid(
   'topRight',
   'bottomRight',
   'bottomLeft',
-  'topLeft'
+  'topLeft',
+  'topCenter'
 )
 
 const gasPriceProbabilities = [70, 80, 90, 95, 99]
 
 const notify = Joi.object({
-  transactionHandler: Joi.function().optional(),
+  transactionHandler: Joi.function(),
   enabled: Joi.boolean(),
   position: commonPositions,
   replacement: Joi.object({
@@ -220,7 +222,8 @@ const themeMap = Joi.object({
   '--w3o-text-color': Joi.string(),
   '--w3o-border-color': Joi.string(),
   '--w3o-action-color': Joi.string(),
-  '--w3o-border-radius': Joi.string()
+  '--w3o-border-radius': Joi.string(),
+  '--w3o-background-color-item': Joi.string()
 })
 
 const presetTheme = Joi.string().valid('default', 'dark', 'light', 'system')
@@ -244,13 +247,13 @@ const initOptions = Joi.object({
     get: Joi.function().required(),
     stream: Joi.function().required()
   }),
-  wagmi: Joi.function(),
   connect: connectModalOptions,
   containerElements: containerElements,
-  // transactionPreview is deprecated but is still allowed to 
-  // avoid breaking dapps a console error is shown although 
-  // transactionPreview functionality has been removed
-  transactionPreview: Joi.any(),
+  transactionPreview: Joi.object({
+    patchProvider: Joi.function().required(),
+    init: Joi.function().required(),
+    previewTransaction: Joi.function()
+  }),
   theme: theme,
   disableFontDownload: Joi.boolean(),
   unstoppableResolution: Joi.function()
@@ -267,7 +270,8 @@ const connectOptions = Joi.object({
 })
 
 const disconnectOptions = Joi.object({
-  label: Joi.string().required()
+  label: Joi.string().required(),
+  type: Joi.string().required()
 }).required()
 
 const secondaryTokenValidation = Joi.object({
@@ -333,6 +337,11 @@ const notification = Joi.object({
   onClick: Joi.function(),
   link: Joi.string()
 })
+
+const transactionHandlerReturn = Joi.any().allow(
+  customNotificationUpdate,
+  Joi.boolean().allow(false)
+)
 
 export function validateWallet(
   data: WalletState | Partial<WalletState>
@@ -410,8 +419,19 @@ export function validateNotifyOptions(
   return validate(notifyOptions, data)
 }
 
+export function validateTransactionHandlerReturn(
+  data: TransactionHandlerReturn
+): ValidateReturn {
+  return validate(transactionHandlerReturn, data)
+}
+
 export function validateNotification(data: Notification): ValidateReturn {
   return validate(notification, data)
+}
+export function validatePreflightNotifications(
+  data: PreflightNotificationsOptions
+): ValidateReturn {
+  return validate(preflightNotifications, data)
 }
 
 export function validateCustomNotificationUpdate(

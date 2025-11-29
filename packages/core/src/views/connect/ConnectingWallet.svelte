@@ -3,10 +3,12 @@
   import type { WalletState, i18n } from '../../types.js'
 
   import WalletAppBadge from '../shared/WalletAppBadge.svelte'
-  import questionIcon from '../../icons/question.js'
   import en from '../../i18n/en.json'
   import { state } from '../../store/index.js'
-  import { shareReplay, startWith } from 'rxjs'
+  import { shareReplay, startWith, withLatestFrom } from 'rxjs'
+  import { errorIcon } from '../../icons';
+  import { qrModalConnect$, uriConnect$ } from '../../streams.js';
+  import { MOBILE_WINDOW_WIDTH } from '../../constants.js';
 
   export let connectWallet: () => Promise<void>
   export let selectedWallet: WalletState
@@ -15,6 +17,25 @@
   export let connectionRejected: boolean
   export let previousConnectionRequest: boolean
 
+  let windowWidth: number
+
+
+
+  qrModalConnect$
+  .pipe(withLatestFrom(uriConnect$))
+  .subscribe(async ([{ isOpen, modal }, uri])=>{
+    if(isOpen && modal && uri !== ''){
+      try{
+          await modal.openModal({ uri });
+      } catch (e) {
+        console.log(e)
+      }
+    } else {
+      modal?.closeModal();
+    }
+  })
+
+
   const appMetadata$ = state
     .select('appMetadata')
     .pipe(startWith(state.get().appMetadata), shareReplay(1))
@@ -22,43 +43,44 @@
 
 <style>
   .container {
-    padding: var(--onboard-spacing-4, var(--spacing-4));
+    padding: 20px 24px 0 0;
+  }
+
+  .container.qr-container{
+    padding: 0;
+    margin-top: -3px;
   }
 
   .connecting-container {
     width: 100%;
     padding: var(--onboard-spacing-4, var(--spacing-4));
+    padding: 12px 14px 16px 18px;
     transition: background-color 100ms ease-in-out,
       border-color 100ms ease-in-out;
-    border-radius: 24px;
-    background: var(--onboard-primary-100, var(--primary-100));
-    border: 1px solid;
-    border-color: var(--onboard-primary-300, var(--primary-300));
-    color: var(--onboard-gray-600, var(--gray-600));
+    border-radius: var(--border-radius-5);
+    background: var(--w3o-background-color-item, var(--primary-800));
+    border: 1px solid transparent;
+    color: var(--w3o-text-color, var(--white));
   }
 
-  .connecting-container.warning {
-    background: var(--onboard-warning-100, var(--warning-100));
-    border-color: var(--onboard-warning-400, var(--warning-400));
+  .connecting-container.qr-connecting-container{
+    background-color: transparent;
   }
 
   .text {
-    line-height: 16px;
-    margin-bottom: var(--onboard-spacing-5, var(--spacing-5));
-  }
-
-  .text.text-rejected {
     line-height: 24px;
-    margin-bottom: 0;
+    font-weight: 600;
   }
 
   .subtext {
     font-size: var(--onboard-font-size-7, var(--font-size-7));
-    line-height: 16px;
+    color: var(--gray-400);
+    line-height: 20px;
+    font-weight: 600;
   }
 
   .rejected-cta {
-    color: var(--onboard-primary-500, var(--primary-500));
+    color: var(--onboard-primary-500, var(--primary-2));
   }
 
   .onboard-button-primary {
@@ -68,6 +90,7 @@
   .ml {
     margin-left: var(--onboard-spacing-4, var(--spacing-4));
   }
+
 
   @media all and (max-width: 520px) {
     .connecting-container {
@@ -90,51 +113,45 @@
       display: none;
     }
   }
+
+  .open-modal-footer{
+    bottom: var(--onboard-spacing-3, var(--spacing-3));
+    gap: 131px;
+    align-items: center;
+    margin-right: 30px;
+  }
+
+  .footer-text{
+    width: 300px;
+    height: 20px;
+  }
+
 </style>
 
-<div class="container flex flex-column items-center">
+<svelte:window bind:innerWidth={windowWidth} />
+
+<div
+    class="container flex flex-column items-center"
+>
   <div
     class="connecting-container flex justify-between items-center"
-    class:warning={connectionRejected || previousConnectionRequest}
   >
     <div class="flex">
       <div class="flex justify-center relative wallet-badges">
-        <WalletAppBadge
-          size={40}
-          padding={8}
-          icon={($appMetadata$ && $appMetadata$.icon) || questionIcon}
-          border={connectionRejected || previousConnectionRequest
-            ? 'yellow'
-            : 'blue'}
-          background="lightGray"
-        />
-
-        <div class="relative" style="right: 0.5rem;">
+        <div class="relative">
           <WalletAppBadge
             size={40}
             padding={8}
-            border={connectionRejected || previousConnectionRequest
-              ? 'yellow'
-              : 'blue'}
-            background="white"
+            typeWallet={selectedWallet.type}
+            background="transparent"
             icon={selectedWallet.icon}
           />
         </div>
       </div>
 
       <div class="flex flex-column justify-center ml connecting-wallet-info">
-        <div class="text" class:text-rejected={connectionRejected}>
-          {$_(
-            `connect.connectingWallet.${
-              connectionRejected ? 'rejectedText' : 'mainText'
-            }`,
-            {
-              default: connectionRejected
-                ? en.connect.connectingWallet.rejectedText
-                : en.connect.connectingWallet.mainText,
-              values: { wallet: selectedWallet.label }
-            }
-          )}
+        <div class="text">
+          {selectedWallet.label}
         </div>
         {#if connectionRejected}
           <div class="rejected-cta pointer subtext" on:click={connectWallet}>
@@ -147,7 +164,7 @@
           <div class="subtext">
             {$_(
               `connect.connectingWallet.${
-                previousConnectionRequest ? 'previousConnection' : 'paragraph'
+                previousConnectionRequest ? 'previousConnection' : 'mainText'
               }`,
               {
                 default: en.connect.connectingWallet.paragraph,
@@ -158,16 +175,20 @@
         {/if}
       </div>
     </div>
+    {#if connectionRejected}
+      <div class="tick flex items-center">
+        {@html errorIcon}
+      </div>
+    {/if}
   </div>
-
-  <button
-    on:click={() => {
-      deselectWallet(selectedWallet.label)
-      setStep('selectingWallet')
+      <button
+          on:click={() => {
+            deselectWallet(selectedWallet.label)
+            setStep('selectingWallet')
     }}
-    class="onboard-button-primary absolute"
-    >{$_('connect.connectingWallet.primaryButton', {
-      default: en.connect.connectingWallet.primaryButton
-    })}</button
-  >
+              class="onboard-button-primary absolute"
+      >{$_('connect.connectingWallet.primaryButton', {
+        default: en.connect.connectingWallet.primaryButton
+      })}</button
+      >
 </div>

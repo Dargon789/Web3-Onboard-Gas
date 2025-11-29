@@ -1,5 +1,6 @@
-import { createEIP1193Provider, WalletInit } from '@web3-onboard/common'
-import type { ConstructorParams } from '@arcana/auth'
+import { WalletInit, createEIP1193Provider } from '@subwallet-connect/common';
+import icon from './icon.js'
+import type { ConstructorParams } from "@arcana/auth";
 
 export default function (opts: {
   clientID: string
@@ -7,7 +8,10 @@ export default function (opts: {
 }): WalletInit {
   return () => ({
     label: 'Arcana Auth',
-    getIcon: async () => (await import('./icon.js')).default,
+    type : 'evm',
+    async getIcon() {
+      return icon
+    },
     async getInterface() {
       const { AuthProvider } = await import('@arcana/auth')
 

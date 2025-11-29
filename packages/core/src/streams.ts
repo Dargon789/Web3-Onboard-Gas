@@ -1,4 +1,4 @@
-import type { Chain } from '@web3-onboard/common'
+import type { Chain } from '@subwallet-connect/common'
 import { onDestroy, onMount, beforeUpdate, afterUpdate } from 'svelte'
 import { Observable, Subject, defer, BehaviorSubject } from 'rxjs'
 import {
@@ -9,14 +9,22 @@ import {
   shareReplay
 } from 'rxjs/operators'
 
+
 import { resetStore } from './store/actions.js'
 import { state } from './store/index.js'
 
-import type { WalletState, ConnectOptions } from './types.js'
+import type { WalletState, ConnectOptions, ModalQrConnect } from './types.js'
 import type { EthereumTransactionData } from 'bnc-sdk'
 
+
 export const reset$ = new Subject<void>()
-export const disconnectWallet$ = new Subject<WalletState['label']>()
+export const disconnectWallet$ = new Subject<Pick<WalletState, 'label' | 'type'>>()
+
+export const qrModalConnect$ = new BehaviorSubject<ModalQrConnect>({
+  isOpen: false
+});
+
+export const uriConnect$ = new BehaviorSubject<string>('')
 
 export const connectWallet$ = new BehaviorSubject<{
   autoSelect?: ConnectOptions['autoSelect']
@@ -29,14 +37,14 @@ export const switchChainModal$ = new BehaviorSubject<null | {
 }>(null)
 
 export const wallets$ = (
-  state.select('wallets') as Observable<WalletState[]>
+    state.select('wallets') as Observable<WalletState[]>
 ).pipe(shareReplay(1))
 
 // reset logic
 reset$.pipe(withLatestFrom(wallets$), pluck('1')).subscribe(wallets => {
   // disconnect all wallets
-  wallets.forEach(({ label }) => {
-    disconnectWallet$.next(label)
+  wallets.forEach(({ label, type }) => {
+    disconnectWallet$.next({ label, type })
   })
 
   resetStore()
@@ -52,7 +60,7 @@ export function updateTransaction(tx: EthereumTransactionData): void {
 
   if (txIndex !== -1) {
     const updatedTransactions = currentTransactions.map((val, i) =>
-      i === txIndex ? tx : val
+        i === txIndex ? tx : val
     )
 
     transactions$.next(updatedTransactions)

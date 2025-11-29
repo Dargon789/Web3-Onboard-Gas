@@ -1,11 +1,11 @@
-import Joi from 'joi'
+import Joi, {number} from 'joi'
 import type { SelectAccountOptions } from './types.js'
 
 import {
   validate,
   chainValidation,
   type ValidateReturn
-} from '@web3-onboard/common'
+} from '@subwallet-connect/common'
 
 const basePath = Joi.object({
   label: Joi.string().required(),

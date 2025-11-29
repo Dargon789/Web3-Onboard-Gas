@@ -1,4 +1,4 @@
-import type { WalletInit, EIP1193Provider } from '@web3-onboard/common'
+import type { WalletInit, EIP1193Provider } from '@subwallet-connect/common'
 
 let bitKeepDependencies: any = null
 let bitKeepAdapter: any = null
@@ -17,18 +17,16 @@ const loadBitKeepDependencies = async (getAdapter?: boolean) => {
   return bitKeepDependencies
 }
 
-/**
- * @deprecated Please use `@web3-onboard/bitget` instead.
- */
 function bitKeep(): WalletInit {
   if (typeof window === 'undefined') return () => null
 
   return () => {
     return {
       label: 'BitKeep',
+      type : 'evm',
       getIcon: async () => {
-        const { WalletInfo } = await loadBitKeepDependencies()
-        return WalletInfo.logolist.svg[256]
+        const { WalletInfo } = await loadBitKeepDependencies();
+        return WalletInfo.logolist.svg[256];
       },
       getInterface: async () => {
         const {

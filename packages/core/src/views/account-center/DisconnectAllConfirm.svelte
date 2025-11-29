@@ -10,31 +10,32 @@
 
 <style>
   .content {
-    padding: 1rem;
-    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
     font-family: var(--onboard-font-family-normal, var(--font-family-normal));
     font-size: var(--onboard-font-size-5, var(--font-size-5));
     line-height: 24px;
+    text-align: center;
+    max-width: 390px;
   }
 
-  .icon-container {
-    width: 3rem;
-    height: 3rem;
-    background: var(--onboard-warning-100, var(--warning-100));
-    border-radius: 24px;
-    padding: 12px;
-    color: var(--onboard-warning-500, var(--warning-500));
+  .content-description, .content-subHeading {
+    padding: 0 var(--spacing-4);
   }
 
-  h4 {
-    margin: 1.5rem 0 0.5rem 0;
+  .content-subHeading {
+    color: var(--danger-600);
     font-weight: 600;
   }
 
-  p {
-    margin: 0;
-    font-weight: 400;
+  .content-description {
+    font-size: var(--font-size-6);
+    color: rgba(255, 255, 255, 0.45);
+    font-weight: 500;
   }
+
 
   button {
     margin-top: 1.5rem;
@@ -42,39 +43,51 @@
     font-weight: 600;
   }
 
+  .title {
+    width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .right {
-    margin-left: 0.5rem;
-    width: 60%;
+    margin-left: 0.75rem;
+  }
+
+  .width-100 {
+    width: 100%;
   }
 </style>
 
-<Modal close={onClose}>
-  <div class="content">
-    <div class="icon-container flex justify-center items-center">
-      {@html warningIcon}
-    </div>
-
-    <h4>
-      {$_('modals.confirmDisconnectAll.heading', {
-        default: en.modals.confirmDisconnectAll.heading
+<Modal close={onClose} maskClose={true}>
+  <span class="title" slot="title">
+    {$_('modals.confirmDisconnectAll.heading', {
+      default: en.modals.confirmDisconnectAll.heading
+    })}
+  </span>
+  <div class="content width-100" slot="content">
+    <span class="content-subHeading width-100">
+      {$_('modals.confirmDisconnectAll.subHeading', {
+        default: en.modals.confirmDisconnectAll.subHeading
       })}
-    </h4>
+    </span>
+    <span class="content-description width-100">
+      {$_('modals.confirmDisconnectAll.description', {
+        default: en.modals.confirmDisconnectAll.description
+      })}
+    </span>
+  </div>
 
-    <p>
-      {$_('modals.confirmDisconnectAll.description')}
-    </p>
-
-    <div class="flex justify-between items-center w-100">
-      <button class="button-neutral-solid-b rounded" on:click={onClose}
-        >{$_('modals.confirmDisconnectAll.cancel', {
-          default: en.modals.confirmDisconnectAll.cancel
-        })}</button
-      >
-      <button class="right button-neutral-solid rounded" on:click={onConfirm}
-        >{$_('modals.confirmDisconnectAll.confirm', {
-          default: en.modals.confirmDisconnectAll.confirm
-        })}</button
-      >
-    </div>
+  <div class="flex justify-between items-center" slot="footer">
+    <button class="button-neutral-solid" on:click={onClose}
+    >{$_('modals.confirmDisconnectAll.cancel', {
+      default: en.modals.confirmDisconnectAll.cancel
+    })}</button
+    >
+    <button class="right button-neutral-danger" on:click={onConfirm}
+    >{$_('modals.confirmDisconnectAll.confirm', {
+      default: en.modals.confirmDisconnectAll.confirm
+    })}</button
+    >
   </div>
 </Modal>

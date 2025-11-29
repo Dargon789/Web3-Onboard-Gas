@@ -1,23 +1,48 @@
 <script lang="ts">
-  import { weiToEth } from '../utils.js'
+  import { weiToEth } from '@subwallet-connect/common'
   import type { Account, AccountsList } from '../types.js'
 
   export let accountsListObject: AccountsList | undefined
-  export let accountSelected: Account | undefined = undefined
+
+  export let handleAddAccount : ( length: number ) => void;
+  export let lengthAccountSelectedDefault : number
+  export let accountSelected: Account[] = []
   export let showEmptyAddresses: boolean
 
   $: accounts = showEmptyAddresses
     ? accountsListObject && accountsListObject.all
     : accountsListObject && accountsListObject.filtered
 
+  $: accountsSelectedLength = lengthAccountSelectedDefault
   const handleSelectedRow = (accountClicked: Account) => {
-    accountSelected = accountClicked
+    const accountExits = accountSelected.findIndex(
+            ({ address }) => address === accountClicked.address);
+    if(accountExits >= 0){
+      accountSelected.splice(accountExits, 1);
+    }else{
+      accountSelected.push(accountClicked)
+    }
+
+    accountsSelectedLength = accountSelected.length;
+    handleAddAccount(accountSelected.length)
   }
 </script>
 
 <style>
   table {
     border-spacing: 0px;
+  }
+
+  table::-webkit-scrollbar {
+    width: 0
+  }
+
+  table::-webkit-scrollbar-track {
+    background-color: transparent
+  }
+
+  table::-webkit-scrollbar-thumb {
+    background-color: transparent
   }
 
   table thead {
@@ -121,18 +146,21 @@
         {#each accounts as account}
           <tr
             class="pointer"
-            class:selected-row={accountSelected &&
-              accountSelected.address === account.address}
+            class:selected-row={accountsSelectedLength > 0 &&
+              !!accountSelected
+              .find(({ address }) => address === account.address ) }
             on:click={() => handleSelectedRow(account)}
           >
             <td style="font-family:'Courier New', Courier, monospace;"
               >{account.address}</td
             >
             <td>{account.derivationPath}</td>
+            {#if account.balance.value.toString() !== '0'}
             <td class="asset-td"
               >{weiToEth(account.balance.value.toString())}
               {account.balance.asset}</td
             >
+              {/if}
           </tr>
         {/each}
       {/if}

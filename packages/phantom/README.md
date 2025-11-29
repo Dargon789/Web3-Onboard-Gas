@@ -1,4 +1,4 @@
-# @web3-onboard/phantom
+# @subwallet-connect/phantom
 
 ## Wallet module for connecting Phantom to Web3-Onboard
 
@@ -6,13 +6,13 @@
 
 ### Install
 
-`npm i @web3-onboard/core @web3-onboard/phantom`
+`npm i @subwallet-connect/core @subwallet-connect/phantom`
 
 ## Usage
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import phantomModule from '@web3-onboard/phantom'
+import Onboard from '@subwallet-connect/core'
+import phantomModule from '@subwallet-connect/phantom'
 
 // initialize the module
 const phantom = phantomModule()

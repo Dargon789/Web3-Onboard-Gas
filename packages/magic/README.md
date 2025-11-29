@@ -1,4 +1,4 @@
-# @web3-onboard/magic
+# @subwallet-connect/magic
 
 ## Wallet module for connecting Magic wallets to Onboard V2
 
@@ -11,7 +11,7 @@
 
 ### Install
 
-`npm i @web3-onboard/magic`
+`npm i @subwallet-connect/magic`
 
 Head over to https://magic.link/ and sign up to get an API key
 
@@ -27,8 +27,8 @@ type MagicInitOptions = {
 ## Usage
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import magicModule from '@web3-onboard/magic'
+import Onboard from '@subwallet-connect/core'
+import magicModule from '@subwallet-connect/magic'
 
 const magic = magicModule({
   apiKey: 'API_KEY',

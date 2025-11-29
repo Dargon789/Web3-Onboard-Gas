@@ -1,14 +1,14 @@
-# @web3-onboard/uauth
+# @subwallet-connect/uauth
 
 ## Wallet module for connecting Unstoppable Domains to web3-onboard
 
 ### Install
 
 **NPM**
-`npm i @web3-onboard/core @web3-onboard/uauth`
+`npm i @subwallet-connect/core @subwallet-connect/uauth`
 
 **Yarn**
-`yarn add @web3-onboard/core @web3-onboard/uauth`
+`yarn add @subwallet-connect/core @subwallet-connect/uauth`
 
 ## Options
 
@@ -66,8 +66,8 @@ type UauthInitOptions = {
 ## Usage
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import uauthModule from '@web3-onboard/uauth'
+import Onboard from '@subwallet-connect/core'
+import uauthModule from '@subwallet-connect/uauth'
 
 // initialize the module with options
 const uauth = uauthModule({

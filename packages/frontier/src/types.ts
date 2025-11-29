@@ -1,4 +1,4 @@
-import { EIP1193Provider } from '@web3-onboard/common'
+import { EIP1193Provider } from '@subwallet-connect/common'
 export interface CustomWindow extends Window {
   ethereum: EIP1193Provider & {
     isFrontier?: boolean

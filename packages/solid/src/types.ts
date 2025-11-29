@@ -3,7 +3,7 @@ import type {
   DisconnectOptions,
   WalletState,
   ConnectedChain
-} from '@web3-onboard/core'
+} from '@subwallet-connect/core'
 import { Accessor, Ref } from 'solid-js'
 
 // Syntax sugar for Readonly Refs

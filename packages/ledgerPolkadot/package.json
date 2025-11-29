@@ -1,0 +1,82 @@
+{
+  "name": "@subwallet-connect/ledger-polkadot",
+  "version": "1.0.7",
+  "description": "Ledger hardware wallet module for connecting to Web3-Onboard. Web3-Onboard makes it simple to connect Ethereum hardware and software wallets to your dapp. Features standardized spec compliant web3 providers for all supported wallets, framework agnostic modern javascript UI with code splitting, CSS customization, multi-chain and multi-account support, reactive wallet state subscriptions and real-time transaction state change notifications.",
+  "keywords": [
+    "Ethereum",
+    "Web3",
+    "EVM",
+    "dapp",
+    "Multichain",
+    "Wallet",
+    "Transaction",
+    "Provider",
+    "Hardware Wallet",
+    "Notifications",
+    "React",
+    "Svelte",
+    "Vue",
+    "Next",
+    "Nuxt",
+    "MetaMask",
+    "Coinbase",
+    "WalletConnect",
+    "Ledger",
+    "LedgerPolkadot",
+    "Trezor",
+    "Connect Wallet",
+    "Ethereum Hooks",
+    "Blocknative",
+    "Mempool",
+    "pending",
+    "confirmed",
+    "Injected Wallet",
+    "Crypto",
+    "Crypto Wallet"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blocknative/web3-onboard.git",
+    "directory": "packages/ledgerPolkadot"
+  },
+  "homepage": "https://subwallet.app",
+  "bugs": {
+    "url": "https://github.com/blocknative/web3-onboard/issues"
+  },
+  "module": "dist/index.js",
+  "browser": "dist/index.js",
+  "main": "dist/index.js",
+  "type": "module",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "type-check": "tsc --noEmit"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@polkadot/dev": "^0.78.7",
+    "@walletconnect/types": "^2.7.0",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "@ethersproject/providers": "5.5.0",
+    "@shapeshiftoss/hdwallet-core": "v1.52.6",
+    "@shapeshiftoss/hdwallet-ledger": "v1.52.2",
+    "@subwallet-connect/common": "^1.0.7",
+    "@polkadot/hw-ledger": "^12.6.2",
+    "buffer": "^6.0.3",
+    "https-browserify": "^1.0.0",
+    "node-polyfill-webpack-plugin": "^2.0.1",
+    "react-app-rewired": "^2.2.1",
+    "react-scripts": "^5.0.1",
+    "rxjs": "^7.5.2",
+    "stream": "^0.0.2",
+    "stream-browserify": "^3.0.0",
+    "@subwallet-connect/hw-common": "^1.0.7"
+  },
+  "author": ""
+}

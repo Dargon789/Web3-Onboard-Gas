@@ -3,7 +3,7 @@ import type {
   EIP1193Provider,
   ProviderAccounts,
   WalletInit
-} from '@web3-onboard/common'
+} from '@subwallet-connect/common'
 
 import type { Web3AuthOptions, ModalConfig } from '@web3auth/modal'
 import type { CustomChainConfig, OPENLOGIN_NETWORK_TYPE } from '@web3auth/base'
@@ -26,6 +26,7 @@ type Web3AuthModuleOptions = Omit<Web3AuthOptions, 'chainConfig'> & {
 function web3auth(options: Web3AuthModuleOptions): WalletInit {
   return () => ({
     label: 'Web3Auth',
+    type : 'evm',
     getIcon: async () => (await import('./icon.js')).default,
     getInterface: async ({ EventEmitter, chains }) => {
       const { Web3Auth } = await import('@web3auth/modal')
@@ -33,7 +34,7 @@ function web3auth(options: Web3AuthModuleOptions): WalletInit {
         '@web3auth/base'
       )
       const { createEIP1193Provider, ProviderRpcError, ProviderRpcErrorCode } =
-        await import('@web3-onboard/common')
+        await import('@subwallet-connect/common')
 
       const emitter = new EventEmitter()
 

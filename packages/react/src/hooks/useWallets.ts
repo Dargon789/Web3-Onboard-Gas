@@ -1,4 +1,4 @@
-import type { WalletState } from '@web3-onboard/core'
+import type { WalletState } from '@subwallet-connect/core'
 
 import { useAppState } from './useAppState.js'
 

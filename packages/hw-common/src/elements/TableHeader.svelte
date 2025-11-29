@@ -1,10 +1,10 @@
 <script lang="ts">
   import Spinner from './Spinner.svelte'
-
   export let scanAccounts: () => Promise<void>
   export let loadingAccounts: boolean
   export let showEmptyAddresses: boolean
   export let errorFromScan: string
+
 </script>
 
 <style>
@@ -32,12 +32,39 @@
     width: 8rem;
   }
 
-  .scan-accounts-btn {
-    background: var(--account-select-gray-500, var(--action-color));
-    color: var(--account-select-primary-100, inherit);
+
+  .button-group-action {
     display: flex;
     justify-content: center;
+    gap: 8px;
+  }
+
+  .scan-accounts-btn {
+    background: var(
+            --account-select-primary-500,
+            var(--onboard-primary-500, var(--primary-500))
+    );
+    color: var(--w3o-text-color, inherit);
+    display: flex;
+    justify-content: center;
+    width: 165px;
     align-items: center;
+    cursor: pointer;
+  }
+
+  .more-btn:disabled {
+    background: var(
+            --account-select-gray-800,
+            var(--onboard-gray-800, var(--gray-800))
+    );
+    cursor: default;
+  }
+
+  .more-btn {
+    background: var(
+            --account-select-primary-500,
+            var(--onboard-primary-500, var(--primary-500))
+    );
     cursor: pointer;
   }
 
@@ -177,7 +204,8 @@
 
     .table-controls {
       height: 3.5rem;
-      justify-content: space-between;
+      gap: 8px;
+      justify-content: flex-end;
     }
 
     input[type='checkbox'] {
@@ -206,31 +234,34 @@
 </style>
 
 <div class="table-controls">
-  <div class="checkbox-container">
-    <input
-      id="show-empty-addresses"
-      type="checkbox"
-      bind:checked={showEmptyAddresses}
-      class="checkbox-input"
-    />
-    <label for="show-empty-addresses" class="ml2 cursor-pointer font-5"
-      >Show Empty Addresses</label
-    >
-  </div>
+<!--  <div class="checkbox-container">-->
+<!--    <input-->
+<!--      id="show-empty-addresses"-->
+<!--      type="checkbox"-->
+<!--      bind:checked={showEmptyAddresses}-->
+<!--      class="checkbox-input"-->
+<!--    />-->
+<!--    <label for="show-empty-addresses" class="ml2 cursor-pointer font-5"-->
+<!--      >Show Empty Addresses</label-->
+<!--    >-->
+<!--  </div>-->
   {#if errorFromScan}
     <span class="error-msg">{errorFromScan}</span>
   {/if}
-  <button
-    class="scan-accounts-btn"
-    id="scan-accounts"
-    on:click={async () => await scanAccounts()}
-  >
-    {#if loadingAccounts}
-      Scanning...
-      <Spinner size="1.5rem" />
-    {/if}
-    {#if !loadingAccounts}
-      Scan Accounts
-    {/if}
-  </button>
+  <div class="button-group-action">
+    <button
+            class="scan-accounts-btn"
+            id="scan-accounts"
+            on:click={async () => await scanAccounts()}
+    >
+      {#if loadingAccounts}
+        Scanning...
+        <Spinner size="1.5rem" />
+      {/if}
+      {#if !loadingAccounts}
+        Scan Accounts
+      {/if}
+    </button>
+  </div>
+
 </div>

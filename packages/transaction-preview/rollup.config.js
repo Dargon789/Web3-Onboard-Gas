@@ -41,7 +41,7 @@ export default {
     })
   ],
   external: [
-    '@web3-onboard/common',
+    '@subwallet-connect/common',
     'bnc-sdk',
     'bowser',
     'joi',

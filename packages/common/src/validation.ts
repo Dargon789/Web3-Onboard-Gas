@@ -3,7 +3,7 @@ import Joi from 'joi'
 export type ValidateReturn = Joi.ValidationResult | null
 
 export function validate(
-  validator: Joi.AnySchema<any>,
+  validator: Joi.AnySchema<unknown>,
   data: unknown
 ): ValidateReturn {
   const result = validator.validate(data)
@@ -11,11 +11,11 @@ export function validate(
 }
 
 export const chainIdValidation = Joi.alternatives().try(
-  Joi.string().pattern(/^0x[0-9a-fA-F]+$/),
+  Joi.string().pattern(/^[0-9a-fA-F]+$/),
   Joi.number().positive()
 )
 
-export const chainNamespaceValidation = Joi.string().valid('evm')
+export const chainNamespaceValidation = Joi.string().valid('evm', 'substrate')
 
 const secondaryTokenValidation = Joi.object({
   address: Joi.string().required(),

@@ -1,12 +1,12 @@
-# @web3-onboard/injected-wallets
+# @subwallet-connect/injected-wallets
 
 ## Quickstart
 
-To allow all injected wallets that are supported natively by web3-onboard or wallets that have implemented [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) support - don't pass in any options:
+To allow all injected wallets that are supported, don't pass in any options:
 
 ```javascript
-import Onboard from '@web3-onboard/core'
-import injectedModule from '@web3-onboard/injected-wallets'
+import Onboard from '@subwallet-connect/core'
+import injectedModule from '@subwallet-connect/injected-wallets'
 
 const MAINNET_RPC_URL = 'https://mainnet.infura.io/v3/<INFURA_KEY>'
 
@@ -38,19 +38,6 @@ const onboard = Onboard({
 const connectedWallets = await onboard.connectWallet()
 
 console.log(connectedWallets)
-```
-
-### This module supports any injected wallet that has implemented support for [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963)
-
-This can be disabled by passing in `disable6963Support` as true within the injected module init object.
-
-```ts
-const injected = injectedModule({ disable6963Support: true })
-
-const onboard = Onboard({
-  wallets: [injected],
-  ...
-})
 ```
 
 ### Injected Wallets Supported Natively
@@ -85,7 +72,7 @@ const onboard = Onboard({
 - xDefi - _Desktop & Mobile_
 - 1inch - _Mobile_
 - Tokenary - _Mobile_
-- Rabby - _Desktop & Mobile_
+- Rabby - _Desktop_
 - MathWallet - _Desktop & Mobile_
 - Bitget - _Desktop & Mobile_
 - Sequence - _Desktop & Mobile_
@@ -105,17 +92,14 @@ const onboard = Onboard({
 - Coin98 Wallet - _Desktop & Mobile_
 - SubWallet - _Desktop & Mobile_
 - Kayros - _Desktop_
-- Lif3Wallet - _Mobile_
-- Zodiac Pilot - _Desktop_
-- Echooo - _Desktop & Mobile_
 
 ## Filtering Wallets
 
 Injected wallets that you do not want to support can be filtered based on the `Platform` the user is on. For example you may not want to support the 'Detected Wallet' that is detected automatically and filter it via all platforms by passing `false`:
 
 ```javascript
-import Onboard from '@web3-onboard/core'
-import injectedModule, { ProviderLabel } from '@web3-onboard/injected-wallets'
+import Onboard from '@subwallet-connect/core'
+import injectedModule, { ProviderLabel } from '@subwallet-connect/injected-wallets'
 
 const MAINNET_RPC_URL = 'https://mainnet.infura.io/v3/<INFURA_KEY>'
 
@@ -134,8 +118,8 @@ const onboard = Onboard({
 Or you may want to only filter the 'Detected Wallet' on a select few platforms:
 
 ```javascript
-import Onboard from '@web3-onboard/core'
-import injectedModule, { ProviderLabel } from '@web3-onboard/injected-wallets'
+import Onboard from '@subwallet-connect/core'
+import injectedModule, { ProviderLabel } from '@subwallet-connect/injected-wallets'
 
 const MAINNET_RPC_URL = 'https://mainnet.infura.io/v3/<INFURA_KEY>'
 

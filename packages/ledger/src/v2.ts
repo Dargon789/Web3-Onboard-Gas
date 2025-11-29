@@ -1,11 +1,11 @@
-import type {
+import {
   Chain,
   WalletInit,
   EIP1193Provider,
   ProviderAccounts
-} from '@web3-onboard/common'
-import type { EthereumProvider as LedgerEthereumProvider } from '@ledgerhq/connect-kit/dist/umd/index.js'
-import type { LedgerOptionsWCv2 } from './index.js'
+} from '@subwallet-connect/common'
+import type { EthereumProvider as LedgerEthereumProvider } from '@ledgerhq/connect-kit-loader'
+import { isHexString, LedgerOptionsWCv2 } from './index.js'
 import type { JQueryStyleEventEmitter } from 'rxjs/internal/observable/fromEvent'
 
 // methods that require user interaction
@@ -15,18 +15,8 @@ const defaultOptionalMethods = [
   'personal_sign',
   'eth_sign',
   'eth_signTypedData',
-  'eth_signTypedData_v4',
-  'wallet_addEthereumChain',
-  'wallet_switchEthereumChain'
+  'eth_signTypedData_v4'
 ]
-
-const isHexString = (value: string | number) => {
-  if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
-    return false
-  }
-
-  return true
-}
 
 function ledger(options?: LedgerOptionsWCv2): WalletInit {
   if (!options?.projectId) {
@@ -37,11 +27,17 @@ function ledger(options?: LedgerOptionsWCv2): WalletInit {
 
   return () => {
     return {
+      type : 'evm',
       label: 'Ledger',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains, EventEmitter }) => {
-        const connectKit = await import('@ledgerhq/connect-kit/dist/umd')
+        const {
+          loadConnectKit,
+          SupportedProviders,
+          SupportedProviderImplementations
+        } = await import('@ledgerhq/connect-kit-loader')
 
+        const connectKit = await loadConnectKit()
         if (options?.enableDebugLogs) {
           connectKit.enableDebugLogs()
         }
@@ -59,7 +55,7 @@ function ledger(options?: LedgerOptionsWCv2): WalletInit {
             : defaultOptionalMethods
 
         const checkSupportResult = connectKit.checkSupport({
-          providerType: connectKit.SupportedProviders.Ethereum,
+          providerType: SupportedProviders.Ethereum,
           walletConnectVersion: 2,
           projectId: options?.projectId,
           chains: requiredChains,
@@ -84,7 +80,7 @@ function ledger(options?: LedgerOptionsWCv2): WalletInit {
         // return the Ledger Extension provider
         if (
           checkSupportResult.providerImplementation ===
-          connectKit.SupportedProviderImplementations.LedgerConnect
+          SupportedProviderImplementations.LedgerConnect
         ) {
           return {
             provider: instance
@@ -92,7 +88,7 @@ function ledger(options?: LedgerOptionsWCv2): WalletInit {
         }
 
         const { ProviderRpcError, ProviderRpcErrorCode } = await import(
-          '@web3-onboard/common'
+          '@subwallet-connect/common'
         )
         const { default: EthereumProvider } = await import(
           '@walletconnect/ethereum-provider'
@@ -110,8 +106,11 @@ function ledger(options?: LedgerOptionsWCv2): WalletInit {
           public connector: InstanceType<typeof EthereumProvider>
           public chains: Chain[]
           public disconnect: EIP1193Provider['disconnect']
+          // @ts-ignore
           public emit: typeof EventEmitter['emit']
+          // @ts-ignore
           public on: typeof EventEmitter['on']
+          // @ts-ignore
           public removeListener: typeof EventEmitter['removeListener']
 
           private disconnected$: InstanceType<typeof Subject>
@@ -215,7 +214,7 @@ function ledger(options?: LedgerOptionsWCv2): WalletInit {
                             ? chainId
                             : `0x${chainId.toString(16)}`
                           this.emit('chainChanged', hexChainId)
-                          resolve(this.connector.accounts as ProviderAccounts)
+                          resolve(this.connector.accounts)
                         },
                         error: reject
                       })
@@ -237,7 +236,7 @@ function ledger(options?: LedgerOptionsWCv2): WalletInit {
                       const chainId = this.connector.chainId
                       const hexChainId = `0x${chainId.toString(16)}`
                       this.emit('chainChanged', hexChainId)
-                      return resolve(accounts as ProviderAccounts)
+                      return resolve(accounts)
                     }
                   }
                 )
@@ -274,6 +273,13 @@ function ledger(options?: LedgerOptionsWCv2): WalletInit {
                       chainId: chainIdObj.chainId
                     }
                   ]
+                })
+              }
+
+              if(!this.connector.session){
+                throw new ProviderRpcError({
+                  code: ProviderRpcErrorCode.UNSUPPORTED_METHOD,
+                  message: `Your session has expired, you need to reload to create a new session.`
                 })
               }
 

@@ -1,7 +1,7 @@
-# @web3-onboard/bitkeep
+# @subwallet-connect/bitkeep
 
 ## (Deprecated) Wallet module for connecting Bitkeep to web3-onboard
-_Use [@web3-onboard/bitget](https://www.npmjs.com/package/@web3-onboard/bitget)_
+_Use [@subwallet-connect/bitget](https://www.npmjs.com/package/@subwallet-connect/bitget)_
 
 ## Wallet module for connecting Bitkeep Wallet through web3-onboard
 
@@ -10,16 +10,16 @@ Bitkeep Wallet SDK wallet module for connecting to Web3-Onboard. Web3-Onboard ma
 ### Install
 
 **NPM**
-`npm i @web3-onboard/core @web3-onboard/bitkeep`
+`npm i @subwallet-connect/core @subwallet-connect/bitkeep`
 
 **Yarn**
-`yarn add @web3-onboard/core @web3-onboard/bitkeep`
+`yarn add @subwallet-connect/core @subwallet-connect/bitkeep`
 
 ## Usage
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import bitkeepModule from '@web3-onboard/bitkeep'
+import Onboard from '@subwallet-connect/core'
+import bitkeepModule from '@subwallet-connect/bitkeep'
 
 const bitKeep = bitkeepModule()
 

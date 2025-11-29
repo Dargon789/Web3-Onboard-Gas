@@ -1,3 +1,4 @@
+
 <script lang="ts">
   import { shareReplay, startWith } from 'rxjs/operators'
   import { connectWallet$, switchChainModal$, wallets$ } from '../streams.js'
@@ -27,17 +28,23 @@
   const setPositioningDefaults = (targetComponentVariable: string) => {
     return {
       topLeft: `
-        top: var(--${targetComponentVariable}-position-top, 0); 
+        top: var(--${targetComponentVariable}-position-top, 24px);
         left: var(--${targetComponentVariable}-position-left, 0);`,
       topRight: `
-        top: var(--${targetComponentVariable}-position-top, 0); 
+        top: var(--${targetComponentVariable}-position-top, 24px);
         right: var(--${targetComponentVariable}-position-right, 0);`,
       bottomRight: `
-        bottom: var(--${targetComponentVariable}-position-bottom, 0); 
+        bottom: var(--${targetComponentVariable}-position-bottom, 0);
         right: var(--${targetComponentVariable}-position-right, 0);`,
       bottomLeft: `
-        bottom: var(--${targetComponentVariable}-position-bottom, 0); 
-        left: var(--${targetComponentVariable}-position-left, 0);`
+        bottom: var(--${targetComponentVariable}-position-bottom, 0);
+        left: var(--${targetComponentVariable}-position-left, 0);`,
+      topCenter:
+      ` top: var(--${targetComponentVariable}-position-top, 24px);
+        left: var(--${targetComponentVariable}-position-center, 50%);
+        transform: translate(-50%, -50%);
+      `
+
     }
   }
 
@@ -238,7 +245,6 @@
 
   :global(input[type='checkbox']) {
     -webkit-appearance: none;
-    appearance: none;
     width: auto;
     background: var(--onboard-white, var(--white));
     outline: 1px solid var(--onboard-gray-300, var(--gray-300));
@@ -309,7 +315,7 @@
   :global(a) {
     color: var(
       --onboard-link-color,
-      var(--onboard-primary-500, var(--primary-500))
+      var(--onboard-primary-500, var(--primary-2))
     );
     text-decoration: none;
   }
@@ -331,37 +337,86 @@
   }
 
   :global(.onboard-button-primary) {
-    background: var(--onboard-white, var(--white));
+    background: var(--onboard-primary-500, var(--primary-2));
     padding: calc(var(--onboard-spacing-5, var(--spacing-5)) - 1px)
       calc(var(--onboard-spacing-4, var(--spacing-4)) - 1px);
-    color: var(--onboard-gray-500, var(--gray-500));
+    color:  var(--white);
     font-size: var(--onboard-font-size-6, var(--font-size-6));
     line-height: var(--onboard-font-line-height-3, var(--font-line-height-3));
-    border: 1px solid var(--onboard-gray-500, var(--gray-500));
+    border: 1px solid transparent;
     font-weight: 600;
+    height: 40px;
+    border-radius: var(--border-radius-1);
   }
 
   :global(.button-neutral-solid) {
     width: 100%;
     border-radius: 8px;
-    background: var(--onboard-gray-500, var(--gray-500));
+    height: 52px;
+    margin-top: 0 !important;
+    background: var(--gray-800);
+    padding: var(--spacing-4);
     color: var(--onboard-white, var(--white));
     line-height: var(--onboard-font-line-height-3, var(--font-line-height-3));
   }
 
   :global(.button-neutral-solid-b) {
     width: 100%;
+    height: 52px;
+    padding: var(--spacing-4);
+    margin-top: 0 !important;
     background: var(--onboard-gray-100, var(--gray-100));
     color: var(--onboard-gray-500, var(--gray-500));
     line-height: var(--onboard-font-line-height-3, var(--font-line-height-3));
   }
 
+  :global(.button-neutral-danger){
+    height: 52px;
+    width: 100%;
+    padding: var(--spacing-4);
+    margin-top: 0 !important;
+    border-radius: var(--border-radius-5);
+    background: var(--danger-600);
+    color: var(--onboard-white, var(--white));
+    line-height: var(--onboard-font-line-height-3, var(--font-line-height-3));
+  }
+
+  :global(.button-neutral-confirm){
+    height: 52px;
+    width: 100%;
+    padding: var(--spacing-4);
+    margin-top: 0 !important;
+    border-radius: var(--border-radius-5);
+    background: var(--primary-2);
+    color: var(--onboard-white, var(--white));
+    line-height: var(--onboard-font-line-height-3, var(--font-line-height-3));
+  }
+
+  :global(.button-neutral-success){
+    height: 52px;
+    width: 100%;
+    padding: var(--spacing-4);
+    margin-top: 0 !important;
+    border-radius: var(--border-radius-5);
+    background: var(--success-500);
+    color: var(--onboard-white, var(--white));
+    line-height: var(--onboard-font-line-height-3, var(--font-line-height-3));
+  }
+
+
   :global(button.rounded) {
     border-radius: 24px;
   }
 
+  :global(.button-neutral-danger:hover) {
+    background: var(--danger-500);
+  }
+  :global(.button-neutral-confirm:hover) {
+    background: var(--primary-3);
+  }
+
   :global(.button-neutral-solid:hover) {
-    background: var(--onboard-gray-700, var(--gray-700));
+    background: var(--onboard-gray-500, var(--gray-500));
   }
   :global(.button-neutral-solid-b:hover) {
     background: var(--onboard-gray-200, var(--gray-200));
@@ -382,6 +437,10 @@
     pointer-events: none;
     touch-action: none;
     width: 100%;
+  }
+
+  .z-indexed-notify{
+    z-index: 10000;
   }
 
   .z-indexed {
@@ -407,6 +466,16 @@
   <SwitchChain />
 {/if}
 
+{#if !$accountCenter$.enabled && !$notify$.enabled}
+  <div
+    class="container flex flex-column fixed z-indexed"
+    style="top: 0; right: 0; {device.type === 'mobile'
+      ? 'padding-bottom: 0;'
+      : ''} "
+    id="w3o-transaction-preview-container"
+  />
+{/if}
+
 {#if displayAccountCenterNotifySameContainer}
   <div
     class="container flex flex-column fixed z-indexed"
@@ -430,6 +499,9 @@
         {/if}
       {/await}
     {/if}
+    {#if $accountCenter$.position.includes('bottom')}
+      <div id="w3o-transaction-preview-container6" style="margin-bottom: 8px;" />
+    {/if}
     <div id="account-center-with-notify">
       {#await accountCenterComponent then AccountCenter}
         {#if AccountCenter}
@@ -437,6 +509,9 @@
         {/if}
       {/await}
     </div>
+    {#if $accountCenter$.position.includes('top')}
+      <div id="w3o-transaction-preview-container5" style="margin-top: 8px;" />
+    {/if}
     {#if $notify$.position.includes('top') && $accountCenter$.position.includes('top') && samePositionOrMobile}
       {#await notifyComponent then Notify}
         {#if Notify}
@@ -462,6 +537,9 @@
       ? 'padding-top:0;'
       : ''} "
   >
+    {#if $accountCenter$.position.includes('bottom')}
+      <div id="w3o-transaction-preview-container4" style="margin-bottom: 8px;" />
+    {/if}
     <div>
       {#if $accountCenter$.enabled && $wallets$.length}
         {#await accountCenterComponent then AccountCenter}
@@ -471,11 +549,14 @@
         {/await}
       {/if}
     </div>
+    {#if $accountCenter$.position.includes('top')}
+      <div id="w3o-transaction-preview-container3" style="margin-top: 8px;" />
+    {/if}
   </div>
 {/if}
 {#if displayNotifySeparate}
   <div
-    class="container flex flex-column fixed z-indexed"
+    class="container flex flex-column fixed z-indexed-notify"
     style="{setPositioningDefaults(notifyPositioning)[
       $notify$.position
     ]}; {device.type === 'mobile' && $notify$.position.includes('top')
@@ -484,6 +565,9 @@
       ? 'padding-top:0;'
       : ''} "
   >
+    {#if $notify$.position.includes('top')}
+      <div id="w3o-transaction-preview-container2" />
+    {/if}
     {#await notifyComponent then Notify}
       {#if Notify}
         <svelte:component
@@ -494,5 +578,8 @@
         />
       {/if}
     {/await}
+    {#if $notify$.position.includes('bottom')}
+      <div id="w3o-transaction-preview-container1" />
+    {/if}
   </div>
 {/if}

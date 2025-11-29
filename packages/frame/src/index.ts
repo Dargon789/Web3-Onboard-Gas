@@ -1,4 +1,4 @@
-import { WalletInit } from '@web3-onboard/common'
+import { WalletInit } from '@subwallet-connect/common'
 
 async function getProvider() {
   const injected = (window as any).ethereum
@@ -15,6 +15,7 @@ function frame(): WalletInit {
   return () => {
     return {
       label: 'Frame',
+      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async () => {
         const provider = await getProvider()

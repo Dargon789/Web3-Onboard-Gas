@@ -8,3 +8,5 @@ export {
 } from './hdwallets.js'
 
 export * from './types.js'
+export * from './utils.js'
+

@@ -1,5 +1,5 @@
 export default `
-<svg height="100%" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="100%" height="100%" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_1607_202)">
 <mask id="mask0_1607_202" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="32" height="32">
 <path d="M32 0H0V32H32V0Z" fill="white"/>

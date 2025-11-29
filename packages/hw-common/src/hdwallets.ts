@@ -1,5 +1,5 @@
 import type Common from '@ethereumjs/common'
-import type { EIP1193Provider, RPCResponse } from '@web3-onboard/common'
+import type { EIP1193Provider, RPCResponse } from '@subwallet-connect/common'
 import type { CustomNetwork } from './types.js'
 import type { BigNumber, providers } from 'ethers'
 
@@ -87,6 +87,8 @@ export const bigNumberFieldsToStrings = (
     transaction
   ) as StringifiedTransactionRequest
 
+
+
 /**
  * Helper method for hardware wallets to build an object
  * with a request method used for making rpc requests.
@@ -97,7 +99,9 @@ export const bigNumberFieldsToStrings = (
 export const getHardwareWalletProvider = (
   getRpcUrl: () => string
 ): { request: EIP1193Provider['request'] } => ({
-  request: ({ method, params }) =>
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+  request: ({ method, params })  =>
     fetch(getRpcUrl(), {
       method: 'POST',
       headers: {

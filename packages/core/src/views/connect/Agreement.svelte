@@ -73,7 +73,7 @@
         {/if}
         {#if privacyUrl}<a href={privacyUrl} target="_blank"
             >{$_('connect.selectingWallet.agreement.privacy')}</a
-          >.{/if}
+          >{/if}
       </span>
     </label>
   </div>

@@ -2,7 +2,7 @@
   <img alt="Web3-Onboard UI Components" src="https://github.com/blocknative/web3-onboard/blob/develop/assets/core.svg?raw=true" />
 </a>
 
-# @web3-onboard/core
+# @subwallet-connect/core
 
 This is the core package that contains all of the UI and logic to be able to seamlessly connect user's wallets to your app and track the state of those wallets. Onboard no longer contains any wallet specific code, so wallets need to be passed in upon initialization.
 
@@ -38,25 +38,25 @@ Checkout our full library of quick start examples for connecting and interacting
 
 Install the core module:
 
-`npm i @web3-onboard/core`
+`npm i @subwallet-connect/core`
 
 If you would like to support all wallets, then you can install all of the wallet modules:
 
 ```bash
-npm i @web3-onboard/coinbase @web3-onboard/fortmatic @web3-onboard/gnosis @web3-onboard/infinity-wallet @web3-onboard/trust
-@web3-onboard/injected-wallets @web3-onboard/keepkey @web3-onboard/keystone
-@web3-onboard/ledger @web3-onboard/magic @web3-onboard/portis @web3-onboard/torus
-@web3-onboard/trezor @web3-onboard/walletconnect @web3-onboard/web3auth
-@web3-onboard/dcent @web3-onboard/sequence @web3-onboard/enkrypt
-@web3-onboard/mew-wallet @web3-onboard/uauth @web3-onboard/zeal @web3-onboard/frontier
+npm i @subwallet-connect/coinbase @subwallet-connect/fortmatic @subwallet-connect/gnosis @subwallet-connect/infinity-wallet @subwallet-connect/trust
+@subwallet-connect/injected-wallets @subwallet-connect/keepkey @subwallet-connect/keystone
+@subwallet-connect/ledger @subwallet-connect/magic @subwallet-connect/portis @subwallet-connect/torus
+@subwallet-connect/trezor @subwallet-connect/walletconnect @subwallet-connect/web3auth
+@subwallet-connect/dcent @subwallet-connect/sequence @subwallet-connect/enkrypt
+@subwallet-connect/mew-wallet @subwallet-connect/uauth @subwallet-connect/zeal @subwallet-connect/frontier
 ```
 
 Note:
 
 - All wallet modules (except for `injected-wallets`) require extra dependencies and may require polyfilling the node built in modules for the browser. See the [Build Environments](#build-environments) section for more info
-- **If using React** you may be interested in checking out the React Hooks package here - https://www.npmjs.com/package/@web3-onboard/react
-- **If using Solid** you may be interested in checking out the Solid package here - https://www.npmjs.com/package/@web3-onboard/solid
-- **If using Vue** you may be interested in checking out the Vue package here - https://www.npmjs.com/package/@web3-onboard/vue
+- **If using React** you may be interested in checking out the React Hooks package here - https://www.npmjs.com/package/@subwallet-connect/react
+- **If using Solid** you may be interested in checking out the Solid package here - https://www.npmjs.com/package/@subwallet-connect/solid
+- **If using Vue** you may be interested in checking out the Vue package here - https://www.npmjs.com/package/@subwallet-connect/vue
 
 ## Initialization
 
@@ -254,9 +254,9 @@ type ConnectModalOptions = {
    */
   removeIDontHaveAWalletInfoLink?: boolean
   /**
-   * @deprecated Has no effect unless `@web3-onboard/unstoppable-resolution`
+   * @deprecated Has no effect unless `@subwallet-connect/unstoppable-resolution`
    * package has been added and passed into the web3-onboard initialization
-   * In this case remove the `@web3-onboard/unstoppable-resolution` package
+   * In this case remove the `@subwallet-connect/unstoppable-resolution` package
    * to remove unstoppableDomain resolution support
    */
   disableUDResolution?: boolean
@@ -544,8 +544,8 @@ interface UpdateNotification {
 Putting it all together, here is an example initialization with the injected wallet modules:
 
 ```javascript
-import Onboard from '@web3-onboard/core'
-import injectedModule from '@web3-onboard/injected-wallets'
+import Onboard from '@subwallet-connect/core'
+import injectedModule from '@subwallet-connect/injected-wallets'
 
 const injected = injectedModule()
 
@@ -843,10 +843,10 @@ A limited subset of internal actions are exposed to update the Onboard state.
 For updating the wallets that are displayed in the wallet selection modal. This can be used if the wallets you want to support is conditional on another user action within your app. The `setWalletModules` action is called with an updated array of wallets (the same wallets that are passed in on initialization)
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import injectedModule from '@web3-onboard/injected-wallets'
-import ledgerModule from '@web3-onboard/ledger'
-import trezorModule from '@web3-onboard/trezor'
+import Onboard from '@subwallet-connect/core'
+import injectedModule from '@subwallet-connect/injected-wallets'
+import ledgerModule from '@subwallet-connect/ledger'
+import trezorModule from '@subwallet-connect/trezor'
 
 const injected = injectedModule()
 const ledger = ledgerModule()
@@ -897,8 +897,8 @@ The function also accepts a custom built `ThemingMap` object that contains all o
 Example:
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import injectedModule from '@web3-onboard/injected-wallets'
+import Onboard from '@subwallet-connect/core'
+import injectedModule from '@subwallet-connect/injected-wallets'
 
 const injected = injectedModule()
 
@@ -1437,7 +1437,7 @@ const config = {
       },
       build: {
         rollupOptions: {
-          external: ['@web3-onboard/*'],
+          external: ['@subwallet-connect/*'],
           plugins: [nodePolyfills({ crypto: true, http: true })]
         },
         commonjsOptions: {
@@ -1447,9 +1447,9 @@ const config = {
       optimizeDeps: {
         exclude: ['@ethersproject/hash', 'wrtc', 'http'],
         include: [
-          '@web3-onboard/core',
-          '@web3-onboard/gas',
-          '@web3-onboard/sequence',
+          '@subwallet-connect/core',
+          '@subwallet-connect/gas',
+          '@subwallet-connect/sequence',
           'js-sha3',
           '@ethersproject/bignumber'
         ]
@@ -1525,7 +1525,7 @@ const config: UserConfig = {
   },
   build: {
     rollupOptions: {
-      external: ['@web3-onboard/*'],
+      external: ['@subwallet-connect/*'],
       plugins: [
         nodePolyfills({ include: ['crypto', 'http'] }),
         inject({ Buffer: ['buffer', 'Buffer'] })
@@ -1538,9 +1538,9 @@ const config: UserConfig = {
   optimizeDeps: {
     exclude: ['@ethersproject/hash', 'wrtc', 'http'],
     include: [
-      '@web3-onboard/core',
-      '@web3-onboard/gas',
-      '@web3-onboard/sequence',
+      '@subwallet-connect/core',
+      '@subwallet-connect/gas',
+      '@subwallet-connect/sequence',
       'js-sha3',
       '@ethersproject/bignumber',
       '@safe-global/safe-apps-sdk',
@@ -1622,7 +1622,7 @@ export default {
   },
   build: {
     rollupOptions: {
-      external: ['@web3-onboard/*'],
+      external: ['@subwallet-connect/*'],
       plugins: [
         nodePolyfills({ include: ['crypto', 'http'] }),
         inject({ Buffer: ['buffer', 'Buffer'] })
@@ -1635,9 +1635,9 @@ export default {
   optimizeDeps: {
     exclude: ['@ethersproject/hash', 'wrtc', 'http'],
     include: [
-      '@web3-onboard/core',
-      '@web3-onboard/gas',
-      '@web3-onboard/sequence',
+      '@subwallet-connect/core',
+      '@subwallet-connect/gas',
+      '@subwallet-connect/sequence',
       'js-sha3',
       '@ethersproject/bignumber'
     ],

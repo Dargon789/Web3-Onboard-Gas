@@ -1,5 +1,20 @@
-import type { WalletInit } from '@web3-onboard/common'
+import type { WalletInit } from '@subwallet-connect/common'
 import v2 from './v2.js'
+
+export type LedgerOptionsWCv1 = {
+  /**
+   * @deprecated
+   * Version 1 of WalletConnect has been deprecated by the WC team and the WC bridge is not available.
+   * To use version 1 a custom bridge url will need to be provided.
+   * Support will be completely remove from Web3-Onboard in the future
+   */
+  walletConnectVersion?: 1
+  enableDebugLogs?: boolean
+  chainId?: number
+  bridge?: string
+  infuraId?: string
+  rpc?: { [chainId: number]: string }
+}
 
 export type LedgerOptionsWCv2 = {
   walletConnectVersion: 2
@@ -23,7 +38,17 @@ export type LedgerOptionsWCv2 = {
   optionalEvents?: string[]
 }
 
-function ledger(options?: LedgerOptionsWCv2): WalletInit {
+export type LedgerOptions = LedgerOptionsWCv1 | LedgerOptionsWCv2
+
+export const isHexString = (value: string | number) => {
+  if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
+    return false
+  }
+
+  return true
+}
+
+function ledger(options?: LedgerOptions): WalletInit {
   return v2(options as LedgerOptionsWCv2)
 }
 

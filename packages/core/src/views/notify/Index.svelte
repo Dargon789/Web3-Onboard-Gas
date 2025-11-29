@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { _ } from 'svelte-i18n'
   import { flip } from 'svelte/animate'
   import { fade, fly } from 'svelte/transition'
   import { cubicOut } from 'svelte/easing'
@@ -62,6 +61,7 @@
     padding-left: 0;
     display: flex;
     flex-flow: column nowrap;
+    position: absolute;
     font-size: var(
       --notify-onboard-font-size,
       var(--onboard-font-size-5, var(--font-size-5))
@@ -70,7 +70,7 @@
     overflow: visible;
     scrollbar-width: none;
     box-sizing: border-box;
-    z-index: var(--notify-onboard-z-index, 300);
+    z-index: var(--notify-onboard-z-index, 10000);
     font-family: var(
       --notify-onboard-font-family,
       var(--onboard-font-family-normal, inherit)

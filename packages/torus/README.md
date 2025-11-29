@@ -1,10 +1,10 @@
-# @web3-onboard/torus
+# @subwallet-connect/torus
 
 ## Wallet module for connecting Torus wallet to web3-onboard
 
 ### Install
 
-`npm i @web3-onboard/torus`
+`npm i @subwallet-connect/torus`
 
 ## Options
 
@@ -13,8 +13,8 @@ See the [Torus Docs](https://docs.tor.us/wallet/api-reference/class) for the ext
 ## Usage
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import torusModule from '@web3-onboard/torus'
+import Onboard from '@subwallet-connect/core'
+import torusModule from '@subwallet-connect/torus'
 
 const torus = torusModule()
 

@@ -1,4 +1,4 @@
-export default `<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+export default `<svg width="100%" height="100%" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_647_7759)">
 <circle cx="64" cy="64" r="64" fill="#0B1712"/>
 <mask id="mask0_647_7759" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="128" height="128">

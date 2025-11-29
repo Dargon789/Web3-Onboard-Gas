@@ -1,27 +1,24 @@
 import type { SvelteComponent } from 'svelte'
-
+import type { InjectedMetadata } from '@polkadot/extension-inject/types';
 import type {
   AppMetadata,
-  Address,
   Device,
   WalletInit,
   EIP1193Provider,
   WalletModule,
   Chain,
   TokenSymbol,
-  ChainWithDecimalId,
-  DeviceNotBrowser
-} from '@web3-onboard/common'
-
-import type gas from '@web3-onboard/gas'
-import type unstoppableResolution from '@web3-onboard/unstoppable-resolution'
+  ChainWithDecimalId, AccountAddress, SubstrateProvider
+} from '@subwallet-connect/common'
+import type { WalletConnectModal } from '@walletconnect/modal';
+import type gas from '@subwallet-connect/gas'
+import type unstoppableResolution from '@subwallet-connect/unstoppable-resolution'
+import type { TransactionPreviewAPI } from '@subwallet-connect/transaction-preview'
 
 import type en from './i18n/en.json'
-import type { Network } from 'bnc-sdk'
-import type { GetEnsTextReturnType } from 'viem'
-import type { Config, Connector, WagmiModuleAPI } from '@web3-onboard/wagmi'
-import type wagmi from '@web3-onboard/wagmi'
-export type { Config as WagmiConfig } from '@web3-onboard/wagmi'
+import type { EthereumTransactionData, Network } from 'bnc-sdk'
+import type { Signer } from  '@polkadot/types/types';
+import type { WalletConnectModalConfig } from '@walletconnect/modal/dist/_types/src/client';
 
 export interface InitOptions {
   /**
@@ -49,8 +46,8 @@ export interface InitOptions {
    */
   accountCenter?: AccountCenterOptions
   /**
-   * @deprecated apiKey parameter has been deprecated and is no
-   * longer used within Web3-Onboard to provide notifications
+   * Opt in to Blocknative value add services (transaction updates) by providing
+   * your Blocknative API key, head to https://explorer.blocknative.com/account
    */
   apiKey?: string
   /**
@@ -59,10 +56,6 @@ export interface InitOptions {
   notify?: Partial<NotifyOptions> | Partial<Notify>
   /** Gas module */
   gas?: typeof gas
-  /** Web3-Onboard module to add Wagmi support
-   * see https://www.npmjs.com/package/@web3-onboard/wagmi
-   */
-  wagmi?: typeof wagmi
   /**
    * Object mapping for W3O components with the key being the DOM
    * element to mount the component to, this defines the DOM container
@@ -70,12 +63,9 @@ export interface InitOptions {
    */
   containerElements?: Partial<ContainerElements>
   /**
-   * @deprecated Transaction Preview support has ended and Transaction Preview
-   * is no longer supported as part of Web3-Onboard.
-   * Please remove from your onboard config to avoid
-   * console errors and un-expected behavior
+   * Transaction Preview module
    */
-  transactionPreview?: unknown
+  transactionPreview?: TransactionPreviewAPI
   /**
    * Custom or predefined theme for Web3Onboard
    * BuiltInThemes: ['default', 'dark', 'light', 'system']
@@ -96,7 +86,12 @@ export interface InitOptions {
    * address resolution similar to that of ens (Ethereum Name Service)
    * ENS resolution will take president if available
    */
-  unstoppableResolution?: typeof unstoppableResolution
+  unstoppableResolution?: typeof unstoppableResolution,
+
+  wcConfigOption ?: WalletConnectModalConfig
+
+  chainsPolkadot: Chain[]
+
 }
 
 export type Theme = ThemingMap | BuiltInThemes | 'system'
@@ -110,10 +105,11 @@ export type ThemingMap = {
   '--w3o-text-color'?: string
   '--w3o-border-color'?: string
   '--w3o-action-color'?: string
-  '--w3o-border-radius'?: string
+  '--w3o-border-radius'?: string,
+  '--w3o-background-color-item'?: string,
 }
 export interface ConnectOptions {
-  autoSelect?: { label: string; disableModals: boolean }
+  autoSelect?: { label: string; disableModals: boolean, type : WalletState['type'] }
 }
 
 export interface ConnectOptionsString {
@@ -121,7 +117,8 @@ export interface ConnectOptionsString {
 }
 
 export interface DisconnectOptions {
-  label: string // wallet name to disconnect
+  label: string,
+  type: 'substrate' | 'evm'// wallet name to disconnect
 }
 
 export interface WalletWithLoadedIcon extends Omit<WalletModule, 'getIcon'> {
@@ -129,7 +126,7 @@ export interface WalletWithLoadedIcon extends Omit<WalletModule, 'getIcon'> {
 }
 
 export interface WalletWithLoadingIcon
-  extends Omit<WalletWithLoadedIcon, 'icon'> {
+    extends Omit<WalletWithLoadedIcon, 'icon'> {
   icon: Promise<string>
 }
 
@@ -141,19 +138,15 @@ export type ConnectedChain = {
 export interface WalletState {
   label: string //  wallet name
   icon: string // wallet icon svg string
-  provider: EIP1193Provider
+  provider: EIP1193Provider | SubstrateProvider
   accounts: Account[]
   // in future it will be possible that a wallet
   // is connected to multiple chains at once
   chains: ConnectedChain[]
-  instance?: unknown
-  /**
-   * WAGMI Connector object
-   * Can be used to leverage all WAGMI functions from
-   * the @web3-onboard/wagmi module
-   * See https://www.npmjs.com/package/@web3-onboard/wagmi for more details
-   */
-  wagmiConnector?: Connector
+  instance?: unknown,
+  signer ?: Signer | undefined,
+  metadata ?: InjectedMetadata,
+  type : 'evm' | 'substrate'
 }
 
 export type Account = {
@@ -162,7 +155,9 @@ export type Account = {
   uns: Uns | null
   balance: Balances | null
   secondaryTokens?: SecondaryTokenBalances[] | null
+  message ?: string
 }
+
 
 export type Balances = Record<TokenSymbol, string> | null
 
@@ -174,15 +169,21 @@ export interface SecondaryTokenBalances {
 
 export interface Ens {
   name: string
-  avatar: string | null
-  contentHash: Address | null
-  ensResolver: Address | null
-  getText: (key: string) => Promise<GetEnsTextReturnType>
+  avatar: Avatar | null
+  contentHash: string | null
+  getText: (key: string) => Promise<string | undefined>
 }
 
 export interface Uns {
   name: string
 }
+
+export type Avatar = {
+  url: string
+  linkage: Array<{ type: string; content: string }>
+}
+
+export type Address = string
 
 export interface AppState {
   chains: Chain[]
@@ -193,8 +194,7 @@ export interface AppState {
   notify: Notify
   notifications: Notification[]
   connect: ConnectModalOptions
-  appMetadata: AppMetadata | null
-  wagmiConfig: Config | null
+  appMetadata: AppMetadata
 }
 
 export type Configuration = {
@@ -202,15 +202,10 @@ export type Configuration = {
   device: Device | DeviceNotBrowser
   initialWalletInit: WalletInit[]
   appMetadata?: AppMetadata | null
-  /**
-   * @deprecated APIKey parameter has been deprecated and is no
-   * longer used within Web3-Onboard
-   */
   apiKey?: string
   gas?: typeof gas
-  wagmi?: WagmiModuleAPI
   containerElements?: ContainerElements
-  transactionPreview?: unknown
+  transactionPreview?: TransactionPreviewAPI
   unstoppableResolution?: typeof unstoppableResolution
 }
 
@@ -273,19 +268,20 @@ export type ConnectModalOptions = {
    */
   removeIDontHaveAWalletInfoLink?: boolean
   /**
-   * @deprecated Has no effect unless `@web3-onboard/unstoppable-resolution`
+   * @deprecated Has no effect unless `@subwallet-connect/unstoppable-resolution`
    * package has been added and passed into the web3-onboard initialization
-   * In this case remove the `@web3-onboard/unstoppable-resolution` package
+   * In this case remove the `@subwallet-connect/unstoppable-resolution` package
    * to remove unstoppableDomain resolution support
    */
   disableUDResolution?: boolean
 }
 
 export type CommonPositions =
-  | 'topRight'
-  | 'bottomRight'
-  | 'bottomLeft'
-  | 'topLeft'
+    | 'topRight'
+    | 'bottomRight'
+    | 'bottomLeft'
+    | 'topLeft'
+    | 'topCenter'
 
 export type AccountCenterPosition = CommonPositions
 
@@ -371,8 +367,18 @@ export type Notify = {
    */
   enabled: boolean
   /**
+   * Callback that receives all transaction events
+   * Return a custom notification based on the event
+   * Or return false to disable notification for this event
+   * Or return undefined for a default notification
+   */
+  transactionHandler: (
+      event: EthereumTransactionData
+  ) => TransactionHandlerReturn
+  /**
    * Position of notifications that defaults to the same position as the
    * Account Center (if enabled) of the top right if AC is disabled
+   * and notifications are enabled (enabled by default with API key)
    */
   position?: NotificationPosition
   replacement?: {
@@ -391,7 +397,7 @@ export type NotifyOptions = {
 export type Notification = {
   id: string
   key: string
-  network: Network
+  network: Network | string
   startTime?: number
   /**
    * to completely customize the message shown
@@ -427,11 +433,11 @@ export type Notification = {
 export type TransactionHandlerReturn = CustomNotification | boolean | void
 
 export type CustomNotification = Partial<
-  Omit<Notification, 'startTime' | 'network' | 'id' | 'key'>
+    Omit<Notification, 'startTime' | 'network' | 'id' | 'key'>
 >
 
 export type CustomNotificationUpdate = Partial<
-  Omit<Notification, 'startTime' | 'network'>
+    Omit<Notification, 'startTime' | 'network'>
 >
 
 export type NotificationType = 'pending' | 'success' | 'error' | 'hint'
@@ -443,6 +449,15 @@ export interface UpdateNotification {
   }
 }
 
+export interface PreflightNotificationsOptions {
+  sendTransaction?: (fn: (hash: string) => void) => Promise<string | void>
+  estimateGas?: () => Promise<string>
+  gasPrice?: () => Promise<string>
+  balance?: string | number
+  txDetails?: TxDetails
+  txApproveReminderTimeout?: number
+}
+
 export interface TxDetails {
   value: string | number
   to?: string
@@ -451,23 +466,23 @@ export interface TxDetails {
 
 // ==== ACTIONS ==== //
 export type Action =
-  | AddChainsAction
-  | UpdateChainsAction
-  | AddWalletAction
-  | UpdateWalletAction
-  | RemoveWalletAction
-  | ResetStoreAction
-  | UpdateAccountAction
-  | UpdateAccountCenterAction
-  | SetWalletModulesAction
-  | SetLocaleAction
-  | UpdateNotifyAction
-  | AddNotificationAction
-  | RemoveNotificationAction
-  | UpdateAllWalletsAction
-  | UpdateConnectModalAction
-  | UpdateAppMetadataAction
-  | UpdateWagmiConfigAction
+    | AddChainsAction
+    | UpdateChainsAction
+    | AddWalletAction
+    | UpdateWalletAction
+    | RemoveWalletAction
+    | ResetStoreAction
+    | UpdateAccountAction
+    | UpdateAccountCenterAction
+    | SetWalletModulesAction
+    | SetLocaleAction
+    | UpdateNotifyAction
+    | AddNotificationAction
+    | RemoveNotificationAction
+    | UpdateAllWalletsAction
+    | UpdateConnectModalAction
+    | UpdateAppMetadataAction
+    | SendSignMessage
 
 export type AddChainsAction = { type: 'add_chains'; payload: Chain[] }
 export type UpdateChainsAction = { type: 'update_chains'; payload: Chain }
@@ -475,12 +490,12 @@ export type AddWalletAction = { type: 'add_wallet'; payload: WalletState }
 
 export type UpdateWalletAction = {
   type: 'update_wallet'
-  payload: { id: string } & Partial<WalletState>
+  payload: { id: string, type : WalletState['type'] } & Partial<WalletState>
 }
 
 export type RemoveWalletAction = {
   type: 'remove_wallet'
-  payload: { id: string }
+  payload: { id: string, type : WalletState['type'] }
 }
 
 export type ResetStoreAction = {
@@ -490,7 +505,7 @@ export type ResetStoreAction = {
 
 export type UpdateAccountAction = {
   type: 'update_account'
-  payload: { id: string; address: Address } & Partial<Account>
+  payload: { id: string; address: string; walletType: WalletState['type'] } & Partial<Account>
 }
 
 export type UpdateAccountCenterAction = {
@@ -538,9 +553,9 @@ export type UpdateAppMetadataAction = {
   payload: AppMetadata | Partial<AppMetadata>
 }
 
-export type UpdateWagmiConfigAction = {
-  type: 'update_wagmi_config'
-  payload: Config
+export type SendSignMessage = {
+  type : 'send_sign_message',
+  payload : string
 }
 
 // ==== MISC ==== //
@@ -556,6 +571,12 @@ export type NotifyEventStyles = {
   iconColor?: string
 }
 
+export type DeviceNotBrowser = {
+  type: null
+  os: null
+  browser: null
+}
+
 export type WalletPermission = {
   id: string
   parentCapability: string
@@ -566,4 +587,26 @@ export type WalletPermission = {
   }[]
 
   date: number
+}
+
+export type WalletConnectState = {
+  signer ?: Signer,
+  metadata ?: InjectedMetadata
+  address : AccountAddress[]
+}
+
+export type ModalQrConnect = {
+  isOpen : boolean,
+  modal ?: WalletConnectModal
+}
+
+export type PlatformType = 'Extension' | 'WebApp' | 'Cold Wallet' | 'QRcode' | 'Dapp' | 'Mobile';
+
+export interface WalletStateDeviceInterface  {
+  platform : PlatformType[],
+  namespace?: string
+}
+
+export interface CustomWindow extends Window  {
+  ethereum: EIP1193Provider & Record<string, boolean | undefined>
 }

@@ -1,5 +1,5 @@
 export default `
-<svg height="100%" viewBox="0 0 218 256" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="100%" height="100%" viewBox="0 0 218 256" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>brave-browser</title>
     <defs>
         <linearGradient x1="0%" y1="50.7055163%" x2="100%" y2="50.7055163%" id="linearGradient-1">

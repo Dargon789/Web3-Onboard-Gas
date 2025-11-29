@@ -3,9 +3,9 @@ import type {
   CustomNetwork,
   Platform,
   WalletInit
-} from '@web3-onboard/common'
+} from '@subwallet-connect/common'
 
-import type { Account, ScanAccountsOptions } from '@web3-onboard/hw-common'
+import type { Account, ScanAccountsOptions } from '@subwallet-connect/hw-common'
 import type { StaticJsonRpcProvider } from '@ethersproject/providers'
 
 const DEFAULT_BASE_PATH = "m/44'/60'/0'/0"
@@ -43,11 +43,12 @@ const getAccount = async (
 const generateAccounts = async (
   keyring: any,
   provider: StaticJsonRpcProvider,
-  consecutiveEmptyAccounts: number
+  consecutiveEmptyAccounts: number,
+  accountIdxStart: number
 ): Promise<Account[]> => {
   const accounts = []
   let zeroBalanceAccounts = 0,
-    index = 0
+    index = accountIdxStart
 
   while (zeroBalanceAccounts < consecutiveEmptyAccounts) {
     const account = await getAccount(keyring, provider, index)
@@ -65,11 +66,11 @@ const generateAccounts = async (
 }
 
 function keystone({
-  customNetwork,
-  filter,
-  containerElement,
-  consecutiveEmptyAccountThreshold
-}: {
+                    customNetwork,
+                    filter,
+                    containerElement,
+                    consecutiveEmptyAccountThreshold
+                  }: {
   customNetwork?: CustomNetwork
   filter?: Platform[]
   containerElement?: string
@@ -91,17 +92,18 @@ function keystone({
     if (filtered) return null
 
     return {
+      type: 'evm',
       label: 'Keystone',
       getIcon,
       getInterface: async ({ EventEmitter, chains }) => {
 
         const { StaticJsonRpcProvider } = await import(
           '@ethersproject/providers'
-        )
+          )
 
         let { default: AirGappedKeyring } = await import(
           '@keystonehq/eth-keyring'
-        )
+          )
 
         // Super weird esm issue where the default export is an object with a property default on it
         // if that is the case then we just grab the default value
@@ -109,25 +111,25 @@ function keystone({
         AirGappedKeyring =
           'default' in AirGappedKeyring
             ? // @ts-ignore
-              AirGappedKeyring.default
+            AirGappedKeyring.default
             : AirGappedKeyring
 
         const { TransactionFactory: Transaction } = await import(
           '@ethereumjs/tx'
-        )
+          )
 
         const {
           createEIP1193Provider,
           ProviderRpcError,
           ProviderRpcErrorCode
-        } = await import('@web3-onboard/common')
+        } = await import('@subwallet-connect/common')
 
         const {
           accountSelect,
           getCommon,
           bigNumberFieldsToStrings,
           getHardwareWalletProvider
-        } = await import('@web3-onboard/hw-common')
+        } = await import('@subwallet-connect/hw-common')
 
         const consecutiveEmptyAccounts = consecutiveEmptyAccountThreshold || 5
         const keyring = AirGappedKeyring.getEmptyKeyring()
@@ -139,7 +141,8 @@ function keystone({
 
         let currentChain: Chain = chains[0]
         const scanAccounts = async ({
-          chainId
+          chainId,
+          accountIdxStart
         }: ScanAccountsOptions): Promise<Account[]> => {
           currentChain =
             chains.find(({ id }: Chain) => id === chainId) || currentChain
@@ -148,7 +151,8 @@ function keystone({
           return generateAccounts(
             keyring,
             ethersProvider,
-            consecutiveEmptyAccounts
+            consecutiveEmptyAccounts,
+            accountIdxStart
           )
         }
 

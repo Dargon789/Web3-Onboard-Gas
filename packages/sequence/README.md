@@ -1,12 +1,12 @@
-# @web3-onboard/sequence
+# @subwallet-connect/sequence
 
 ## Wallet module for connecting Sequence wallet to web3-onboard
 
 ### Install
 
-`npm i @web3-onboard/sequence 0xsequence ethers`  
+`npm i @subwallet-connect/sequence 0xsequence ethers`  
 or  
-`yarn add @web3-onboard/sequence 0xsequence ethers`
+`yarn add @subwallet-connect/sequence 0xsequence ethers`
 
 ## Options
 
@@ -20,8 +20,8 @@ type SequenceOptions {
 ## Usage
 
 ```typescript
-import Onboard from '@web3-onboard/core'
-import sequenceModule from '@web3-onboard/sequence'
+import Onboard from '@subwallet-connect/core'
+import sequenceModule from '@subwallet-connect/sequence'
 
 const sequence = sequenceModule({
   appName: 'My app'

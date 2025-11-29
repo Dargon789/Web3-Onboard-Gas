@@ -1,4 +1,4 @@
-import { WalletInit } from '@web3-onboard/common'
+import { WalletInit } from '@subwallet-connect/common'
 
 function walletLink(options?: { darkMode?: boolean }): WalletInit {
   const { darkMode = false } = options || {}
@@ -6,6 +6,7 @@ function walletLink(options?: { darkMode?: boolean }): WalletInit {
   return () => {
     return {
       label: 'Coinbase',
+      type: 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains, appMetadata }) => {
         const [chain] = chains
@@ -52,6 +53,6 @@ function walletLink(options?: { darkMode?: boolean }): WalletInit {
 }
 
 /**
- * @deprecated Use @web3-onboard/coinbase
+ * @deprecated Use @subwallet-connect/coinbase
  */
 export default walletLink

@@ -9,13 +9,13 @@ import type { SelectAccountOptions, Account } from './types.js'
 const accountSelect = async (
   options: SelectAccountOptions
 ): Promise<Account[]> => {
-  if (options) {
-    const error = validateSelectAccountOptions(options)
-
-    if (error) {
-      throw error
-    }
-  }
+  // if (options) {
+  //   const error = validateSelectAccountOptions(options)
+  //
+  //   if (error) {
+  //     throw error
+  //   }
+  // }
 
   const app = mountAccountSelect(options, accounts$)
 
@@ -53,20 +53,30 @@ const mountAccountSelect = (
         /* COLORS */
         --white: white;
         --black: black;
-        --primary-100: #eff1fc;
-        --primary-200: #d0d4f7;
-        --primary-300: #b1b8f2;
-        --primary-500: #6370e5;
-        --primary-600: #454ea0;
+        --primary-100: #a0c7fa;
+        --primary-200: #76aaf7;
+        --primary-300: #4e8af2;
+        --primary-400: #2565e6;
+        --primary-500: #004BFF;
+        --primary-600: #0031a6;
+        --primary-700: #00174d;
         --gray-100: #ebebed;
         --gray-200: #c2c4c9;
         --gray-300: #999ca5;
         --gray-500: #33394b;
         --gray-700: #1a1d26;
+        --gray-800: #1A1A1A;
         --danger-500: #ff4f4f;
+        --success-100: #d1fae3;
+        --success-200: #baf7d5;
+        --success-300: #a4f4c6;
+        --success-400: #8df2b8;
+        --success-500: #3aa683;
+        --success-600: #4cd9ac;
+        --success-700: #129b4d;
 
         /* FONTS */
-        --font-family-normal: var(--w3o-font-family, Inter, sans-serif);
+        --font-family-normal: var(--w3o-font-family, 'Plus Jakarta Sans', Inter, sans-serif);
         --font-size-5: 1rem;
         --font-size-6: .875rem;
         --font-size-7: .75rem;
