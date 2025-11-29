@@ -1,13 +1,13 @@
-name: SubWallet Build
+name: sequence.js Build
 on:
   pull_request:
     branches:
-      - sw-dev
+      - master
       - main 
   push:
     branches:
       - main
-      - sw-dev
+      - master
 
 jobs:
   master:
