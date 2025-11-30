@@ -3,9 +3,11 @@ on:
   pull_request:
     branches:
       - sw-dev
+      - main
   push:
     branches:
       - sw-dev
+      - main
 
 jobs:
   master:
