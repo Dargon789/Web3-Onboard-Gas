@@ -1,6 +1,9 @@
-import type { WalletInit } from '@subwallet-connect/common'
+import type { WalletInit } from '@web3-onboard/common'
 import type { ExternalProvider } from '@ethersproject/providers'
-import { createEIP1193Provider } from '@subwallet-connect/common'
+import {
+  createDownloadMessage,
+  createEIP1193Provider
+} from '@web3-onboard/common'
 
 declare const window: Window & { zeal: ExternalProvider & { isZeal: boolean } }
 
@@ -9,7 +12,6 @@ function zealWallet(): WalletInit {
 
   return () => ({
     label: 'Zeal',
-    type : 'evm',
     injectedNamespace: 'zeal',
     checkProviderIdentity: ({ provider }: { provider: any }) => {
       !!provider && !!provider['isZeal']
@@ -25,8 +27,7 @@ function zealWallet(): WalletInit {
           provider: createEIP1193Provider(window.zeal)
         }
       } else {
-        window.open('https://www.zeal.app/', '_blank')
-        throw new Error('Please Install Zeall to use this wallet')
+        throw new Error(createDownloadMessage('Zeal', 'https://www.zeal.app/'))
       }
     },
     platforms: ['desktop']

@@ -1,9 +1,15 @@
-import type { AppMetadata, Chain, WalletInit, WalletModule } from '@subwallet-connect/common'
+import type {
+  AppMetadata,
+  Chain,
+  WalletHelpers,
+  WalletInit,
+  WalletModule
+} from '@web3-onboard/common'
 import { nanoid } from 'nanoid'
 import { dispatch } from './index.js'
 import { configuration } from '../configuration.js'
 import { handleThemeChange, returnTheme } from '../themes.js'
-
+import { state } from '../store/index.js'
 
 import type {
   Account,
@@ -32,7 +38,7 @@ import type {
   Theme,
   UpdateChainsAction,
   UpdateAppMetadataAction,
-  SendSignMessage
+  UpdateWagmiConfigAction
 } from '../types.js'
 
 import {
@@ -42,9 +48,11 @@ import {
   validateCustomNotification,
   validateCustomNotificationUpdate,
   validateString,
+  validateWallet,
   validateWalletInit,
   validateUpdateBalances,
   validateNotify,
+  validateConnectModalUpdate,
   validateUpdateTheme,
   validateSetChainOptions,
   validateAppMetadataUpdate
@@ -66,11 +74,11 @@ import {
   UPDATE_ALL_WALLETS,
   UPDATE_CONNECT_MODAL,
   UPDATE_CHAINS,
-  UPDATE_APP_METADATA, SEND_SIGN_MESSAGE
+  UPDATE_APP_METADATA,
+  UPDATE_WAGMI_CONFIG
 } from './constants.js'
-import { getBalance } from '../provider.js';
-
-
+import type { Address } from 'bnc-sdk'
+import type { Config } from '@web3-onboard/wagmi'
 
 export function addChains(chains: Chain[]): void {
   // chains are validated on init
@@ -95,14 +103,17 @@ export function updateChain(updatedChain: Chain): void {
     id: chainId,
     namespace: chainNamespace
   } = updatedChain
-  const error = validateSetChainOptions(
-    { label, token, rpcUrl, chainId, chainNamespace }
-  )
+  const error = validateSetChainOptions({
+    label,
+    token,
+    rpcUrl,
+    chainId,
+    chainNamespace
+  })
 
   if (error) {
     throw error
   }
-
   const action = {
     type: UPDATE_CHAINS,
     payload: updatedChain
@@ -111,12 +122,12 @@ export function updateChain(updatedChain: Chain): void {
 }
 
 export function addWallet(wallet: WalletState): void {
-  // const error = validateWallet(wallet)
-  //
-  // if (error) {
-  //   console.error(error)
-  //   throw error
-  // }
+  const error = validateWallet(wallet)
+
+  if (error) {
+    console.error(error)
+    throw error
+  }
 
   const action = {
     type: ADD_WALLET,
@@ -126,19 +137,18 @@ export function addWallet(wallet: WalletState): void {
   dispatch(action as AddWalletAction)
 }
 
-export function updateWallet(id: string, type : WalletState['type'], update: Partial<WalletState>): void {
-  // const error = validateWallet(update)
-  //
-  // if (error) {
-  //   console.error(error)
-  //   throw error
-  // }
+export function updateWallet(id: string, update: Partial<WalletState>): void {
+  const error = validateWallet(update)
+
+  if (error) {
+    console.error(error)
+    throw error
+  }
 
   const action = {
     type: UPDATE_WALLET,
     payload: {
       id,
-      type,
       ...update
     }
   }
@@ -146,7 +156,7 @@ export function updateWallet(id: string, type : WalletState['type'], update: Par
   dispatch(action as UpdateWalletAction)
 }
 
-export function removeWallet(id: string, type : 'evm' | 'substrate'): void {
+export function removeWallet(id: string): void {
   const error = validateString(id, 'wallet id')
 
   if (error) {
@@ -156,57 +166,43 @@ export function removeWallet(id: string, type : 'evm' | 'substrate'): void {
   const action = {
     type: REMOVE_WALLET,
     payload: {
-      id,
-      type: type
+      id
     }
   }
-
 
   dispatch(action as RemoveWalletAction)
 }
 
-export async function setPrimaryWallet(
-    wallet: WalletState,
-    chains : Chain[],
-    address?: string): Promise<void> {
-  // const error =
-  //   validateWallet(wallet) || (address && validateString(address, 'address'))
-  //
-  // if (error) {
-  //   throw error
-  // }
+export function setPrimaryWallet(wallet: WalletState, address?: string): void {
+  const error =
+    validateWallet(wallet) || (address && validateString(address, 'address'))
+
+  if (error) {
+    throw error
+  }
 
   // if also setting the primary account
   if (address) {
     const account = wallet.accounts.find(ac => ac.address === address)
-    const chain = chains.find( chain => chain.id === wallet.chains[0].id)
-    if(!account.balance){
-      account.balance = await getBalance(address,chain, wallet.type)
-    }
 
     if (account) {
       wallet.accounts = [
-          account,
-        ...wallet.accounts
-        .map((acc) => ({ ...acc, balance : null }))
-        .filter(acc => {
-            return acc.address !== address
-            }
-        )
+        account,
+        ...wallet.accounts.filter(({ address }) => address !== account.address)
       ]
-
     }
   }
 
+  // Update wagmi config if wagmi is being used
+  handleWagmiConnectorUpdate(wallet)
 
-  updateWallet(wallet.label,  wallet.type, { accounts : wallet.accounts })
   // add wallet will set it to first wallet since it already exists
   addWallet(wallet)
 }
 
 export function updateAccount(
   id: string,
-  address: string,
+  address: Address,
   update: Partial<Account>
 ): void {
   const action = {
@@ -241,11 +237,11 @@ export function updateAccountCenter(
 export function updateConnectModal(
   update: ConnectModalOptions | Partial<ConnectModalOptions>
 ): void {
-  // const error = validateConnectModalUpdate(update)
-  //
-  // if (error) {
-  //   throw error
-  // }
+  const error = validateConnectModalUpdate(update)
+
+  if (error) {
+    throw error
+  }
 
   const action = {
     type: UPDATE_CONNECT_MODAL,
@@ -321,7 +317,11 @@ export function customNotification(updatedNotification: CustomNotification): {
   }
   addCustomNotification(notification)
 
-  const dismiss = () => removeNotification(notification.id)
+  const dismiss = () => {
+    if (notification.id) {
+      removeNotification(notification.id)
+    }
+  }
 
   const update = (
     notificationUpdate: CustomNotification
@@ -361,6 +361,7 @@ export function removeNotification(id: Notification['id']): void {
   if (typeof id !== 'string') {
     throw new Error('Notification id must be of type string')
   }
+
   const action = {
     type: REMOVE_NOTIFICATION,
     payload: id
@@ -427,7 +428,8 @@ export function updateAllWallets(wallets: WalletState[]): void {
 
 // ==== HELPERS ==== //
 export function initializeWalletModules(modules: WalletInit[]): WalletModule[] {
-  const { device } = configuration
+  const { device }: WalletHelpers = configuration
+  if (!device) return []
   return modules.reduce((acc, walletInit) => {
     const initialized = walletInit({ device })
 
@@ -448,9 +450,7 @@ export function uniqueWalletsByLabel(
       wallet &&
       walletModuleList.findIndex(
         (innerWallet: WalletModule) =>
-          innerWallet
-          && innerWallet.label === wallet.label
-          && innerWallet.type === wallet.type
+          innerWallet && innerWallet.label === wallet.label
       ) === i
   )
 }
@@ -466,7 +466,7 @@ export function updateTheme(theme: Theme): void {
 }
 
 export function updateAppMetadata(
-  update: AppMetadata| Partial<AppMetadata>
+  update: AppMetadata | Partial<AppMetadata>
 ): void {
   const error = validateAppMetadataUpdate(update)
 
@@ -482,13 +482,30 @@ export function updateAppMetadata(
   dispatch(action as UpdateAppMetadataAction)
 }
 
-export function sendSignMessage(message : string): void {
-
-  if(!message || message.length === 0) return ;
+export function updateWagmiConfig(update: Config): void {
   const action = {
-    type: SEND_SIGN_MESSAGE ,
-    payload: message
+    type: UPDATE_WAGMI_CONFIG,
+    payload: update
   }
 
-  dispatch(action as SendSignMessage)
+  dispatch(action as UpdateWagmiConfigAction)
+}
+
+function handleWagmiConnectorUpdate(wallet: WalletState) {
+  const { wagmi } = configuration
+  if (!wagmi) return
+
+  try {
+    const { label } = wallet
+    const { wagmiConnect, getWagmiConnector } = wagmi
+    const wagmiConfig = state.get().wagmiConfig
+    const wagmiConnector = getWagmiConnector(label)
+    wagmiConnect(wagmiConfig, { connector: wagmiConnector }).then(() => {
+      updateWallet(label, { wagmiConnector })
+    })
+  } catch (e) {
+    console.error(
+      `Error updating Wagmi connector on primary wallet switch ${e}`
+    )
+  }
 }

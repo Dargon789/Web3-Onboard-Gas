@@ -6,12 +6,16 @@ import type {
 } from '@subwallet-connect/common'
 
 import type { Web3AuthOptions, ModalConfig } from '@web3auth/modal'
-import type { CustomChainConfig } from '@web3auth/base'
+import type { CustomChainConfig, OPENLOGIN_NETWORK_TYPE } from '@web3auth/base'
 
 type Web3AuthModuleOptions = Omit<Web3AuthOptions, 'chainConfig'> & {
   chainConfig?: Partial<CustomChainConfig> &
     Pick<CustomChainConfig, 'chainNamespace'>
   modalConfig?: Record<string, ModalConfig> | undefined
+  /**
+     * Web3Auth Network to use for the session & the issued idToken
+     */
+  web3AuthNetwork: OPENLOGIN_NETWORK_TYPE;
   /**
    * @deprecated use web3Auth native Z-Index config through
    * uiConfig.modalZIndex
@@ -26,7 +30,7 @@ function web3auth(options: Web3AuthModuleOptions): WalletInit {
     getIcon: async () => (await import('./icon.js')).default,
     getInterface: async ({ EventEmitter, chains }) => {
       const { Web3Auth } = await import('@web3auth/modal')
-      const { CHAIN_NAMESPACES, ADAPTER_EVENTS } = await import(
+      const { CHAIN_NAMESPACES } = await import(
         '@web3auth/base'
       )
       const { createEIP1193Provider, ProviderRpcError, ProviderRpcErrorCode } =
@@ -49,7 +53,7 @@ function web3auth(options: Web3AuthModuleOptions): WalletInit {
           ticker: token,
           tickerName: label,
           chainId: id,
-          rpcTarget: rpcUrl,
+          rpcTarget: rpcUrl!,
           chainNamespace:
             namespace === 'evm'
               ? CHAIN_NAMESPACES.EIP155

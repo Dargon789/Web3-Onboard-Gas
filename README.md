@@ -1,16 +1,6 @@
-## SubConnect
+# Web3-Onboard
 
-**Providing an efficient and easy solution for connecting Polkadot, Substrate, & Ethereum wallets. Drawing insights from [Blocknative](https://github.com/blocknative)'s [web3-onboard](https://onboard.blocknative.com/), we've enhanced our capabilities for seamless integration with Substrate wallets.**
-
-## New Update
-**We have developed the ability to further extend the connection of substrate wallets.**
-**SDK Substrate Wallets**
-- [SubWallet-Polkadot](https://github.com/Koniverse/SubWallet-Connect/wiki/SubWallet%E2%80%90Polkadot)
-- [WalletConnect-Polkadot](https://github.com/Koniverse/SubWallet-Connect/wiki/WalletConnect%E2%80%90Polkadot)
-- [Talisman](https://github.com/Koniverse/SubWallet-Connect/wiki/Talisman)
-- [Polkadot{.js}](https://github.com/Koniverse/SubWallet-Connect/wiki/Polkadot%E2%80%90Js)
-- [Polkadot Vault](https://github.com/Koniverse/SubWallet-Connect/wiki/Polkadot-Vault)
-- [Ledger Polkadot](https://github.com/Koniverse/SubWallet-Connect/wiki/Ledger%E2%80%90Polkadot)
+**easy way to connect users to dapps**
 
 ## Features
 
@@ -18,68 +8,68 @@
 - **Multiple Wallets and Accounts Connection**: Allow your users to connect multiple wallets and multiple accounts within each wallet at the same time to your app.
 - **Multiple Chain Support**: Allow users to switch between chains/networks with ease.
 - **Account Center**: A persistent interface to manage wallet connections and networks, with a minimal version for mobile
-- **Notify**: Real-time transaction notifications for the connected wallet addresses for all transaction states
-- **Wallet Provider Ethereum Standardization**: All wallet modules expose a provider that is patched to be compliant with the [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193), [EIP-1102](https://eips.ethereum.org/EIPS/eip-1102), [EIP-3085](https://eips.ethereum.org/EIPS/eip-3085) and [EIP-3326](https://ethereum-magicians.org/t/eip-3326-wallet-switchethereumchain/5471) specifications.
-- **Wallet Provider Substrate**: For Substrate wallets, we provide 2 connection solutions. This includes injected wallets with available signers, and other connections like hardware wallets, WalletConnect, and Polkadot Vault. Additionally, we offer a provider similar to Ethereum wallets, supporting various methods such as `polkadot_signTransaction`, `polkadot_signMessage`, `polkadot_sendTransaction`, `polkadot_getBalance`, and `polkadot_requestAccounts`
+- **Wallet Provider Standardization**: All wallet modules expose a provider that is patched to be compliant with the [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193), [EIP-1102](https://eips.ethereum.org/EIPS/eip-1102), [EIP-3085](https://eips.ethereum.org/EIPS/eip-3085) and [EIP-3326](https://ethereum-magicians.org/t/eip-3326-wallet-switchethereumchain/5471) specifications.
 - **Dynamic Imports**: Supporting multiple wallets in your app requires a lot of dependencies. Onboard dynamically imports a wallet and its dependencies only when the user selects it, so that minimal bandwidth is used.
 
 ## Quickstart
-**Note**: If you're still unsure about following our instructions below, you can run the [demo](https://github.com/Koniverse/SubWallet-Connect/wiki#test-out-the-demo-app) that we have prepared. The result is our [SubWallet-Connect](https://w3o-demo.subwallet.app/).
-Install the core Onboard library, the injected wallets module and optionally ethers js and polkadot js to support browser extension and mobile wallets:
+
+Install the core Onboard library, the injected wallets module and optionally ethers js to support browser extension and mobile wallets:
 
 **NPM**
-`npm i @subwallet-connect/core @subwallet-connect/injected-wallets ethers `
+`npm i @web3-onboard/core @web3-onboard/injected-wallets ethers`
 
 **Yarn**
-`yarn add @subwallet-connect/core @subwallet-connect/injected-wallets ethers @polkadot/extension-inject`
+`yarn add @web3-onboard/core @web3-onboard/injected-wallets ethers`
 
 Then initialize in your app:
 
-```typescript
-import Onboard from '@subwallet-connect/core';
-import injectedModule from '@subwallet-connect/injected-wallets';
-import subwalletModule from '@subwallet-connect/subwallet';
-import subwalletPolkadotModule from '@subwallet-connect/subwallet-polkadot';
-import type {EIP1193Provider, SubstrateProvider} from "@subwallet-connect/common";
-import {ethers} from 'ethers';
-import {ApiPromise, WsProvider} from '@polkadot/api';
+```javascript
+import Onboard from '@web3-onboard/core'
+import injectedModule from '@web3-onboard/injected-wallets'
+import { ethers } from 'ethers'
 
 const MAINNET_RPC_URL = 'https://mainnet.infura.io/v3/<INFURA_KEY>'
-const ws = 'wss://rpc.polkadot.io'
 
 const injected = injectedModule()
-const subwalletWallet = subwalletModule()
-const subwalletPolkadotWalet = subwalletPolkadotModule()
 
 const onboard = Onboard({
-  wallets: [injected, subwalletWallet, subwalletPolkadotWalet],
+  wallets: [injected],
   chains: [
     {
       id: '0x1',
       token: 'ETH',
       label: 'Ethereum Mainnet',
       rpcUrl: MAINNET_RPC_URL
-    }
-  ],
-  chainsPolkadot: [
+    },
     {
-      id: '0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3',
-      namespace: 'substrate',
-      token: 'DOT',
-      label: 'Polkadot',
-      rpcUrl: `polkadot.api.subscan.io`,
-      decimal: 10
+      id: 42161,
+      token: 'ARB-ETH',
+      label: 'Arbitrum One',
+      rpcUrl: 'https://rpc.ankr.com/arbitrum'
+    },
+    {
+      id: '0xa4ba',
+      token: 'ARB',
+      label: 'Arbitrum Nova',
+      rpcUrl: 'https://nova.arbitrum.io/rpc'
+    },
+    {
+      id: '0x2105',
+      token: 'ETH',
+      label: 'Base',
+      rpcUrl: 'https://mainnet.base.org'
     }
   ]
 })
 
 const wallets = await onboard.connectWallet()
-const wallet = wallets[0]
 
-if (wallet?.type === 'evm') {
+console.log(wallets)
+
+if (wallets[0]) {
   // create an ethers provider with the last connected wallet provider
   const ethersProvider = new ethers.providers.Web3Provider(
-    wallet.provider as EIP1193Provider,
+    wallets[0].provider,
     'any'
   )
 
@@ -92,84 +82,76 @@ if (wallet?.type === 'evm') {
   })
 
   const receipt = await txn.wait()
-} else if (wallet?.type === 'substrate') {
-
-  const api = new ApiPromise({
-    provider: new WsProvider(ws)
-  });
-  api.isReady().then(() => {
-    const transferExtrinsic = api.tx.balances.transferKeepAlive(recipientAddress, amount);
-
-    transferExtrinsic.signAndSend(senderAddress, {signer: wallet.signer}, ({status, txHash}) => {
-      if (status.isInBlock) {
-        console.log(txHash.toString());
-        console.log(`Completed at block hash #${status.asInBlock.toString()}`);
-      } else {
-        console.log(`Current status: ${status.type}`);
-      }
-    })
-  })
+  console.log(receipt)
 }
 ```
 
+**Onboard v1 migration guide**
+
+If you're coming from v1, we've created a [migration guide for you](https://web3onboard.thirdweb.com/docs/overview/onboard.js-migration-guide#background).
+
 ## Documentation
 
-For full documentation, check out the README.md for each package or the [docs page here](https://github.com/Koniverse/SubWallet-Connect/wiki) from ethereum wallet:
+For full documentation, check out the README.md for each package or the [docs page here](https://web3onboard.thirdweb.com/docs/overview/introduction#features):
 
 **Core Repo**
 
-- [Core](https://github.com/Koniverse/SubWallet-Connect/wiki/Core)
+- [Core](packages/core/README.md)
 
 **Injected Wallets**
 
-- [Injected](https://github.com/Koniverse/SubWallet-Connect/wiki/Injected)
+- [Injected](packages/injected/README.md)
 
 **SDK Wallets**
-- [SubWallet](https://github.com/Koniverse/SubWallet-Connect/wiki/SubWallet)
-- [SubWallet-Polkadot](https://github.com/Koniverse/SubWallet-Connect/wiki/SubWallet%E2%80%90Polkadot)
-- [WalletConnect-Polkadot](https://github.com/Koniverse/SubWallet-Connect/wiki/WalletConnect%E2%80%90Polkadot)
-- [Talisman](https://github.com/Koniverse/SubWallet-Connect/wiki/Talisman)
-- [Polkadot{.js}](https://github.com/Koniverse/SubWallet-Connect/wiki/Polkadot%E2%80%90Js)
-- [Arcana](https://github.com/Koniverse/SubWallet-Connect/wiki/Arcana)
-- [Coinbase](https://github.com/Koniverse/SubWallet-Connect/wiki/Coinbase)
-- [Trust](https://github.com/Koniverse/SubWallet-Connect/wiki/Trust)
-- [WalletConnect](https://github.com/Koniverse/SubWallet-Connect/wiki/WalletConnect)
-- [Magic](https://github.com/Koniverse/SubWallet-Connect/wiki/Magic)
-- [Fortmatic](https://github.com/Koniverse/SubWallet-Connect/wiki/Fortmatic)
-- [Portis](https://github.com/Koniverse/SubWallet-Connect/wiki/Portis)
-- [MEW-Wallet](https://github.com/Koniverse/SubWallet-Connect/wiki/Mew)
-- [Web3Auth](https://github.com/Koniverse/SubWallet-Connect/wiki/Web3Auth)
-- [Taho (previously Tally Ho)](https://github.com/Koniverse/SubWallet-Connect/wiki/Taho)
-- [Enkrypt](https://github.com/Koniverse/SubWallet-Connect/wiki/Enkrypt)
-- [Frontier](https://github.com/Koniverse/SubWallet-Connect/wiki/Frontier)
-- [Infinity Wallet](https://github.com/Koniverse/SubWallet-Connect/wiki/Infinity-Wallet)
-- [Frame](https://github.com/Koniverse/SubWallet-Connect/wiki/Frame)
-- [Blocto](https://github.com/Koniverse/SubWallet-Connect/wiki/Blockto)
+
+- [Arcana](packages/arcana-auth/README.md)
+- [Bitget](packages/bitget/README.md)
+- [Blocto](packages/blocto/README.md)
+- [Para](packages/para/README.md)
+- [Coinbase](packages/coinbase/README.md)
+- [Enkrypt](packages/enkrypt/README.md)
+- [FinoaConnect](packages/finoaconnect/README.md)
+- [Fortmatic](packages/fortmatic/README.md)
+- [Frame](packages/frame/README.md)
+- [Frontier](packages/frontier/README.md)
+- [Infinity Wallet](packages/infinity-wallet/README.md)
+- [Keplr](packages/keplr/README.md)
+- [Magic](packages/magic/README.md)
+- [MetaMask](packages/metamask/README.md)
+- [MEW-Wallet](packages/mew-wallet/README.md)
+- [OKX](packages/okx/README.md)
+- [Particle Network](packages/particle-network/README.md)
+- [Portis](packages/portis/README.md)
+- [Safe](packages/gnosis/README.md)
+- [Sequence](packages/sequence/README.md)
+- [Taho (previously Tally Ho)](packages/tallyho/README.md)
+- [Trust](packages/trust/README.md)
+- [Unstoppable Domains](packages/uauth/README.md)
+- [WalletConnect](packages/walletconnect/README.md)
+- [Web3Auth](packages/web3auth/README.md)
+- [XDEFI](packages/xdefi/README.md)
 
 **Hardware Wallets**
-- [Polkadot Vault](https://github.com/Koniverse/SubWallet-Connect/wiki/Polkadot-Vault)
-- [Ledger Polkadot](https://github.com/Koniverse/SubWallet-Connect/wiki/Ledger%E2%80%90Polkadot) 
-- [Ledger](https://github.com/Koniverse/SubWallet-Connect/wiki/Ledger)
-- [Trezor](https://github.com/Koniverse/SubWallet-Connect/wiki/Trezor)
-- [Keystone](https://github.com/Koniverse/SubWallet-Connect/wiki/Keystone)
-- [KeepKey](https://github.com/Koniverse/SubWallet-Connect/wiki/KeepKey)
-- [D'CENT](https://github.com/Koniverse/SubWallet-Connect/wiki/D'CENT)
+
+- [D'CENT](packages/dcent/README.md)
+- [KeepKey](packages/keepkey/README.md)
+- [Keystone](packages/keystone/README.md)
+- [Ledger](packages/ledger/README.md)
+- [Trezor](packages/trezor/README.md)
 
 **Frameworks**
 
-- [React](https://github.com/Koniverse/SubWallet-Connect/wiki/React)
-
+- [React](packages/react/README.md)
+- [Solid](packages/solid/README.md)
+- [Vue](packages/vue/README.md)
 
 ## Test out the demo app
 
-If you would like to test out the current functionality of SubWallet Connect in a small browser demo, then:
+If you would like to test out the current functionality of V2 in a small browser demo, then:
 
-- Clone the repo: `git clone git@github.com:Koniverse/SubWallet-Connect.git`
-- Checkout the SubWallet Connect feature branch: `git checkout sw-dev`
-- Install the dependencies: `yarn install` (if running a M1 mac - `yarn install-m1-mac`)
-- Run build all packages in dev mode: `yarn build`
-- Direct to package\demo: `cd .\packages\demo\`
-- Running start to view demo : `yarn start`
+- Clone the repo: `git clone git@github.com:blocknative/onboard.git`
+- Change in to the onboard directory: `cd onboard`
+- Checkout the V2 feature branch: `git checkout main`
+- Install the dependencies: `yarn` (if running a M1 mac - `yarn install-m1-mac`)
+- Run all packages in dev mode: `yarn dev`
 - To view the demo app in the browser after running the above steps navigate to [http://localhost:8080](http://localhost:8080)
-
-***

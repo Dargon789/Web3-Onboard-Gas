@@ -9,7 +9,7 @@ import type {
   ProviderAccounts,
   WalletInit,
   EIP1193Provider
-} from '@subwallet-connect/common'
+} from '@web3-onboard/common'
 
 // methods that require user interaction
 const methods = [
@@ -20,9 +20,7 @@ const methods = [
   'eth_signTypedData',
   'eth_signTypedData_v4',
   'wallet_addEthereumChain',
-  'wallet_switchEthereumChain',
-  'wallet_getPermissions',
-  'wallet_requestPermissions'
+  'wallet_switchEthereumChain'
 ]
 
 function walletConnect(options: WalletConnectOptions): WalletInit {
@@ -52,17 +50,15 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
   return () => {
     return {
       label: 'WalletConnect',
-      type: 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains, EventEmitter, appMetadata }) => {
-
         const { ProviderRpcError, ProviderRpcErrorCode } = await import(
-          '@subwallet-connect/common'
-          )
+          '@web3-onboard/common'
+        )
 
         const { default: EthereumProvider, REQUIRED_METHODS } = await import(
           '@walletconnect/ethereum-provider'
-          )
+        )
 
         const { Subject, fromEvent } = await import('rxjs')
         const { takeUntil, take } = await import('rxjs/operators')
@@ -72,10 +68,10 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
           const url = dappUrl || appMetadata.explore || ''
 
           !url &&
-          !url.length &&
-          console.warn(
-            `It is strongly recommended to supply a dappUrl as it is required by some wallets (i.e. MetaMask) to allow connection.`
-          )
+            !url.length &&
+            console.warn(
+              `It is strongly recommended to supply a dappUrl as it is required by some wallets (i.e. MetaMask) to allow connection.`
+            )
           const wcMetaData: CoreTypes.Metadata = {
             name: appMetadata.name,
             description: appMetadata.description || '',
@@ -95,8 +91,6 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
           return wcMetaData
         }
 
-        const requiredChainForLedger = [1, 137, 56, 42161, 10, 43114, 5]
-
         // default to mainnet
         const requiredChainsParsed: number[] =
           Array.isArray(requiredChains) &&
@@ -104,9 +98,8 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
           requiredChains.every(num => !isNaN(num))
             ? // @ts-ignore
               // Required as WC package does not support hex numbers
-            requiredChains.map(chainID => parseInt(chainID))
-            : chains.map(({ id }) => parseInt(id, 16))
-              .filter(value => requiredChainForLedger.find((value_) => value_ === value))
+              requiredChains.map(chainID => parseInt(chainID))
+            : []
 
         // Defaults to the chains provided within the web3-onboard init chain property
         const optionalChainsParsed: number[] =
@@ -115,7 +108,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
           optionalChains.every(num => !isNaN(num))
             ? // @ts-ignore
               // Required as WC package does not support hex numbers
-            optionalChains.map(chainID => parseInt(chainID))
+              optionalChains.map(chainID => parseInt(chainID))
             : chains.map(({ id }) => parseInt(id, 16))
 
         const requiredMethodsSet = new Set(
@@ -136,14 +129,14 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
           methods: requiredMethods,
           optionalChains: optionalChainsParsed,
           optionalMethods,
-          showQrModal: false,
-          relayUrl: 'wss://relay.walletconnect.com',
+          showQrModal: true,
           rpcMap: chains
             .map(({ id, rpcUrl }) => ({ id, rpcUrl }))
             .reduce((rpcMap: Record<number, string>, { id, rpcUrl }) => {
               rpcMap[parseInt(id, 16)] = rpcUrl || ''
               return rpcMap
             }, {}),
+          metadata: getMetaData(),
           qrModalOptions: qrModalOptions
         } as EthereumProviderOptions)
 
@@ -163,9 +156,9 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
           private disconnected$: InstanceType<typeof Subject>
 
           constructor({
-                        connector,
-                        chains
-                      }: {
+            connector,
+            chains
+          }: {
             connector: InstanceType<typeof EthereumProvider>
             chains: Chain[]
           }) {
@@ -217,7 +210,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                   this.emit('accountsChanged', [])
                   this.disconnected$.next(true)
                   typeof localStorage !== 'undefined' &&
-                  localStorage.removeItem('walletconnect')
+                    localStorage.removeItem('walletconnect')
                 },
                 error: console.warn
               })
@@ -229,7 +222,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
               }
             }
 
-            if (options) {
+            if (options && handleUri) {
               // listen for uri event
               fromEvent(
                 this.connector as JQueryStyleEventEmitter<any, string>,
@@ -239,10 +232,7 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                 .pipe(takeUntil(this.disconnected$))
                 .subscribe(async uri => {
                   try {
-                    console.log('uri', uri)
-                    this.emit('uriChanged', uri);
-                    this.emit('qrModalState', true);
-                    handleUri && (await handleUri(uri));
+                    handleUri && (await handleUri(uri))
                   } catch (error) {
                     throw `An error occurred when handling the URI. Error: ${error}`
                   }
@@ -267,16 +257,13 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
               }
 
               if (method === 'eth_requestAccounts') {
-
                 return new Promise<ProviderAccounts>(
                   async (resolve, reject) => {
                     // Subscribe to connection events
                     fromEvent(
                       this.connector as JQueryStyleEventEmitter<
                         any,
-                        { chainId: number,
-                          modal: any
-                        }
+                        { chainId: number }
                       >,
                       'connect',
                       (payload: { chainId: number | string }) => payload
@@ -288,10 +275,8 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                           const hexChainId = isHexString(chainId)
                             ? chainId
                             : `0x${chainId.toString(16)}`
-                          this.emit('qrModalState', false);
-                          this.emit('uriChanged', '');
                           this.emit('chainChanged', hexChainId)
-                          resolve(this.connector.accounts)
+                          resolve(this.connector.accounts as ProviderAccounts)
                         },
                         error: reject
                       })
@@ -307,19 +292,15 @@ function walletConnect(options: WalletConnectOptions): WalletInit {
                             message: 'User rejected the request.'
                           })
                         )
-                        this.emit('qrModalState', false);
                       })
                     } else {
                       // update ethereum provider to load accounts & chainId
-                      const accounts = this.connector.accounts;
-                      const chainId = this.connector.chainId;
+                      const accounts = this.connector.accounts
+                      const chainId = this.connector.chainId
                       instance = this.connector.session
-                      const hexChainId = `0x${chainId.toString(16)}`;
-                      this.emit('qrModalState', false);
-                      this.emit('uriChanged', '');
-                      this.emit('chainChanged', hexChainId);
-                      return resolve(accounts)
-
+                      const hexChainId = `0x${chainId.toString(16)}`
+                      this.emit('chainChanged', hexChainId)
+                      return resolve(accounts as ProviderAccounts)
                     }
                   }
                 )

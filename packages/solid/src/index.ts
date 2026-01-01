@@ -1,6 +1,6 @@
 import { createSignal, createEffect, createMemo, Signal } from 'solid-js'
-import { SetStoreFunction, Store, createStore } from 'solid-js/store'
-import Web3Onboard from '@subwallet-connect/core'
+import { type SetStoreFunction, type Store, createStore } from 'solid-js/store'
+import Web3Onboard from '@web3-onboard/core'
 import type {
   InitOptions,
   OnboardAPI,
@@ -9,10 +9,10 @@ import type {
   WalletState,
   ConnectedChain,
   AppState
-} from '@subwallet-connect/core'
-import { OnboardComposable, SetChainOptions } from './types'
-export * from '@subwallet-connect/core';
-export * from './types';
+} from '@web3-onboard/core'
+import type { OnboardComposable, SetChainOptions } from './types'
+export type * from '@web3-onboard/core'
+export type * from './types'
 
 export const STORAGE_KEYS = {
   TERMS_AGREEMENT: 'onboard.js:agreement',
@@ -113,7 +113,7 @@ const useOnboard = (): OnboardComposable => {
 
   const disconnectConnectedWallet = async () => {
     if (connectedWallet()) {
-      await disconnectWallet({ label: connectedWallet()!.label, type: connectedWallet()!.type })
+      await disconnectWallet({ label: connectedWallet()!.label })
     }
   }
 
@@ -152,4 +152,10 @@ const useOnboard = (): OnboardComposable => {
   }
 }
 
-export { init, useOnboard, OnboardComposable, OnboardAPI, InitOptions }
+export {
+  init,
+  useOnboard,
+  type OnboardComposable,
+  type OnboardAPI,
+  type InitOptions
+}

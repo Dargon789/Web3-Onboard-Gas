@@ -1,11 +1,14 @@
-import { WalletInit, createEIP1193Provider } from '@subwallet-connect/common'
+import {
+  WalletInit,
+  createDownloadMessage,
+  createEIP1193Provider
+} from '@web3-onboard/common'
 
 function phantom(): WalletInit {
   if (typeof window === 'undefined') return () => null
   return () => {
     return {
       label: 'Phantom',
-      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async () => {
         if ('phantom' in window) {
@@ -21,8 +24,9 @@ function phantom(): WalletInit {
             }
           }
         }
-        window.open('https://phantom.app/download', '_blank')
-        throw new Error('Please install Phantom before proceeding')
+        throw new Error(
+          createDownloadMessage('Phantom', 'https://phantom.app/download')
+        )
       },
       platforms: ['all']
     }

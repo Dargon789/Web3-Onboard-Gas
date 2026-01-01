@@ -1,6 +1,6 @@
 {
-  "name": "@subwallet-connect/sequence",
-  "version": "1.0.7",
+  "name": "@web3-onboard/sequence",
+  "version": "2.1.1",
   "description": "Sequence is the smartest Web3 wallet. Easy, fun and secure.",
   "keywords": [
     "Ethereum",
@@ -36,7 +36,7 @@
     "url": "https://github.com/blocknative/web3-onboard.git",
     "directory": "packages/core"
   },
-  "homepage": "https://subwallet.app",
+  "homepage": "https://web3onboard.thirdweb.com",
   "bugs": "https://github.com/blocknative/web3-onboard/issues",
   "module": "dist/index.js",
   "browser": "dist/index.js",
@@ -53,10 +53,10 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^4.5.5"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@subwallet-connect/common": "^1.0.7",
+    "@web3-onboard/common": "^2.4.1",
     "0xsequence": "^0.43.1"
   },
   "peerDependencies": {

@@ -1,6 +1,6 @@
 ---
 title: Connect Wallet Example
-description: Learn how to connect a wallet to your dapp with Web3-Onboard. For this example, we are going to use the injected wallets module.
+description: Learn how to connect a wallet to your dapp with Web3 Onboard. For this example, we are going to use the injected wallets module.
 ---
 
 <script>
@@ -25,23 +25,22 @@ Remember- if you used create-react-app, please follow the [additional setup inst
 <TabPanel value="yarn">
 
 ```sh copy
-yarn add @web3-onboard/react @web3-onboard/injected-wallets @web3-onboard/infinity-wallet @web3-onboard/fortmatic @web3-onboard/gnosis @web3-onboard/keepkey @web3-onboard/keystone @web3-onboard/ledger @web3-onboard/portis @web3-onboard/trezor @web3-onboard/walletconnect @web3-onboard/coinbase @web3-onboard/magic @web3-onboard/dcent @web3-onboard/sequence @web3-onboard/taho @web3-onboard/trust @web3-onboard/frontier
+yarn add @web3-onboard/react @web3-onboard/injected-wallets @web3-onboard/infinity-wallet @web3-onboard/fortmatic @web3-onboard/gnosis @web3-onboard/keepkey @web3-onboard/keystone @web3-onboard/ledger @web3-onboard/portis @web3-onboard/trezor @web3-onboard/walletconnect @web3-onboard/coinbase @web3-onboard/magic @web3-onboard/dcent @web3-onboard/sequence @web3-onboard/taho @web3-onboard/trust @web3-onboard/frontier @web3-onboard/okx
 ```
 
   </TabPanel>
   <TabPanel value="npm">
 
 ```sh copy
-npm install @web3-onboard/react @web3-onboard/injected-wallets @web3-onboard/infinity-wallet @web3-onboard/fortmatic @web3-onboard/gnosis @web3-onboard/keepkey @web3-onboard/keystone @web3-onboard/ledger @web3-onboard/portis @web3-onboard/trezor @web3-onboard/walletconnect @web3-onboard/coinbase @web3-onboard/magic @web3-onboard/dcent @web3-onboard/sequence @web3-onboard/taho @web3-onboard/trust @web3-onboard/frontier
+npm install @web3-onboard/react @web3-onboard/injected-wallets @web3-onboard/infinity-wallet @web3-onboard/fortmatic @web3-onboard/gnosis @web3-onboard/keepkey @web3-onboard/keystone @web3-onboard/ledger @web3-onboard/portis @web3-onboard/trezor @web3-onboard/walletconnect @web3-onboard/coinbase @web3-onboard/magic @web3-onboard/dcent @web3-onboard/sequence @web3-onboard/taho @web3-onboard/trust @web3-onboard/frontier @web3-onboard/okx
 ```
 
   </TabPanel>
 </Tabs>
 
-
 ## Step 2: Import + Configure
 
-Import the libraries and any wallets you would like to use. For this example, we are going to use the injected wallets module. You can easily add more wallet support to your dapp via our other wallet modules. Additionally, we'll setup web3-onboard to support 2 chains: Ethereum mainnet and Polygon mainnet.
+Import the libraries and any wallets you would like to use. For this example, we are going to use the injected wallets module. You can easily add more wallet support to your dapp via our other wallet modules. Additionally, we'll setup Web3 Onboard to support 2 chains: Ethereum mainnet and Polygon mainnet.
 
 ```js title="App.tsx"|copy
 import { Web3OnboardProvider, init } from '@web3-onboard/react'
@@ -61,6 +60,7 @@ import dcentModule from '@web3-onboard/dcent'
 import sequenceModule from '@web3-onboard/sequence'
 import tahoModule from '@web3-onboard/taho'
 import trustModule from '@web3-onboard/trust'
+import okxModule from '@web3-onboard/okx'
 import frontierModule from '@web3-onboard/frontier'
 import ConnectWallet from './ConnectWallet'
 
@@ -87,6 +87,7 @@ const safe = safeModule()
 const sequence = sequenceModule()
 const taho = tahoModule() // Previously named Tally Ho wallet
 const trust = trustModule()
+const okx = okxModule()
 const frontier = frontierModule()
 
 const trezorOptions = {
@@ -106,6 +107,7 @@ const wallets = [
   sequence,
   injected,
   trust,
+  okx,
   frontier,
   taho,
   ledger,
@@ -128,10 +130,10 @@ const chains = [
     rpcUrl: `https://mainnet.infura.io/v3/${INFURA_KEY}`
   },
   {
-    id: '0x5',
+    id: 11155111,
     token: 'ETH',
-    label: 'Goerli',
-    rpcUrl: `https://goerli.infura.io/v3/${INFURA_KEY}`
+    label: 'Sepolia',
+    rpcUrl: 'https://rpc.sepolia.org/'
   },
   {
     id: '0x13881',
@@ -148,7 +150,7 @@ const chains = [
   {
     id: '0xA',
     token: 'OETH',
-    label: 'Optimism',
+    label: 'OP Mainnet',
     rpcUrl: 'https://mainnet.optimism.io'
   },
   {
@@ -156,6 +158,24 @@ const chains = [
     token: 'ARB-ETH',
     label: 'Arbitrum',
     rpcUrl: 'https://rpc.ankr.com/arbitrum'
+  },
+  {
+    id: '0xa4ec',
+    token: 'ETH',
+    label: 'Celo',
+    rpcUrl: 'https://1rpc.io/celo'
+  },
+  {
+    id: 666666666,
+    token: 'DEGEN',
+    label: 'Degen',
+    rpcUrl: 'https://rpc.degen.tips'
+  },
+  {
+    id: 2192,
+    token: 'SNAX',
+    label: 'SNAX Chain',
+    rpcUrl: 'https://mainnet.snaxchain.io'
   }
 ]
 
@@ -186,9 +206,9 @@ function App() {
 export default App
 ```
 
-## Step 2: Display the connect wallet button
+## Step 3: Display the connect wallet button
 
-In another file we'll create the component that will display our connect wallet button. We'll be using the `useConnectWallet` hook in order to achieve this.
+In another file, we'll create the component that will display our connect wallet button. We'll be using the `useConnectWallet` hook in order to achieve this.
 
 ```js title="ConnectWallet.tsx"|copy
 import { useEffect, useState } from 'react'
@@ -220,7 +240,7 @@ export default function ConnectWallet() {
 }
 ```
 
-## Step 3: Display account information
+## Step 4: Display account information
 
 Now that we have our wallet connected, let's display some basic information, such as the connected wallet's address, ENS name, and avatar.
 
@@ -291,7 +311,7 @@ export default function ConnectWallet() {
 
 ## Step 1: Import + Configure
 
-Import the libraries and any wallets you would like to use. For this example, we are going to use the injected wallets module. You can easily add more wallet support to your dapp via our other wallet modules. Additionally, we'll setup web3-onboard to support 2 chains: Ethereum mainnet and Polygon mainnet.
+Import the libraries and any wallets you would like to use. For this example, we are going to use the injected wallets module. You can easily add more wallet support to your dapp via our other wallet modules. Additionally, we'll setup Web3 Onboard to support 2 chains: Ethereum mainnet and Polygon mainnet.
 
 ```js title="onboard.js"|copy
 import Onboard from '@web3-onboard/core'
@@ -313,6 +333,7 @@ import dcentModule from '@web3-onboard/dcent'
 import sequenceModule from '@web3-onboard/sequence'
 import tahoModule from '@web3-onboard/taho'
 import trustModule from '@web3-onboard/trust'
+import okxModule from '@web3-onboard/okx'
 import frontierModule from '@web3-onboard/frontier'
 
 const INFURA_KEY = ''
@@ -338,6 +359,7 @@ const safe = safeModule()
 const sequence = sequenceModule()
 const taho = tahoModule() // Previously named Tally Ho wallet
 const trust = trustModule()
+const okx = okxModule()
 const frontier = frontierModule()
 
 const trezorOptions = {
@@ -364,6 +386,7 @@ const wallets = [
   coinbase,
   dcent,
   trust,
+  okx,
   frontier,
   trezor,
   walletConnect,
@@ -384,10 +407,10 @@ const chains = [
     rpcUrl: `https://mainnet.infura.io/v3/${INFURA_ID}`
   },
   {
-    id: '0x5',
+    id: 11155111,
     token: 'ETH',
-    label: 'Goerli',
-    rpcUrl: `https://goerli.infura.io/v3/${INFURA_ID}`
+    label: 'Sepolia',
+    rpcUrl: 'https://rpc.sepolia.org/'
   },
   {
     id: '0x13881',
@@ -404,7 +427,7 @@ const chains = [
   {
     id: '0xA',
     token: 'OETH',
-    label: 'Optimism',
+    label: 'OP Mainnet',
     rpcUrl: 'https://mainnet.optimism.io'
   },
   {
@@ -412,6 +435,24 @@ const chains = [
     token: 'ARB-ETH',
     label: 'Arbitrum',
     rpcUrl: 'https://rpc.ankr.com/arbitrum'
+  },
+  {
+    id: '0xa4ec',
+    token: 'ETH',
+    label: 'Celo',
+    rpcUrl: 'https://1rpc.io/celo'
+  },
+  {
+    id: 666666666,
+    token: 'DEGEN',
+    label: 'Degen',
+    rpcUrl: 'https://rpc.degen.tips'
+  },
+  {
+    id: 2192,
+    token: 'SNAXETH',
+    label: 'SNAX Chain',
+    rpcUrl: 'https://mainnet.snaxchain.io'
   }
 ]
 
@@ -497,3 +538,7 @@ Now that we have our wallet connected, let's display some basic information, suc
 
   </TabPanel>
 </Tabs>
+
+## Interacting with the providers - Transfer, Send, Sign using ethers.js
+
+For examples of interacting with the wallet providers please see our demo project [here](https://github.com/blocknative/web3-onboard/blob/9b871a1b3117e92a7c87285677fa5b35c544a8e0/packages/demo/src/App.svelte#L447)

@@ -1,6 +1,6 @@
 {
-  "name": "@subwallet-connect/zeal",
-  "version": "1.0.7",
+  "name": "@web3-onboard/zeal",
+  "version": "2.1.1",
   "description": "Zeal SDK wallet module for connecting to Web3-Onboard.",
   "keywords": [
     "Ethereum",
@@ -28,10 +28,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Koniverse/web3-onboard.git",
+    "url": "https://github.com/blocknative/web3-onboard.git",
     "directory": "packages/zeal"
   },
-  "homepage": "https://www.subwallet.app/",
+  "homepage": "https://web3onboard.thirdweb.com",
   "bugs": "https://github.com/blocknative/web3-onboard/issues",
   "module": "dist/index.js",
   "browser": "dist/index.js",
@@ -49,11 +49,11 @@
   "license": "MIT",
   "devDependencies": {
     "@ethersproject/providers": "^5.5.0",
-    "@types/node": "^20.8.10",
-    "typescript": "^5.2.2",
+    "@types/node": "^17.0.21",
+    "typescript": "^5.4.5",
     "window": "^4.2.7"
   },
   "dependencies": {
-    "@subwallet-connect/common": "^1.0.7"
+    "@web3-onboard/common": "^2.4.1"
   }
 }
