@@ -108,9 +108,12 @@ type InitOptions {
   wallets: WalletInit[]
   chains: Chain[]
   appMetadata?: AppMetadata
+  /** Web3-Onboard module to add Wagmi support
+   * see https://www.npmjs.com/package/@web3-onboard/wagmi
+   */
+  wagmi?: typeof wagmi
   i18n?: i18nOptions
   accountCenter?: AccountCenterOptions
-  apiKey?: string
   notify?: Partial<NotifyOptions>
   gas?: typeof gas
   /**
@@ -133,6 +136,11 @@ type InitOptions {
    * the Theme initialization object or set as css variable
    */
   disableFontDownload?: boolean
+  /**
+   * @deprecated apiKey parameter has been deprecated and is no
+   * longer used within Web3-Onboard to provide notifications
+   */
+  apiKey?: string
 }
 
 ```
@@ -309,9 +317,12 @@ type ConnectModalOptions = {
 #### i18n
 
 An object that defines the display text for different locales. Can also be used to override the default text. To override the default text, pass in an object for the `en` locale.
+Currently there is built-in support for:
+- English (`en`) - Default
+- Simplified Chinese (`zh`)
 
 ```typescript
-type Locale = string // eg 'en', 'es'
+type Locale = string // eg 'en', 'zh', 'es'
 type i18nOptions = Record<Locale, i18n>
 ```
 
@@ -385,6 +396,58 @@ Interested in seeing how Web3 Onboard will look on your site?
 
 It will allow you to customize the look and feel of Web3 Onboard, try different themes or create your own, and preview how Web3 Onboard will look on your site by entering a URL or adding a screenshot.
 :::
+
+---
+
+#### wagmi
+
+To add [WAGMI API](https://wagmi.sh/core/getting-started) support to your project you can simply install `web3-onboard/wagmi` import and pass in the [wagmi package](/docs/modules/wagmi) export directly into your onboard configuration. After doing so you can use all of the native WAGMI API functions directly from `@web3-onboard/wagmi`. This will give access to all WAGMI function available on or before `@wagmi/core` version `2.10.4`.
+After initialization an up-to-date WAGMI config will will be available from the onboard state object `onboard.state.get().wagmiConfig` which will need to be passed as the first prop of most [@wagmi/core](https://wagmi.sh/core/getting-started) methods. Wallets will also have a [wagmiConnector](#state) prop within the onboard state object which will allow you to target specific wallets for interactions. This can also be bi-passed if the primary or most recently connected wallet is the wallet meant for the transactions.
+The config and connectors can be used with the WAGMI API returned from this module or an external WAGMI instance.
+
+Full documentation for the `@web3-onboard/wagmi` module can be found [here](/docs/modules/wagmi).
+
+```typescript
+import Onboard from '@web3-onboard/core'
+import wagmi from '@web3-onboard/wagmi'
+import {
+  sendTransaction as wagmiSendTransaction,
+  switchChain,
+  disconnect,
+  getConnectors
+} from '@web3-onboard/wagmi'
+
+const injected = injectedModule()
+
+const onboard = Onboard({
+  // This javascript object is unordered meaning props do not require a certain order
+  wagmi,
+  wallets: [injected],
+  chains: [
+    {
+      id: '0x1',
+      token: 'ETH',
+      label: 'Ethereum',
+      rpcUrl: 'https://mainnet.infura.io/v3/17c1e1500e384acfb6a72c5d2e67742e'
+    }
+  ]
+  // ... other Onboard options
+})
+
+const sendTransaction = async () => {
+  // current primary wallet - as multiple wallets can connect this value is the currently active
+  const [activeWallet] = onboard.state.get().wallets
+  const { wagmiConnector } = activeWallet
+  const wagmiConfig = onboard.state.get().wagmiConfig
+  const result = await wagmiSendTransaction(wagmiConfig, {
+    to: toAddress,
+    // desired connector to send txn from
+    connector: wagmiConnector,
+    value: parseEther('0.001')
+  })
+  console.log(result)
+}
+```
 
 ---
 
@@ -478,23 +541,18 @@ type ContainerElements = {
 
 #### notify
 
-Notify is a feature that provides transaction notifications for all connected wallets on the current blockchain. This document will provide you with an overview of Notify and guide you through the process of integrating it into your decentralized application (dapp).
+Notify is a feature that provides DApps with the ability to send custom messages to the client. This document will provide you with an overview of Notify and guide you through the process of integrating it into your decentralized application (dapp). Check out the [customNotifications API docs for examples and code snippets](#customnotification).
 
 <img src="{notifyImg}" alt="Transaction notifications image"/>
-
-To enable transaction notifications and updates simply add your Blocknative `apiKey`([sign up for free](https://explorer.blocknative.com/account)) to the web3-onboard configurations as the value to the `apiKey` prop and thats it!
-Transaction notifications will be shown for all transactions occurring on supported chains for all of the users connected wallets.
-When switching chains, the previous chain listeners remain active for 60 seconds to allow the capture and report of any remaining transactions that may be in flight.
 
 Notifications are by default positioned in the same location as the Account Center (if enabled) or can be positioned separately using the `position` property.
 
 ##### **Notify Configuration**
 
-| Property             | Type            | Description                                                   |
-| -------------------- | --------------- | ------------------------------------------------------------- |
-| `enabled`            | boolean         | Indicates whether transaction notifications will be displayed |
-| `transactionHandler` | function        | Optional callback for customizations of notifications         |
-| `position`           | CommonPositions | Position of the notification on the screen                    |
+| Property   | Type            | Description                                                   |
+| ---------- | --------------- | ------------------------------------------------------------- |
+| `enabled`  | boolean         | Indicates whether transaction notifications will be displayed |
+| `position` | CommonPositions | Position of the notification on the screen                    |
 
 ##### **Position Options**
 
@@ -504,10 +562,6 @@ Notifications are by default positioned in the same location as the Account Cent
 | `mobile`  | Notify | Configuration for mobile notifications.  |
 
 Both `desktop` and `mobile` configurations are of type `Notify`.
-
-###### **Transaction Handler**
-
-The `transactionHandler` is a callback that receives an object of type `EthereumTransactionData`. Based on the data received, the handler can return a custom `Notification` object or a boolean value (false to disable the notification for the current event or undefined for a default notification).
 
 ##### **Customizing Notification**
 
@@ -523,24 +577,6 @@ The `transactionHandler` is a callback that receives an object of type `Ethereum
 ##### **Styling Notify**
 
 Notify automatically will match the [`theme`](#theme) defined in the web3-onboard configuration. It can also be styled using the [exposed css variables provided below](#custom-styling). These variables allow for maximum customization with base styling variables setting the global theme (e.g., `--onboard-grey-600`) and more precise component-level styling variables available (`--notify-onboard-grey-600`). The latter takes precedence if defined.
-
-##### **Handling Notifications**
-
-If notifications are enabled, they can be fielded and handled through the onboard app state as seen in the example below - although this is not required for notifications to display:
-
-```javascript
-const wallets = onboard.state.select('notifications')
-const { unsubscribe } = wallets.subscribe((update) =>
-  console.log('transaction notifications: ', update)
-)
-
-// unsubscribe when updates are no longer needed
-unsubscribe()
-```
-
-##### **Notifications as Toast Messages**
-
-The Notifications messages can also be used to send fully customized dapp toast messages and updated. Check out the [customNotifications API docs for examples and code snippets](#customnotification)
 
 ```ts
 type NotifyOptions = {
@@ -621,8 +657,8 @@ import injectedModule from '@web3-onboard/injected-wallets'
 const injected = injectedModule()
 
 const onboard = Onboard({
+  // This javascript object is unordered meaning props do not require a certain order
   // head to https://explorer.blocknative.com/account to sign up for free
-  apiKey: 'xxx387fb-bxx1-4xxc-a0x3-9d37e426xxxx'
   wallets: [injected],
   chains: [
     {
@@ -678,6 +714,12 @@ const onboard = Onboard({
       token: 'DEGEN',
       label: 'Degen',
       rpcUrl: 'https://rpc.degen.tips'
+    },
+    {
+      id: 2192,
+      token: 'SNAXETH',
+      label: 'SNAX Chain',
+      rpcUrl: 'https://mainnet.snaxchain.io'
     }
   ],
   appMetadata: {
@@ -693,12 +735,12 @@ const onboard = Onboard({
   notify: {
     desktop: {
       enabled: true,
-      transactionHandler: transaction => {
+      transactionHandler: (transaction) => {
         console.log({ transaction })
         if (transaction.eventCode === 'txPool') {
           return {
             type: 'success',
-            message: 'Your transaction from #1 DApp is in the mempool',
+            message: 'Your transaction from #1 DApp is in the mempool'
           }
         }
       },
@@ -706,12 +748,12 @@ const onboard = Onboard({
     },
     mobile: {
       enabled: true,
-      transactionHandler: transaction => {
+      transactionHandler: (transaction) => {
         console.log({ transaction })
         if (transaction.eventCode === 'txPool') {
           return {
             type: 'success',
-            message: 'Your transaction from #1 DApp is in the mempool',
+            message: 'Your transaction from #1 DApp is in the mempool'
           }
         }
       },
@@ -743,7 +785,8 @@ const onboard = Onboard({
         },
         watched: {
           // Any words in brackets can be re-ordered or removed to fit your dapps desired verbiage
-          "txPool": "Your account is {verb} {formattedValue} {asset} {preposition} {counterpartyShortened}"
+          txPool:
+            'Your account is {verb} {formattedValue} {asset} {preposition} {counterpartyShortened}'
         }
       }
     },
@@ -844,6 +887,13 @@ type WalletState = {
   accounts: Account[]
   chains: ConnectedChain[]
   instance?: unknown
+  /**
+   * WAGMI Connector object
+   * Can be used to leverage all WAGMI functions from
+   * the @web3-onboard/wagmi module
+   * See https://www.npmjs.com/package/@web3-onboard/wagmi for more details
+   */
+  wagmiConnector?: Connector
 }
 
 type Account = {
@@ -1136,74 +1186,6 @@ The `customNotification` method also returns a `dismiss` method that is called w
       autoDismiss: 0
     })}>Send DApp Notification</button
 >
-```
-
----
-
-#### **preflightNotifications**
-
-Notify can be used to deliver standard notifications along with preflight updates by passing a `PreflightNotificationsOptions` object to the `preflightNotifications` API action.
-
-<img src="{notifyPreflightImg}" alt="Preflight notifications image"/>
-
-Preflight event types include:
-
-- `txRequest` : Alert user that there is a transaction request awaiting confirmation by their wallet
-- `txAwaitingApproval` : A previous transaction is awaiting confirmation
-- `txConfirmReminder` : Reminder to confirm a transaction to continue - configurable with the `txApproveReminderTimeout` property; defaults to 15 seconds
-- `nsfFail` : The user has insufficient funds for transaction (requires `gasPrice`, `estimateGas`, `balance`, `txDetails.value`)
-- `txError` : General transaction error (requires `sendTransaction`)
-- `txSendFail` : The user rejected the transaction (requires `sendTransaction`)
-- `txUnderpriced` : The gas price for the transaction is too low (requires `sendTransaction`)
-
-This API call will return a promise that resolves to the transaction hash (if `sendTransaction` resolves the transaction hash and is successful), the internal notification id (if no `sendTransaction` function is provided) or return nothing if an error occurs or `sendTransaction` is not provided or doesn't resolve to a string.
-
-Example:
-
-```typescript copy
-const balanceValue = Object.values(balance)[0]
-// if using ethers v6 this is:
-// ethersProvider = new ethers.BrowserProvider(wallet.provider, 'any')
-const ethersProvider = new ethers.providers.Web3Provider(provider, 'any')
-
-const signer = ethersProvider.getSigner()
-const txDetails = {
-  to: toAddress,
-  value: 100000000000000
-}
-
-const sendTransaction = () => {
-  return signer.sendTransaction(txDetails).then((tx) => tx.hash)
-}
-
-const gasPrice = () => ethersProvider.getGasPrice().then((res) => res.toString())
-
-const estimateGas = () => {
-  return ethersProvider.estimateGas(txDetails).then((res) => res.toString())
-}
-const transactionHash = await onboard.state.actions.preflightNotifications({
-  sendTransaction,
-  gasPrice,
-  estimateGas,
-  balance: balanceValue,
-  txDetails: txDetails
-})
-console.log(transactionHash)
-```
-
-```typescript
-interface PreflightNotificationsOptions {
-  sendTransaction?: () => Promise<string | void>
-  estimateGas?: () => Promise<string>
-  gasPrice?: () => Promise<string>
-  balance?: string | number
-  txDetails?: {
-    value: string | number
-    to?: string
-    from?: string
-  }
-  txApproveReminderTimeout?: number // defaults to 15 seconds if not specified
-}
 ```
 
 ---
@@ -1839,7 +1821,9 @@ export default {
       '@web3-onboard/gas',
       '@web3-onboard/sequence',
       'js-sha3',
-      '@ethersproject/bignumber'
+      '@ethersproject/bignumber',
+      '@safe-global/safe-apps-sdk',
+      '@safe-global/safe-apps-provider'
     ],
     esbuildOptions: {
       // Node.js global to browser globalThis

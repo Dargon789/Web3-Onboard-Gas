@@ -1,6 +1,9 @@
 import { CedeProvider, detectCedeProvider } from '@cedelabs/providers'
-import type { WalletInit } from '@subwallet-connect/common'
-import { createEIP1193Provider } from "@subwallet-connect/common";
+import type { ProviderAccounts, WalletInit } from '@web3-onboard/common'
+import {
+  createDownloadMessage,
+  createEIP1193Provider
+} from '@web3-onboard/common'
 
 type CustomWindow = typeof window & {
   cede: CedeProvider
@@ -9,7 +12,6 @@ type CustomWindow = typeof window & {
 function cedeStoreWallet(): WalletInit {
   if (typeof window === 'undefined') return () => null
   return () => ({
-    type : 'evm',
     label: 'cede.store',
     injectedNamespace: 'cede',
     checkProviderIdentity: () => (window as CustomWindow).cede,
@@ -17,8 +19,9 @@ function cedeStoreWallet(): WalletInit {
     getInterface: async () => {
       const provider = await detectCedeProvider()
       if (!provider) {
-        window.open('https://cede.store', '_blank')
-        throw new Error('Please, install cede.store to use this wallet')
+        throw new Error(
+          createDownloadMessage('cede.store', 'https://cede.store')
+        )
       }
 
       // handle disconnect
@@ -37,9 +40,9 @@ function cedeStoreWallet(): WalletInit {
               return []
             }
 
-            const activeVault = accounts.find((account : any) => account.isActive)
+            const activeVault = accounts.find(account => account.isActive)
 
-            return [activeVault?.name || accounts[0].name]
+            return [activeVault?.name || accounts[0].name] as ProviderAccounts
           },
           eth_chainId: () => Promise.resolve('0x1'), // cede.store doesn't support chains, but we have to provide a value to complete the connection
           wallet_switchEthereumChain: null,

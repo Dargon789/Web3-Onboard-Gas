@@ -12,7 +12,6 @@ export const APP_INITIAL_STATE: AppState = {
   },
   notify: {
     enabled: true,
-    transactionHandler: () => {},
     position: 'topRight',
     replacement: {
       gasPriceProbability: {
@@ -28,6 +27,7 @@ export const APP_INITIAL_STATE: AppState = {
     disableClose: false
   },
   appMetadata: null,
+  wagmiConfig: null
 }
 
 export const STORAGE_KEYS = {

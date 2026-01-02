@@ -30,8 +30,6 @@ Web3 Onboard is the quickest and easiest way to add multi-wallet and multi-chain
 
 - **Framework Agnostic:** Avoid framework lock in -- Web3 Onboard works with any framework and includes helper packages for vue & react.
 
-- **Notify:** Real-time transaction notifications for all transaction states for the connected wallet address(es). In-notification speedups & cancels for hardware wallet connections.
-
 ### Natively Supported EVM Chains
 
 Web3 Onboard supports all EVM networks. Supporting a new network is simply a matter of adding its details in the Chains section upon initialization. For more information see [initialization options](../../modules/core.md#initialization).
@@ -46,6 +44,7 @@ Web3 Onboard supports all EVM networks. Supporting a new network is simply a mat
 - BNB Chain
 - Celo
 - Degen
+- SNAX
 - Fantom
 - Gnosis Chain
 - Harmony One
@@ -54,18 +53,6 @@ Web3 Onboard supports all EVM networks. Supporting a new network is simply a mat
 - Base Goerli
 - Degen
 - All other EVM networks
-
-### Optional - Use an API key to fetch real-time transaction data, balances & gas
-
-Using a Blocknative API key with Web3 Onboard on the free plan will allow you to gain the benefits of Blocknative balance & transaction services. Blocknative has a free forever plan you can always use.
-
-This step is not required to use Web3 Onboard. You can skip to the [**Quickstart**](/docs/overview/introduction#quickstart) step below if you want to use Web3 Onboard without API services or if you already have a Blocknative account & API key.
-
-**Setup your Account**
-Go to the Account Dashboard at [https://explorer.blocknative.com/account](https://explorer.blocknative.com/account) and setup an account with an email address. You will receive an email to confirm your account.
-
-**Create your API Key**
-On the Account Dashboard at [https://explorer.blocknative.com/account](https://explorer.blocknative.com/account), create an API key with your choice of name or use/rename the Default Key. Consider using different API keys for development, staging, and production releases.
 
 ## Quickstart
 
@@ -102,6 +89,7 @@ const MAINNET_RPC_URL = 'https://mainnet.infura.io/v3/<INFURA_KEY>'
 const injected = injectedModule()
 
 const onboard = Onboard({
+  // This javascript object is unordered meaning props do not require a certain order
   wallets: [injected],
   chains: [
     {
@@ -139,6 +127,12 @@ const onboard = Onboard({
       token: 'DEGEN',
       label: 'Degen',
       rpcUrl: 'https://rpc.degen.tips'
+    },
+    {
+      id: 2192,
+      token: 'SNAXETH',
+      label: 'SNAX Chain',
+      rpcUrl: 'https://mainnet.snaxchain.io'
     }
   ]
 })
@@ -184,7 +178,7 @@ We recommend you add the [Core Repo](../../modules/core.md#install) and consider
 
 - [Arcana Auth](../../wallets/arcana.md#install)
 - [Blocto](../../wallets/blocto.md#install)
-- [Capsule](../../wallets/capsule.md#install)
+- [Para](../../wallets/para.md#install)
 - [Coinbase](../../wallets/coinbase.md#install)
 - [Fortmatic](../../wallets/fortmatic.md#install)
 - [Frame](../../wallets/frame.md#install)
@@ -192,6 +186,7 @@ We recommend you add the [Core Repo](../../modules/core.md#install) and consider
 - [Magic](../../wallets/magic.md#login-options)
 - [MetaMask](../../wallets/metamask.md#install)
 - [MEW](../../wallets/mewwallet.md#install)
+- [OKX](../../wallets/okx.md#install)
 - [Portis](../../wallets/portis.md#install)
 - [Web3Auth](../../wallets/web3auth.md#install)
 - [WalletConnect](../../wallets/walletconnect.md#install)

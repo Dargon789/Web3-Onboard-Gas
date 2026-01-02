@@ -1,6 +1,6 @@
 {
-  "name": "@subwallet-connect/subwallet_bitkeep",
-  "version": "1.0.7",
+  "name": "@web3-onboard/bitkeep",
+  "version": "2.1.1",
   "description": "Bitkeep Wallet SDK wallet module for connecting to Web3-Onboard. Web3-Onboard makes it simple to connect Ethereum hardware and software wallets to your dapp. Features standardized spec compliant web3 providers for all supported wallets, framework agnostic modern javascript UI with code splitting, CSS customization, multi-chain and multi-account support, reactive wallet state subscriptions and real-time transaction state change notifications.",
   "keywords": [
     "Ethereum",
@@ -37,13 +37,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/blocknative/web3-onboard.git",
+    "url": "https://github.com/blocknative/web3-onboard.git",
     "directory": "packages/bitkeep"
   },
-  "homepage": "https://subwallet.app",
-  "bugs": {
-    "url": "https://github.com/Koniverse/SubWallet-Connect/issues"
-  },
+  "homepage": "https://www.blocknative.com/onboard",
+  "bugs": "https://github.com/blocknative/web3-onboard/issues",
   "module": "dist/index.js",
   "browser": "dist/index.js",
   "main": "dist/index.js",
@@ -60,11 +58,10 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^17.0.21",
-    "typescript": "^4.5.5"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "@bitget-wallet/web3-sdk": "^0.0.8",
-    "@subwallet-connect/common": "^1.0.7"
-  },
-  "author": ""
+    "@web3-onboard/common": "^2.4.1"
+  }
 }

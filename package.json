@@ -1,21 +1,18 @@
 {
-  "name": "subwallet-connect-monorepo",
-  "version": "1.0.7",
+  "name": "web3-onboard-monorepo",
+  "version": "2.29.0",
   "private": true,
   "workspaces": {
     "packages": [
       "./packages/*"
     ],
     "nohoist": [
-      "**/react-dom",
       "**/csstype"
     ]
   },
-  "description": "SubWallet-Connect fork from Web3-Onboard. It makes it simple to connect not only Ethereum but also Polkadot hardware and software wallets to your dapp. Features standardised spec compliant web3 providers for all supported wallets, framework agnostic modern javascript UI with code splitting, CSS customization, multi-chain and multi-account support, reactive wallet state subscriptions and real-time transaction state change notifications.",
+  "description": "Web3-Onboard makes it simple to connect Ethereum hardware and software wallets to your dapp. Features standardised spec compliant web3 providers for all supported wallets, framework agnostic modern javascript UI with code splitting, CSS customization, multi-chain and multi-account support, reactive wallet state subscriptions and real-time transaction state change notifications.",
   "keywords": [
     "Ethereum",
-    "Polkadot",
-    "SubWallet",
     "Web3",
     "EVM",
     "dapp",
@@ -48,11 +45,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Koniverse/SubWallet-Connect.git",
+    "url": "https://github.com/blocknative/web3-onboard.git",
     "directory": "packages/core"
   },
-  "homepage": "https://onboard.blocknative.com",
-  "bugs": "https://github.com/Koniverse/SubWallet-Connect/issues",
+  "homepage": "https://web3onboard.thirdweb.com",
+  "bugs": "https://github.com/blocknative/web3-onboard/issues",
   "scripts": {
     "install-m1-mac": "yarn install --ignore-optional",
     "format": "prettier --write 'packages/**/*.ts'",
@@ -61,21 +58,23 @@
     "type-check": "yarn wsrun type-check",
     "file-check": "yarn install --check-files",
     "check-all": "yarn build && yarn file-check && yarn type-check",
-    "test-playwright": "cd test && yarn && yarn playwright test",
-    "update-version": "node scripts/update-version.js",
-    "publish-version": "node scripts/publish-version.js"
+    "test-playwright": "cd test && yarn && yarn playwright test"
   },
   "devDependencies": {
     "prettier": "^2.4.1",
     "prettier-plugin-svelte": "^2.4.0",
-    "typescript": "^4.5.5"
+    "typescript": "^4.9.4"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*"
   },
   "dependencies": {
     "wsrun": "^5.2.4"
   },
   "resolutions": {
     "minimist": "^1.2.6",
-    "axios": "^1.6.5",
+    "axios": "^0.21.2",
     "async": "^2.6.4",
     "follow-redirects": "1.14.9",
     "ansi-regex": "^4.1.1",

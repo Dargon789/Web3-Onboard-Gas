@@ -32,7 +32,6 @@ function bitKeep(): WalletInit {
         const {
           currentProvider,
           getIsInstall,
-          getDownload,
           installWalletMessage
         } = await loadBitKeepDependencies()
 
@@ -40,7 +39,6 @@ function bitKeep(): WalletInit {
         if (getIsInstall()) {
           provider = currentProvider()
         } else {
-          window.open(getDownload(), '_blank')
           throw new Error(installWalletMessage)
         }
         return { provider }

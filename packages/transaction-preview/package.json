@@ -1,6 +1,6 @@
 {
-  "name": "@subwallet-connect/transaction-preview",
-  "version": "1.0.7",
+  "name": "@web3-onboard/transaction-preview",
+  "version": "2.1.2",
   "description": "In app preview of Ethereum transactions",
   "keywords": [
     "Ethereum",
@@ -35,13 +35,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/blocknative/web3-onboard.git",
+    "url": "https://github.com/blocknative/web3-onboard.git",
     "directory": "packages/transaction-preview"
   },
-  "homepage": "https://subwallet.app",
-  "bugs": {
-    "url": "https://github.com/blocknative/web3-onboard/issues"
-  },
+  "homepage": "https://web3onboard.thirdweb.com",
+  "bugs": "https://github.com/blocknative/web3-onboard/issues",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
@@ -79,16 +77,15 @@
     "svelte-check": "^2.2.6",
     "svelte-preprocess": "^4.9.4",
     "tslib": "^2.0.0",
-    "typescript": "^4.5.5"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@subwallet-connect/common": "^1.0.7",
+    "@web3-onboard/common": "^2.4.1",
     "bnc-sdk": "^4.6.7",
     "bowser": "^2.11.0",
     "joi": "17.9.1",
     "rxjs": "^7.5.2",
     "svelte": "^3.49.0",
     "svelte-i18n": "^3.3.13"
-  },
-  "author": ""
+  }
 }

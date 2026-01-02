@@ -1,4 +1,4 @@
-import type { WalletInit } from '@subwallet-connect/common'
+import type { ProviderAccounts, WalletInit } from '@web3-onboard/common'
 import type { TorusCtorArgs, TorusParams } from '@toruslabs/torus-embed'
 
 type TorusOptions = TorusCtorArgs & TorusParams
@@ -19,7 +19,6 @@ function torus(options?: TorusOptions): WalletInit {
   return () => {
     return {
       label: 'Torus',
-      type : 'evm',
       getIcon: async () => (await import('./icon.js')).default,
       getInterface: async ({ chains }) => {
         const { default: Torus } = await import('@toruslabs/torus-embed')
@@ -28,7 +27,7 @@ function torus(options?: TorusOptions): WalletInit {
           createEIP1193Provider,
           ProviderRpcErrorCode,
           ProviderRpcError
-        } = await import('@subwallet-connect/common')
+        } = await import('@web3-onboard/common')
 
         const [chain] = chains
 
@@ -58,7 +57,7 @@ function torus(options?: TorusOptions): WalletInit {
           eth_requestAccounts: async () => {
             try {
               const accounts = await instance.login()
-              return accounts
+              return accounts as ProviderAccounts
             } catch (error) {
               throw new ProviderRpcError({
                 code: ProviderRpcErrorCode.ACCOUNT_ACCESS_REJECTED,
