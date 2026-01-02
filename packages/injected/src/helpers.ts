@@ -1,5 +1,6 @@
 import type { Device, ProviderRpcErrorCode } from '@subwallet-connect/common'
 import type { InjectedProvider, InjectedWalletModule } from './types.js'
+import DOMPurify from 'dompurify'
 
 export class ProviderRpcError extends Error {
   message: string
@@ -44,4 +45,19 @@ export const isWalletAvailable = (
   return !!provider.providers?.some(provider =>
       checkProviderIdentity({ provider, device })
   )
+}
+
+export 
+function containsExecutableJavaScript(svgString: string): boolean {
+  if (!svgString) return false
+
+  // Use DOMPurify to detect whether any executable JavaScript or
+  // other dangerous content would be removed during sanitization.
+  // If DOMPurify removes anything, we treat the SVG as containing
+  // executable or otherwise unsafe content.
+  // Configure DOMPurify for SVG content.
+  DOMPurify.removed = []
+  DOMPurify.sanitize(svgString, { USE_PROFILES: { svg: true } })
+
+  return Array.isArray(DOMPurify.removed) && DOMPurify.removed.length > 0
 }

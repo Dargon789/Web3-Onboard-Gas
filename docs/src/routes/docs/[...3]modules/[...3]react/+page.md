@@ -4,7 +4,7 @@ title: React
 
 # {$frontmatter.title}
 
-A collection of React hooks for implementing web3-onboard into a React project
+A collection of React hooks for implementing Web3 Onboard into a React project
 
 ## Quickstart with Injected Wallets and Ethers Provider
 
@@ -35,10 +35,6 @@ import { init, useConnectWallet } from '@web3-onboard/react'
 import injectedModule from '@web3-onboard/injected-wallets'
 import { ethers } from 'ethers'
 
-// Sign up to get your free API key at https://explorer.blocknative.com/?signup=true
-// Required for Transaction Notifications and Transaction Preview
-const apiKey = '1730eff0-9d50-4382-a3fe-89f0d34a2070'
-
 const injected = injectedModule()
 
 const infuraKey = '<INFURA_KEY>'
@@ -46,7 +42,7 @@ const rpcUrl = `https://mainnet.infura.io/v3/${infuraKey}`
 
 // initialize Onboard
 init({
-  apiKey,
+  // This javascript object is unordered meaning props do not require a certain order
   wallets: [injected],
   chains: [
     {
@@ -109,13 +105,13 @@ the initialized web3Onboard instance will be available in all children component
 import { Web3OnboardProvider, init } from '@web3-onboard/react'
 import injectedModule from '@web3-onboard/injected-wallets'
 const INFURA_KEY = ''
-const ethereumRopsten = {
-  id: '0x3',
-  token: 'rETH',
-  label: 'Ethereum Ropsten',
-  rpcUrl: `https://ropsten.infura.io/v3/${INFURA_KEY}`
+const ethereumSepolia = {
+  id: 11155111,
+  token: 'ETH',
+  label: 'Sepolia',
+  rpcUrl: 'https://rpc.sepolia.org/'
 }
-const chains = [ethereumRopsten]
+const chains = [ethereumSepolia]
 const wallets = [injectedModule()]
 const web3Onboard = init({
   wallets,
@@ -136,11 +132,11 @@ function MyApp({ Component, pageProps }) {
 export default MyApp
 ```
 
-## `init`
+## init
 
 The `init` function must be called before any hooks can be used. The `init` function just initializes `web3-onboard` and makes it available for all hooks to use. For reference check out the [initialization docs for `@web3-onboard/core`](../../modules/core.md#initialization)
 
-## `useConnectWallet`
+## useConnectWallet
 
 This hook allows you to connect the user's wallet and track the state of the connection status and the wallet that is connected.
 
@@ -202,7 +198,7 @@ setPrimaryWallet(wallets[1])
 setPrimaryWallet(wallets[1], wallets[1].accounts[2].address)
 ```
 
-## `useSetChain`
+## useSetChain
 
 This hook allows you to set the chain of a user's connected wallet, keep track of the current chain the user is connected to and the status of setting the chain. Passing in a wallet label will operate on that connected wallet, otherwise it will default to the last connected wallet. If a chain was instantiated without an rpcUrl, token, or label, add these options for wallets that require this information for adding a new chain.
 
@@ -242,10 +238,66 @@ const [
 ] = useSetChain()
 ```
 
-## `useNotifications`
+## useWagmiConfig
 
-This hook allows the dev to access all notifications if enabled, send custom notifications and update notify <enable/disable & update transactionHandler function>
-**note** requires an API key be added to the initialization, enabled by default if API key exists
+This hook allows you to get the WagmiConfig (Config from the Wagmi project) from @web3-onboard/core if W3O has been initialized with the [WAGMI property imported and passing into the web3-onboard/core config](../../modules/wagmi.md#usage).
+
+```ts
+import Onboard from '@web3-onboard/core'
+import injectedModule from '@web3-onboard/injected-wallets'
+import wagmi from '@web3-onboard/wagmi'
+import {
+  sendTransaction as wagmiSendTransaction,
+  switchChain,
+  disconnect,
+  getConnectors
+} from '@web3-onboard/wagmi'
+import { parseEther, isHex, fromHex } from 'viem'
+
+const injected = injectedModule()
+
+const onboard = Onboard({
+  wagmi,
+  wallets: [injected],
+  chains: [
+    {
+      id: '0x1',
+      token: 'ETH',
+      label: 'Ethereum',
+      rpcUrl: 'https://mainnet.infura.io/v3/17c1e1500e384acfb6a72c5d2e67742e'
+    }
+  ]
+  // ... other Onboard options
+})
+
+const sendTransaction = async () => {
+  // current primary wallet - as multiple wallets can connect this value is the currently active
+  const [activeWallet] = onboard.state.get().wallets
+  const { wagmiConnector } = activeWallet
+  const wagmiConfig = onboard.state.get().wagmiConfig
+  const result = await wagmiSendTransaction(wagmiConfig, {
+    to: toAddress,
+    // desired connector to send txn from
+    connector: wagmiConnector,
+    value: parseEther('0.001')
+  })
+  console.log(result)
+}
+
+async function signMessage(chainId) {
+  // current primary wallet - as multiple wallets can connect this value is the currently active
+  const [activeWallet] = onboard.state.get().wallets
+  const wagmiConfig = onboard.state.get().wagmiConfig
+  await wagmiSignMessage(wagmiConfig, {
+    message: 'This is my message to you',
+    connector: activeWallet.wagmiConnector
+  })
+}
+```
+
+## useNotifications
+
+This hook allows the dev to access all notifications if enabled, send custom notifications, and update notify <enable/disable & update transactionHandler function>
 For full Notification documentation please see [Notify section within the `@web3-onboard/core` docs](../../modules/core.md#initialization)
 
 ```typescript
@@ -256,7 +308,6 @@ type UseNotifications = (): [
     update: UpdateNotification
   },
   (update: Partial<Notify>) => void,
-  (options: PreflightNotificationsOptions) => Promise<void | string>
 ]
 
 type Notification = {
@@ -306,23 +357,9 @@ type Notify = {
   /**
    * Position of notifications that defaults to the same position as the
    * Account Center (if enabled) of the top right if AC is disabled
-   * and notifications are enabled (enabled by default with API key)
+   * and notifications are enabled 
    */
   position?: NotificationPosition
-}
-
-type PreflightNotificationsOptions = {
-  sendTransaction?: () => Promise<string | void>
-  estimateGas?: () => Promise<string>
-  gasPrice?: () => Promise<string>
-  balance?: string | number
-  txDetails?: TxDetails
-  txApproveReminderTimeout?: number
-}
-type TxDetails = {
-  value: string | number
-  to?: string
-  from?: string
 }
 ```
 
@@ -409,9 +446,9 @@ const sendTransactionWithPreFlightNotifications = async () => {
 </button>
 ```
 
-## `useWallets`
+## useWallets
 
-This hook allows you to track the state of all the currently connected wallets.
+This hook allows you to track the state of all the currently connected wallets:
 
 ```typescript
 import { useWallets } from '@web3-onboard/react'
@@ -421,9 +458,9 @@ type UseWallets = (): WalletState[]
 const connectedWallets = useWallets()
 ```
 
-## `useAccountCenter`
+## useAccountCenter
 
-This hook allows you to track and update the state of the AccountCenter
+This hook allows you to track and update the state of the Account Center:
 
 ```typescript
 import { useAccountCenter } from '@web3-onboard/react'
@@ -448,9 +485,9 @@ type AccountCenter = {
 const updateAccountCenter = useAccountCenter()
 ```
 
-## `useSetLocale`
+## useSetLocale
 
-This hook allows you to set the locale of your application to allow language updates associated with the i18n config
+This hook allows you to set the locale of your application to allow language updates associated with the i18n config:
 
 ```typescript
 import { useSetLocale } from '@web3-onboard/react'
@@ -470,7 +507,7 @@ Many of the wallet modules require dependencies that are not normally included i
 
 Node built-ins are automatically bundled in v4 so that portion is handled automatically.
 
-**web3auth** and **torus** will require a Babel to compile from es6 if not already supported. See config for Babel and Webpack4 as follows
+**web3auth** and **torus** will require a Babel to compile from es6 if not already supported. See config for Babel and Webpack4 as follows:
 
 `npm i --save-dev @babel/cli @babel/core @babel/node @babel/plugin-proposal-nullish-coalescing-operator @babel/plugin-proposal-optional-chaining @babel/plugin-syntax-bigint @babel/register`
 **AND**
@@ -602,7 +639,7 @@ Be sure to update the scripts in package.json:
   }
 ```
 
-[React App Rewired](https://www.npmjs.com/package/react-app-rewired) is another option for working with Create React App DApps
+[React App Rewired](https://www.npmjs.com/package/react-app-rewired) is another option for working with Create React App dapps
 
 Add React App Rewired:
 

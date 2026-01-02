@@ -1,11 +1,12 @@
 import { sveltekit } from '@sveltejs/kit/vite'
 import icons from 'unplugin-icons/vite'
 import kitDocs from '@svelteness/kit-docs/node'
-import nodePolyfills from 'rollup-plugin-polyfill-node'
+import {nodePolyfills} from 'vite-plugin-node-polyfills'
+import react from '@vitejs/plugin-react';
 
 /** @type {import('vite').UserConfig} */
 const config = {
-  plugins: [icons({ compiler: 'svelte' }), kitDocs(), sveltekit()],
+  plugins: [react(), icons({ compiler: 'svelte' }), kitDocs(), sveltekit(), nodePolyfills()],
   resolve: {
     alias: {
       crypto: 'crypto-browserify',
@@ -18,14 +19,14 @@ const config = {
   build: {
     rollupOptions: {
       external: ['@web3-onboard/*'],
-      plugins: [nodePolyfills({ crypto: true, http: true })]
     },
     commonjsOptions: {
       transformMixedEsModules: true
     }
   },
   define: {
-    'import.meta.env.VERCEL': JSON.stringify(process.env.VERCEL)
+    'import.meta.env.VERCEL': JSON.stringify(process.env.VERCEL),
+    'process.env.NODE_DEBUG': JSON.stringify('')
   },
   optimizeDeps: {
     exclude: ['@ethersproject/hash', 'wrtc', 'http', 'react/jsx-runtime'],

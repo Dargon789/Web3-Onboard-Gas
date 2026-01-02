@@ -1,6 +1,6 @@
 # @subwallet-connect/gas
 
-## A module for requesting streams or single requests of gas price estimates from the [Blocknative Gas Platform API](https://onboard.blocknative.com/docs/packages/gas).
+## A module for requesting streams or single requests of gas price estimates from the [Blocknative Gas Platform API](https://docs.blocknative.com/gas-prediction/gas-platform).
 
 Supports both Eth Mainnet and Polygon gas pricing.
 
@@ -21,7 +21,6 @@ import gas from '@subwallet-connect/gas'
 // API key is optional and if provided allows for faster poll rates
 const ethMainnetGasBlockPrices = gas.stream({
   chains: ['0x1'],
-  apiKey: '<OPTIONAL_API_KEY>',
   endpoint: 'blockPrices'
 })
 
@@ -35,7 +34,6 @@ setTimeout(ethGasUnsub, 10000)
 // OR you can subscribe to multiple chains at once:
 const gasBlockPrices = gas.stream({
   chains: ['0x1', '0x89'],
-  apiKey: '<OPTIONAL_API_KEY>',
   endpoint: 'blockPrices',
   // can override default poll rate as well
   poll: 1000
@@ -54,7 +52,6 @@ setTimeout(unsubscribe, 10000)
 // Can also just do a one time get rather than a stream
 const gasBlockPrices = await gas.get({
   chains: ['0x1', '0x89'],
-  apiKey: '<OPTIONAL_API_KEY>',
   endpoint: 'blockPrices'
 })
 ```
@@ -63,7 +60,7 @@ const gasBlockPrices = await gas.get({
 ## Usage with Web3-Onboard wallet Connect and Ethers.js
 
 This example assumes you have already setup web3-onboard to connect wallets to your dapp. 
-For more information see [web3-onboard docs](https://onboard.blocknative.com/docs/modules/core#install).
+For more information see [web3-onboard docs](https://web3onboard.thirdweb.com/docs/modules/core#install).
 ```ts
 import gas from '@subwallet-connect/gas'
 import { ethers } from 'ethers'
@@ -74,7 +71,6 @@ let bnGasPrices
 
 const ethMainnetGasBlockPrices = gas.stream({
   chains: ['0x1'], // '0x89' can also be added/replaced here for Polygon gas data 
-  apiKey: '<OPTIONAL_API_KEY>', // for faster refresh rates
   endpoint: 'blockPrices'
 })
 

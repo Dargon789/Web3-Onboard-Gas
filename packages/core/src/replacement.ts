@@ -1,10 +1,10 @@
 import type { EthereumTransactionData, Network } from 'bnc-sdk'
-import { BigNumber } from 'ethers'
+import { bigIntToHex } from '@web3-onboard/common'
 import { configuration } from './configuration.js'
 import { state } from './store/index.js'
 import type { WalletState } from './types.js'
 import { gweiToWeiHex, networkToChainId, toHexString } from './utils.js'
-import type { EIP1193Provider } from '@subwallet-connect/common';
+import type { GasPrice } from '@web3-onboard/gas'
 
 const ACTIONABLE_EVENT_CODES: string[] = ['txPool']
 const VALID_GAS_NETWORKS: Network[] = ['main', 'matic-main']
@@ -39,32 +39,38 @@ export async function replaceTransaction({
 
   const chainId = networkToChainId[network]
 
-  const { gasPriceProbability } = state.get().notify.replacement
-  const { gas, apiKey } = configuration
+  const { gasPriceProbability } = state.get().notify.replacement as {
+    gasPriceProbability?:
+      | { speedup?: number | undefined; cancel?: number | undefined }
+      | undefined
+  }
 
+  const { gas } = configuration
+  if (!gas) return
   // get gas price
   const [gasResult] = await gas.get({
     chains: [networkToChainId[network]],
-    endpoint: 'blockPrices',
-    apiKey
+    endpoint: 'blockPrices'
   })
 
   const { maxFeePerGas, maxPriorityFeePerGas } =
-    gasResult.blockPrices[0].estimatedPrices.find(
+    (gasResult.blockPrices[0].estimatedPrices.find(
       ({ confidence }) =>
         confidence ===
         (type === 'speedup'
-          ? gasPriceProbability.speedup
-          : gasPriceProbability.cancel)
-    )
+          ? gasPriceProbability?.speedup
+          : gasPriceProbability?.cancel)
+    ) as GasPrice) || {}
+
+  if (!maxFeePerGas || !maxPriorityFeePerGas) return
 
   const maxFeePerGasWeiHex = gweiToWeiHex(maxFeePerGas)
   const maxPriorityFeePerGasWeiHex = gweiToWeiHex(maxPriorityFeePerGas)
 
   // Some wallets do not like empty '0x' val
   const dataObj = input === '0x' ? {} : { data: input }
-  if( wallet.type !== 'evm') return;
-  return (wallet.provider as EIP1193Provider).request({
+
+  return wallet.provider.request({
     method: 'eth_sendTransaction',
     params: [
       {
@@ -72,7 +78,7 @@ export async function replaceTransaction({
         from,
         to: type === 'cancel' ? from : to,
         chainId: parseInt(chainId),
-        value: `${BigNumber.from(value).toHexString()}`,
+        value: bigIntToHex(BigInt(value)),
         nonce: toHexString(nonce),
         gasLimit: toHexString(gasLimit),
         maxFeePerGas: maxFeePerGasWeiHex,

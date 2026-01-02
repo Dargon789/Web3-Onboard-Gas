@@ -43,7 +43,6 @@ export default {
   external: [
     '@subwallet-connect/common',
     'bnc-sdk',
-    'ethers',
     'bowser',
     'joi',
     'rxjs',

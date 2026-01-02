@@ -2,7 +2,7 @@ import connectWallet from './connect.js'
 import disconnectWallet from './disconnect.js'
 import setChain from './chain.js'
 import { state } from './store/index.js'
-import { qrModalConnect$, reset$, wallets$ } from './streams.js'
+import { reset$ } from './streams.js'
 import initI18N from './i18n/index.js'
 import App from './views/Index.svelte'
 import type {
@@ -15,12 +15,11 @@ import { APP_INITIAL_STATE, STORAGE_KEYS } from './constants.js'
 import { configuration, updateConfiguration } from './configuration.js'
 import updateBalances from './update-balances.js'
 import { chainIdToHex, getLocalStore, setLocalStore } from './utils.js'
-import { preflightNotifications } from './preflight-notifications.js'
-import type { WalletState } from './types.js';
 
 import {
+  validateInitOptions,
   validateNotify,
-  // validateNotifyOptions
+  validateNotifyOptions
 } from './validation.js'
 
 import {
@@ -33,13 +32,11 @@ import {
   setWalletModules,
   updateConnectModal,
   updateTheme,
-  updateAppMetadata
+  updateAppMetadata,
+  updateChain
 } from './store/actions.js'
-import type { PatchedEIP1193Provider } from '@subwallet-connect/transaction-preview'
-import { getBlocknativeSdk } from './services.js'
-import { WalletConnectModal } from '@walletconnect/modal';
-
-
+import type { WagmiModuleAPI } from '@web3-onboard/wagmi'
+import { wagmiProviderMethods } from './provider'
 
 const API = {
   connectWallet,
@@ -53,7 +50,6 @@ const API = {
       setLocale,
       updateNotify,
       customNotification,
-      preflightNotifications,
       updateBalances,
       updateAccountCenter,
       setPrimaryWallet,
@@ -61,8 +57,7 @@ const API = {
       updateAppMetadata
     }
   }
-};
-
+}
 
 export type OnboardAPI = typeof API
 
@@ -78,21 +73,22 @@ export type {
   Notification,
   Notify,
   UpdateNotification,
-  PreflightNotificationsOptions,
-  Theme
+  Theme,
+  WagmiConfig
 } from './types.js'
 
-export type { EIP1193Provider } from '@subwallet-connect/common'
+export type { EIP1193Provider } from '@web3-onboard/common'
 
 function init(options: InitOptions): OnboardAPI {
   if (typeof window === 'undefined') return API
-  // if (options) {
-  //   const error = validateInitOptions(options)
-  //
-  //   if (error) {
-  //     throw error
-  //   }
-  // }
+
+  if (options) {
+    const error = validateInitOptions(options)
+
+    if (error) {
+      throw error
+    }
+  }
 
   const {
     wallets,
@@ -100,17 +96,15 @@ function init(options: InitOptions): OnboardAPI {
     appMetadata,
     i18n,
     accountCenter,
-    apiKey,
     notify,
     gas,
     connect,
     containerElements,
     transactionPreview,
-    theme = 'default',
+    theme,
     disableFontDownload,
     unstoppableResolution,
-    chainsPolkadot,
-    wcConfigOption
+    wagmi
   } = options
 
   if (containerElements) updateConfiguration({ containerElements })
@@ -124,28 +118,18 @@ function init(options: InitOptions): OnboardAPI {
   }
 
   initI18N(i18n)
-  addChains(chainIdToHex(chains).concat(chainsPolkadot))
-
-  if(wcConfigOption?.projectId){
-    const modalWC = new WalletConnectModal(
-      {...wcConfigOption});
-
-    qrModalConnect$.next({
-      isOpen: false,
-      modal: modalWC
-    })
-  }
-
-
+  addChains(chainIdToHex(chains))
 
   if (typeof connect !== 'undefined') {
-    updateConnectModal(connect)
+    updateConnectModal(
+      connect as ConnectModalOptions | Partial<ConnectModalOptions>
+    )
   }
   // update accountCenter
   if (typeof accountCenter !== 'undefined') {
     let accountCenterUpdate
     const { hideTransactionProtectionBtn, transactionProtectionInfoLink } =
-        accountCenter
+      accountCenter
 
     if (device.type === 'mobile') {
       accountCenterUpdate = {
@@ -162,37 +146,55 @@ function init(options: InitOptions): OnboardAPI {
         ...accountCenter.desktop
       }
     }
-    updateAccountCenter(accountCenterUpdate)
+    if (typeof accountCenterUpdate !== 'undefined') {
+      updateAccountCenter(accountCenterUpdate)
+    }
+  }
+
+  let wagmiApi: WagmiModuleAPI | undefined
+  if (typeof wagmi !== 'undefined') {
+    wagmiApi = wagmi({
+      disconnect: disconnectWallet,
+      updateChain,
+      ...wagmiProviderMethods()
+    })
   }
 
   // update notify
   if (typeof notify !== 'undefined') {
+    console.warn(
+      `Support for notifications on transaction state changes have been deprecated. Custom notifications can still be sent ot the user.`
+    )
     if ('desktop' in notify || 'mobile' in notify) {
-      // const error = validateNotifyOptions(notify)
-      //
-      // if (error) {
-      //   throw error
-      // }
+      const error = validateNotifyOptions(notify)
+
+      if (error) {
+        throw error
+      }
 
       if (
-          (!notify.desktop || (notify.desktop && !notify.desktop.position)) &&
-          accountCenter &&
-          accountCenter.desktop &&
-          accountCenter.desktop.position
+        notify &&
+        notify.desktop &&
+        notify.desktop.position &&
+        accountCenter &&
+        accountCenter.desktop &&
+        accountCenter.desktop.position
       ) {
         notify.desktop.position = accountCenter.desktop.position
       }
 
       if (
-          (!notify.mobile || (notify.mobile && !notify.mobile.position)) &&
-          accountCenter &&
-          accountCenter.mobile &&
-          accountCenter.mobile.position
+        notify &&
+        notify.mobile &&
+        notify.mobile.position &&
+        accountCenter &&
+        accountCenter.mobile &&
+        accountCenter.mobile.position
       ) {
         notify.mobile.position = accountCenter.mobile.position
       }
 
-      let notifyUpdate: Partial<Notify>
+      let notifyUpdate: Partial<Notify> = {}
 
       if (device.type === 'mobile' && notify.mobile) {
         notifyUpdate = {
@@ -227,57 +229,51 @@ function init(options: InitOptions): OnboardAPI {
     updateNotify(notifyUpdate)
   }
 
-  const app = svelteInstance || mountApp(theme, disableFontDownload)
+  const app =
+    svelteInstance || mountApp(theme || {}, disableFontDownload || false)
 
   updateConfiguration({
     svelteInstance: app,
-    apiKey,
     initialWalletInit: wallets,
     gas,
-    transactionPreview,
-    unstoppableResolution
+    unstoppableResolution,
+    wagmi: wagmiApi
   })
-
 
   appMetadata && updateAppMetadata(appMetadata)
 
-
-
-  if (apiKey && transactionPreview) {
-    const getBnSDK = async () => {
-      transactionPreview.init({
-        containerElement: '#w3o-transaction-preview-container',
-        sdk: await getBlocknativeSdk(),
-        apiKey
-      })
-      wallets$.subscribe(wallets => {
-        wallets.forEach(({ provider }) => {
-          transactionPreview.patchProvider(provider as PatchedEIP1193Provider)
-        })
-      })
-    }
-    getBnSDK()
+  if (transactionPreview) {
+    console.error(
+      'Transaction Preview support has been removed and is no longer supported within Web3-Onboard'
+    )
   }
 
   theme && updateTheme(theme)
 
   // handle auto connection of last wallet
   if (
-      connect &&
-      (connect.autoConnectLastWallet || connect.autoConnectAllPreviousWallet)
+    connect &&
+    (connect.autoConnectLastWallet || connect.autoConnectAllPreviousWallet)
   ) {
     const lastConnectedWallets = getLocalStore(
-        STORAGE_KEYS.LAST_CONNECTED_WALLET
+      STORAGE_KEYS.LAST_CONNECTED_WALLET
     )
-    const lastConnectedWalletsParsed = JSON.parse(lastConnectedWallets)
-
     try {
+      const lastConnectedWalletsParsed = JSON.parse(
+        lastConnectedWallets as string
+      )
       if (
-          lastConnectedWalletsParsed &&
-          Array.isArray(lastConnectedWalletsParsed) &&
-          lastConnectedWalletsParsed.length
+        lastConnectedWalletsParsed &&
+        Array.isArray(lastConnectedWalletsParsed) &&
+        lastConnectedWalletsParsed.length
       ) {
         connectAllPreviousWallets(lastConnectedWalletsParsed, connect)
+      }
+      if (
+        lastConnectedWalletsParsed &&
+        typeof lastConnectedWalletsParsed === 'string'
+      ) {
+        connectAllPreviousWallets([lastConnectedWalletsParsed], connect)
       }
     } catch (err) {
       // Handle for legacy single wallet approach
@@ -285,9 +281,8 @@ function init(options: InitOptions): OnboardAPI {
       if (err instanceof SyntaxError && lastConnectedWallets) {
         API.connectWallet({
           autoSelect: {
-            label: lastConnectedWalletsParsed.label,
-            disableModals: true,
-            type: lastConnectedWalletsParsed.type
+            label: lastConnectedWallets,
+            disableModals: true
           }
         })
       }
@@ -298,16 +293,16 @@ function init(options: InitOptions): OnboardAPI {
 }
 
 const fontFamilyExternallyDefined = (
-    theme: Theme,
-    disableFontDownload: boolean
+  theme: Theme,
+  disableFontDownload: boolean
 ): boolean => {
   if (disableFontDownload) return true
   if (
-      document.body &&
-      (getComputedStyle(document.body).getPropertyValue(
-              '--onboard-font-family-normal'
-          ) ||
-          getComputedStyle(document.body).getPropertyValue('--w3o-font-family'))
+    document.body &&
+    (getComputedStyle(document.body).getPropertyValue(
+      '--onboard-font-family-normal'
+    ) ||
+      getComputedStyle(document.body).getPropertyValue('--w3o-font-family'))
   )
     return true
   if (!theme) return false
@@ -316,7 +311,7 @@ const fontFamilyExternallyDefined = (
 }
 
 const importInterFont = async (): Promise<void> => {
-  const { InterVar } = await import('@subwallet-connect/common')
+  const { InterVar } = await import('@web3-onboard/common')
   // Add Fonts to main page
   const styleEl = document.createElement('style')
 
@@ -328,46 +323,35 @@ const importInterFont = async (): Promise<void> => {
 }
 
 const connectAllPreviousWallets = async (
-    lastConnectedWallets: Array<Pick<WalletState, 'label' | 'type'>>,
-    connect: ConnectModalOptions
+  lastConnectedWallets: Array<string>,
+  connect: ConnectModalOptions
 ): Promise<void> => {
-  const activeWalletsList: Pick<WalletState, 'label' | 'type'>[] = []
+  const activeWalletsList = []
   const parsedWalletList = lastConnectedWallets
+
   if (!connect.autoConnectAllPreviousWallet) {
     API.connectWallet({
-      autoSelect: {
-        label: parsedWalletList[0].label,
-        type: parsedWalletList[0].type,
-        disableModals: true
-      }
+      autoSelect: { label: parsedWalletList[0], disableModals: true }
     })
     activeWalletsList.push(parsedWalletList[0])
   } else {
     // Loop in reverse to maintain wallet order
-    await Promise.all(parsedWalletList.map(async (wallet) => {
-      for (let i = parsedWalletList.length; i--; ) {
-        const walletConnectionPromise = await API.connectWallet({
-          autoSelect: {
-            label: parsedWalletList[i].label,
-            type: parsedWalletList[i].type,
-            disableModals: true
-          }
-        })
-        // Update localStorage list for available wallets
-        if (walletConnectionPromise.some(r =>
-          r.label === parsedWalletList[i].label
-          && r.type === parsedWalletList[i].type)
-        ) {
-          activeWalletsList.unshift(parsedWalletList[i])
-        }
+    for (let i = parsedWalletList.length; i--; ) {
+      const walletConnectionPromise = await API.connectWallet({
+        autoSelect: { label: parsedWalletList[i], disableModals: true }
+      })
+      // Update localStorage list for available wallets
+      if (walletConnectionPromise.some(r => r.label === parsedWalletList[i])) {
+        activeWalletsList.unshift(parsedWalletList[i])
       }
-    }))
+    }
+  }
 
   setLocalStore(
-      STORAGE_KEYS.LAST_CONNECTED_WALLET,
-      JSON.stringify(activeWalletsList)
+    STORAGE_KEYS.LAST_CONNECTED_WALLET,
+    JSON.stringify(activeWalletsList)
   )
-}}
+}
 
 function mountApp(theme: Theme, disableFontDownload: boolean) {
   class Onboard extends HTMLElement {
@@ -398,36 +382,33 @@ function mountApp(theme: Theme, disableFontDownload: boolean) {
           --white: white;
           --black: black;
           --primary-1: #2F80ED;
-          --primary-2: #004BFF;
-          --primary-3: #2565e6;
-          --primary-100: #a0c7fa;
-          --primary-200: #76aaf7;
-          --primary-300: #4e8af2;
-          --primary-400: #2565e6;
-          --primary-500: #004BFF;
-          --primary-600: #0031a6;
-          --primary-700: #00174d;
+          --primary-100: #eff1fc;
+          --primary-200: #d0d4f7;
+          --primary-300: #b1b8f2;
+          --primary-400: #929bed;
+          --primary-500: #6370e5;
+          --primary-600: #454ea0;
+          --primary-700: #323873;
           --gray-100: #ebebed;
           --gray-200: #c2c4c9;
           --gray-300: #999ca5;
-          --gray-400: #797979;
-          --gray-500: #363636;
+          --gray-400: #707481;
+          --gray-500: #33394b;
           --gray-600: #242835;
           --gray-700: #1a1d26;
-          --gray-800: #1A1A1A;
           --success-100: #d1fae3;
           --success-200: #baf7d5;
           --success-300: #a4f4c6;
           --success-400: #8df2b8;
-          --success-500: #4CEAAC;
+          --success-500: #5aec99;
           --success-600: #18ce66;
           --success-700: #129b4d;
           --danger-100: #ffe5e6;
           --danger-200: #ffcccc;
-          --danger-400: #ff8080;
           --danger-300: #ffb3b3;
-          --danger-500: #d5413b;
-          --danger-600: #BF1616;
+          --danger-400: #ff8080;
+          --danger-500: #ff4f4f;
+          --danger-600: #cc0000;
           --danger-700: #660000;
           --warning-100: #ffefcc;
           --warning-200: #ffe7b3;
@@ -436,10 +417,10 @@ function mountApp(theme: Theme, disableFontDownload: boolean) {
           --warning-500: #ffaf00;
           --warning-600: #cc8c00;
           --warning-700: #664600;
-          --warning-800: #D9C500;
 
           /* FONTS */
-          --font-family-normal: var(--w3o-font-family, 'Plus Jakarta Sans', Inter, sans-serif);
+          --font-family-normal: var(--w3o-font-family, Inter, sans-serif);
+
           --font-size-1: 3rem;
           --font-size-2: 2.25rem;
           --font-size-3: 1.5rem;
@@ -488,24 +469,33 @@ function mountApp(theme: Theme, disableFontDownload: boolean) {
         }
       </style>
     `
-  const connectModalContEl = configuration.containerElements.connectModal
+  let connectModalContEl
+  if (
+    configuration &&
+    configuration.containerElements &&
+    configuration.containerElements.connectModal
+  ) {
+    connectModalContEl = configuration.containerElements.connectModal
+  }
 
   const containerElementQuery =
-      connectModalContEl || state.get().accountCenter.containerElement || 'body'
+    connectModalContEl || state.get().accountCenter.containerElement || 'body'
 
   const containerElement = document.querySelector(containerElementQuery)
 
   if (!containerElement) {
     throw new Error(
-        `Element with query ${containerElementQuery} does not exist.`
+      `Element with query ${containerElementQuery} does not exist.`
     )
   }
 
   containerElement.appendChild(onboard)
 
-  return new App({
+  const app = new App({
     target
   })
+
+  return app
 }
 
 export default init

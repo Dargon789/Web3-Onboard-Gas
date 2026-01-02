@@ -1,6 +1,6 @@
 {
-  "name": "@subwallet-connect/react",
-  "version": "1.0.7",
+  "name": "@web3-onboard/react",
+  "version": "2.11.0",
   "description": "A collection of React hooks for integrating Web3-Onboard in to React and Next.js projects. Web3-Onboard makes it simple to connect Ethereum hardware and software wallets to your dapp. Features standardised spec compliant web3 providers for all supported wallets, modern javascript UI with code splitting, CSS customization, multi-chain and multi-account support, reactive wallet state subscriptions and real-time transaction state change notifications.",
   "keywords": [
     "Ethereum",
@@ -30,19 +30,16 @@
     "pending",
     "confirmed",
     "Injected Wallet",
-    "GameStop",
     "Crypto",
     "Crypto Wallet"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/blocknative/web3-onboard.git",
+    "url": "https://github.com/blocknative/web3-onboard.git",
     "directory": "packages/react"
   },
-  "homepage": "https://subwallet.app",
-  "bugs": {
-    "url": "https://github.com/blocknative/web3-onboard/issues"
-  },
+  "homepage": "https://web3onboard.thirdweb.com",
+  "bugs": "https://github.com/blocknative/web3-onboard/issues",
   "module": "dist/index.js",
   "browser": "dist/index.js",
   "main": "dist/index.js",
@@ -61,15 +58,17 @@
     "@types/react": "^18.0.2",
     "@types/use-sync-external-store": "^0.0.3",
     "react": "^18.0.0",
-    "typescript": "^4.5.5"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@subwallet-connect/common": "^1.0.7",
-    "@subwallet-connect/core": "^1.0.7",
-    "use-sync-external-store": "^1.0.0"
+    "@web3-onboard/core": "2.24.0",
+    "@web3-onboard/common": "^2.4.1",
+    "use-sync-external-store": "1.0.0"
   },
   "peerDependencies": {
     "react": ">=16.8"
   },
-  "author": ""
+  "engines": {
+    "node": ">=16.15.1"
+  }
 }

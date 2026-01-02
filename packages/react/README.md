@@ -1,8 +1,8 @@
-<a href="https://onboard.blocknative.com/">
+<a href="https://web3onboard.thirdweb.com/">
   <img alt="Web3-Onboard UI Components" src="https://github.com/blocknative/web3-onboard/blob/develop/assets/core.svg?raw=true" />
 </a>
 
-# @subwallet-connect/react
+# @web3-onboard/react
 
 A collection of React hooks for implementing web3-onboard in to a React project
 
@@ -11,22 +11,18 @@ A collection of React hooks for implementing web3-onboard in to a React project
 ### Install Modules
 
 **NPM**
-`npm i @subwallet-connect/react @subwallet-connect/injected-wallets ethers`
+`npm i @web3-onboard/react @web3-onboard/injected-wallets ethers`
 
 **Yarn**
-`yarn add @subwallet-connect/react @subwallet-connect/injected-wallets ethers`
+`yarn add @web3-onboard/react @web3-onboard/injected-wallets ethers`
 
 ### Add Code
 
 ```javascript title="App.js"
 import React from 'react'
-import { init, useConnectWallet } from '@subwallet-connect/react'
-import injectedModule from '@subwallet-connect/injected-wallets'
+import { init, useConnectWallet } from '@web3-onboard/react'
+import injectedModule from '@web3-onboard/injected-wallets'
 import { ethers } from 'ethers'
-
-// Sign up to get your free API key at https://explorer.blocknative.com/?signup=true
-// Required for Transaction Notifications and Transaction Preview
-const apiKey = '1730eff0-9d50-4382-a3fe-89f0d34a2070'
 
 const injected = injectedModule()
 
@@ -35,7 +31,7 @@ const rpcUrl = `https://mainnet.infura.io/v3/${infuraKey}`
 
 // initialize Onboard
 init({
-  apiKey,
+  // This javascript object is unordered meaning props do not require a certain order
   wallets: [injected],
   chains: [
     {
@@ -86,19 +82,19 @@ You can use the context provider `Web3OnboardProvider` to better manage global s
 the initialized web3Onboard instance will be available in all children components. See example below.
 
 ```ts
-import { Web3OnboardProvider, init } from '@subwallet-connect/react'
-import injectedModule from '@subwallet-connect/injected-wallets'
+import { Web3OnboardProvider, init } from '@web3-onboard/react'
+import injectedModule from '@web3-onboard/injected-wallets'
 
 const INFURA_KEY = ''
 
-const ethereumRopsten = {
-  id: '0x3',
-  token: 'rETH',
-  label: 'Ethereum Ropsten',
-  rpcUrl: `https://ropsten.infura.io/v3/${INFURA_KEY}`
+const ethereumSepolia = {
+  id: 11155111,
+  token: 'ETH',
+  label: 'Sepolia',
+  rpcUrl: 'https://rpc.sepolia.org/'
 }
 
-const chains = [ethereumRopsten]
+const chains = [ethereumSepolia]
 const wallets = [injectedModule()]
 
 const web3Onboard = init({
@@ -124,14 +120,14 @@ export default MyApp
 
 ## `init`
 
-The `init` function must be called before any hooks can be used. The `init` function just initializes `web3-onboard` and makes it available for all hooks to use. For reference check out the [initialization docs for `@subwallet-connect/core`](../core/README.md#initialization)
+The `init` function must be called before any hooks can be used. The `init` function just initializes `web3-onboard` and makes it available for all hooks to use. For reference check out the [initialization docs for `@web3-onboard/core`](../core/README.md#initialization)
 
 ## `useConnectWallet`
 
 This hook allows you to connect the user's wallet and track the state of the connection status and the wallet that is connected.
 
 ```typescript
-import { useConnectWallet } from '@subwallet-connect/react'
+import { useConnectWallet } from '@web3-onboard/react'
 
 type UseConnectWallet = (): [
   { wallet: WalletState | null; connecting: boolean },
@@ -193,7 +189,7 @@ setPrimaryWallet(wallets[1], wallets[1].accounts[2].address)
 This hook allows you to set the chain of a user's connected wallet, keep track of the current chain the user is connected to and the status of setting the chain. Passing in a wallet label will operate on that connected wallet, otherwise it will default to the last connected wallet. If a chain was instantiated without an rpcUrl, token, or label, add these options for wallets that require this information for adding a new chain.
 
 ```typescript
-import { useSetChain } from '@subwallet-connect/react'
+import { useSetChain } from '@web3-onboard/react'
 
 type UseSetChain = (
   walletLabel?: string
@@ -231,8 +227,7 @@ const [
 ## `useNotifications`
 
 This hook allows the dev to access all notifications if enabled, send custom notifications and update notify <enable/disable & update transactionHandler function>
-**note** requires an API key be added to the initialization, enabled by default if API key exists
-For full Notification documentation please see [Notify section within the `@subwallet-connect/core` docs](../core/README.md#options)
+For full Notification documentation please see [Notify section within the `@web3-onboard/core` docs](../core/README.md#options)
 
 ```typescript
 type UseNotifications = (): [
@@ -242,7 +237,6 @@ type UseNotifications = (): [
     update: UpdateNotification
   },
   (update: Partial<Notify>) => void,
-  (options: PreflightNotificationsOptions) => Promise<void | string>
 ]
 
 type Notification = {
@@ -292,19 +286,10 @@ type Notify = {
   /**
    * Position of notifications that defaults to the same position as the
    * Account Center (if enabled) of the top right if AC is disabled
-   * and notifications are enabled (enabled by default with API key)
    */
   position?: NotificationPosition
 }
 
-type PreflightNotificationsOptions = {
-  sendTransaction?: () => Promise<string | void>
-  estimateGas?: () => Promise<string>
-  gasPrice?: () => Promise<string>
-  balance?: string | number
-  txDetails?: TxDetails
-  txApproveReminderTimeout?: number
-}
 type TxDetails = {
   value: string | number
   to?: string
@@ -313,7 +298,7 @@ type TxDetails = {
 ```
 
 ```typescript
-import { useNotifications } from '@subwallet-connect/react'
+import { useNotifications } from '@web3-onboard/react'
 
 const [
   notifications, // the list of all notifications that update when notifications are added, updated or removed
@@ -400,7 +385,7 @@ const sendTransactionWithPreFlightNotifications = async () => {
 This hook allows you to track the state of all the currently connected wallets.
 
 ```typescript
-import { useWallets } from '@subwallet-connect/react'
+import { useWallets } from '@web3-onboard/react'
 
 type UseWallets = (): WalletState[]
 
@@ -412,7 +397,7 @@ const connectedWallets = useWallets()
 This hook allows you to track and update the state of the AccountCenter
 
 ```typescript
-import { useAccountCenter } from '@subwallet-connect/react'
+import { useAccountCenter } from '@web3-onboard/react'
 
 type UseAccountCenter = (): ((
   update: AccountCenter | Partial<AccountCenter>
@@ -439,11 +424,68 @@ const updateAccountCenter = useAccountCenter()
 This hook allows you to set the locale of your application to allow language updates associated with the i18n config
 
 ```typescript
-import { useSetLocale } from '@subwallet-connect/react'
+import { useSetLocale } from '@web3-onboard/react'
 
 type useSetLocale = (): ((locale: string) => void)
 
 const updateLocale = useSetLocale()
 
 updateLocale('es')
+```
+
+## `useWagmiConfig`
+
+This hook allows you to get the WagmiConfig (Config from the Wagmi project) from @web3-onboard/core if web3-onboard has been initialized with the wagmi property imported and passing into the web3-onboard/core config.
+
+```ts
+import Onboard from '@web3-onboard/core'
+import injectedModule from '@web3-onboard/injected-wallets'
+import wagmi from '@web3-onboard/wagmi'
+import {
+  sendTransaction as wagmiSendTransaction,
+  switchChain,
+  disconnect,
+  getConnectors
+} from '@web3-onboard/wagmi'
+import { parseEther, isHex, fromHex } from 'viem'
+
+const injected = injectedModule()
+
+const onboard = Onboard({
+  wagmi,
+  wallets: [injected],
+  chains: [
+    {
+      id: '0x1',
+      token: 'ETH',
+      label: 'Ethereum',
+      rpcUrl: 'https://mainnet.infura.io/v3/17c1e1500e384acfb6a72c5d2e67742e'
+    }
+  ]
+  // ... other Onboard options
+})
+
+const sendTransaction = async () => {
+  // current primary wallet - as multiple wallets can connect this value is the currently active
+  const [activeWallet] = onboard.state.get().wallets
+  const { wagmiConnector } = activeWallet
+  const wagmiConfig = onboard.state.get().wagmiConfig
+  const result = await wagmiSendTransaction(wagmiConfig, {
+    to: toAddress,
+    // desired connector to send txn from
+    connector: wagmiConnector,
+    value: parseEther('0.001')
+  })
+  console.log(result)
+}
+
+async function signMessage(chainId) {
+  // current primary wallet - as multiple wallets can connect this value is the currently active
+  const [activeWallet] = onboard.state.get().wallets
+  const wagmiConfig = onboard.state.get().wagmiConfig
+  await wagmiSignMessage(wagmiConfig, {
+    message: 'This is my message to you',
+    connector: activeWallet.wagmiConnector
+  })
+}
 ```

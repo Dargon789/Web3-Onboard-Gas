@@ -12,15 +12,14 @@ import type {
 import { wait } from './utils.js'
 import { validateConnectOptions } from './validation.js'
 
-
-  async function connect(
-    options ?: ConnectOptions | ConnectOptionsString
+async function connect(
+  options?: ConnectOptions | ConnectOptionsString
 ): Promise<WalletState[]> {
   if (options) {
-    // const error = validateConnectOptions(options)
-    // if (error) {
-    //   throw error
-    // }
+    const error = validateConnectOptions(options)
+    if (error) {
+      throw error
+    }
   }
 
   const { chains } = state.get()
@@ -29,11 +28,12 @@ import { validateConnectOptions } from './validation.js'
   // so we must ensure at least one is set
   if (!chains.length)
     throw new Error(
-        'At least one chain must be set before attempting to connect a wallet'
+      'At least one chain must be set before attempting to connect a wallet'
     )
 
-  const { autoSelect } = options || {
-    autoSelect: { label: '', disableModals: false, type: 'evm' }
+  let { autoSelect } = options || {}
+  if (!autoSelect) {
+    autoSelect = { label: '', disableModals: false }
   }
 
   // if auto selecting, wait until next event loop
@@ -45,24 +45,21 @@ import { validateConnectOptions } from './validation.js'
   if (!state.get().walletModules.length) {
     setWalletModules(configuration.initialWalletInit)
   }
-
-
   connectWallet$.next({
     autoSelect:
-        typeof autoSelect === 'string'
-            ? { label: autoSelect, disableModals: false, type: 'evm' }
-            : autoSelect,
+      typeof autoSelect === 'string'
+        ? { label: autoSelect, disableModals: false }
+        : autoSelect,
     inProgress: true
   })
 
-
   const result$ = connectWallet$.pipe(
-      filter(
-          ({ inProgress, actionRequired }) =>
-              inProgress === false && !actionRequired
-      ),
-      withLatestFrom(wallets$),
-      pluck(1)
+    filter(
+      ({ inProgress, actionRequired }) =>
+        inProgress === false && !actionRequired
+    ),
+    withLatestFrom(wallets$),
+    pluck(1)
   )
 
   return firstValueFrom(result$)

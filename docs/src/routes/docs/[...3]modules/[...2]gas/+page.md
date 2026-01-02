@@ -10,7 +10,7 @@ title: Gas
 
 A module for requesting streams or single requests of gas price estimates from the [Blocknative Gas Platform API](https://docs.blocknative.com/gas-platform).
 
-Supports both Eth Mainnet and Polygon gas pricing.
+Supports both Ethereum Mainnet and Polygon Mainnet gas pricing.
 
 <Gas />
 
@@ -39,10 +39,8 @@ npm install @web3-onboard/gas
 import gas from '@web3-onboard/gas'
 
 // subscribe to a single chain for estimates using the default poll rate of 5 secs
-// API key is optional and if provided allows for faster poll rates
 const ethMainnetGasBlockPrices = gas.stream({
   chains: ['0x1'],
-  apiKey: '<OPTIONAL_API_KEY>',
   endpoint: 'blockPrices'
 })
 
@@ -82,7 +80,7 @@ const gasBlockPrices = await gas.get({
 
 ## Usage with Web3-Onboard wallet Connect and Ethers.js
 
-This example assumes you have already setup web3-onboard to connect wallets to your dapp.
+This example assumes you have already setup Web3 Onboard to connect wallets to your dapp.
 For more information see [web3-onboard docs](/docs/modules/core#install).
 
 ```ts copy
@@ -97,7 +95,6 @@ let bnGasPrices
 
 const ethMainnetGasBlockPrices = gas.stream({
   chains: ['0x1'], // '0x89' can also be added/replaced here for Polygon gas data
-  apiKey: '<OPTIONAL_API_KEY>', // for faster refresh rates
   endpoint: 'blockPrices'
 })
 

@@ -4,11 +4,11 @@ title: Installation
 
 # {$frontmatter.title}
 
-Get up and running with Web3-Onboard
+Get up and running with Web3 Onboard
 
 ### Install
 
-Install the core Onboard library and the injected wallets module to support browser extension and mobile wallets:
+Install the core Web3 Onboard library and the injected wallets module to support browser extension and mobile wallets:
 
 <Tabs values={['yarn', 'npm']}>
 <TabPanel value="yarn">
@@ -110,6 +110,7 @@ const appMetadata = {
 
 ```ts
 const onboard = Onboard({
+  // This javascript object is unordered meaning props do not require a certain order
   wallets,
   chains,
   appMetadata

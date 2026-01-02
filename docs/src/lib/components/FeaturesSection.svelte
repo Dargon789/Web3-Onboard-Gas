@@ -7,7 +7,6 @@
   import FeatureCard from './FeatureCard.svelte'
 
   import FrameworksGraphic from './svg/frameworks-group.svelte'
-  import NotifyGraphic from './svg/notify-group.svelte'
   import NetworksGraphic from './svg/networks-graphic.svg'
   import AccountCenterGraphic from './svg/account-center-graphic.svg'
   import WalletsGraphic from './svg/wallet-row.svg'
@@ -48,11 +47,11 @@
       />
       <FeatureCard
         title={'Dynamic Imports'}
-        text={"Supporting multiple wallets in your app requires a lot of dependencies. Onboard dynamically imports a wallet and it's dependencies only when the user selects it, so that minimal bandwidth is used."}
+        text={"Supporting multiple wallets in your app requires a lot of dependencies. Web3 Onboard dynamically imports a wallet and it's dependencies only when the user selects it, so that minimal bandwidth is used."}
       />
       <FeatureCard
         title={'Wallet Provider Standardization'}
-        text={'All wallet modules expose a provider that is patched to be compliant with the EIP-1193, EIP-1102, EIP-3085 and EIP-3326 specifications.'}
+        text={'All wallet modules expose a provider that is patched to be compliant with the EIP-1193, EIP-1102, EIP-3085, EIP-3326, and EIP-6963 specifications.'}
       />
       <FeatureCard
         title={'Multiple Chain Support'}
@@ -89,52 +88,6 @@
       style="margin: 0 auto; max-width: none;"
     />
   </ScrollContainer>
-  <Container>
-    <div class="flexbox">
-      <div>
-        <img
-          src={TransactionPreviewGraphic}
-          alt="Transaction Preview"
-          style="margin: 0 auto; max-width: none;"
-        />
-      </div>
-      <div>
-        <TextBlock
-          title={'Transaction Preview'}
-          subtitle={'Preview transactions to see net-balance changes and gas spent'}
-          text={'Reduce transaction anxiety by allowing users to easily preview expected net-balance changes for their connected wallets before authorizing transactions.'}
-        >
-          <Flexbox --wrap="wrap">
-            <Button href="/docs/modules/transaction-preview" buttonStyle={'link'}
-              >{'Learn More'}</Button
-            >
-            <Button
-              href="/docs/modules/transaction-preview#try-transaction-preview"
-              buttonStyle={'link'}>{'View Demo'}</Button
-            >
-          </Flexbox>
-          <div class="prose">
-            <slot name="installTp" />
-          </div>
-        </TextBlock>
-      </div>
-    </div>
-  </Container>
-  <Container>
-    <div class="flexbox">
-      <TextBlock
-        title={'Real-time transaction notifications'}
-        subtitle={''}
-        text={'Real-time transaction notifications for all connected wallet addresses and all transaction states.'}
-      >
-        <Flexbox --wrap="wrap">
-          <Button href="/docs" buttonStyle={'link'}>{'Learn More'}</Button>
-          <Button href="/examples/connect-wallet" buttonStyle={'link'}>{'View Demo'}</Button>
-        </Flexbox>
-      </TextBlock>
-      <div><NotifyGraphic /></div>
-    </div>
-  </Container>
   <Container>
     <div class="flexbox">
       <div><img src={AccountCenterGraphic} alt="" /></div>
