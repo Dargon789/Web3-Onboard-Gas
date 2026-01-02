@@ -9,6 +9,9 @@ on:
       - sw-dev
       - main
 
+permissions:
+  contents: read
+
 jobs:
   master:
     if: "! startsWith(github.event.head_commit.message, '[CI Skip]')"
