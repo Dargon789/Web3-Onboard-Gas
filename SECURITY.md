@@ -14,8 +14,8 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+We take all security vulnerabilities seriously. If you believe you have found a security vulnerability, we encourage you to report it to us.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Please use the [GitHub Private Vulnerability Reporting feature](https://github.com/blocknative/web3-onboard/security/advisories/new) to submit your report.
+
+You can expect an initial response within 48 hours. We appreciate your efforts to disclose your findings responsibly and will make every effort to acknowledge your contribution.
