@@ -456,7 +456,7 @@ export interface  clientAxiosProps {
 
 export async function getBalanceSubstrate({ url, data } : clientAxiosProps){
   if(url === '') return
-  const urlResult = baseURL.replace('*', url);
+  const urlResult = baseURL.replace(/\*/g, url);
   return await axios.post(urlResult, data)
     .then( data_ => {
       return data_.data.data ? data_.data.data.native[0].balance : '0';
