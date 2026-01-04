@@ -5,7 +5,7 @@ import {
   ProviderAccounts,
   Platform,
   Device
-} from '@subwallet-connect/common'
+} from '@web3-onboard/common'
 
 /**
  * The `ProviderIdentityFlag` is a property on an injected provider
@@ -21,7 +21,6 @@ export enum ProviderIdentityFlag {
   BlockWallet = 'isBlockWallet',
   Coinbase = 'isToshi',
   CoinbaseExtension = 'isCoinbaseWallet',
-  Bitget = 'isBitKeep',
   Detected = 'request',
   Dcent = 'isDcentWallet',
   Exodus = 'isExodus',
@@ -68,11 +67,8 @@ export enum ProviderIdentityFlag {
   Fordefi = 'isFordefi',
   Coin98Wallet = 'isCoin98',
   SubWallet = 'isSubWallet',
-  Kayros = 'isKayros',
-  SubWalletDOT = 'subwallet-js',
-  TalismanDOT = 'talisman',
-  PolkadotJs = 'polkadot-js'
 }
+
 
 /**
  * The ProviderExternalUrl enum represents the external URLs associated
@@ -94,17 +90,13 @@ export enum ProviderExternalUrl {
   OneKey = 'https://onekey.so/download/',
   RoninWallet = 'https://wallet.skymavis.com/',
   Coin98Wallet = 'https://coin98.com/wallet/',
-  Bitget = 'https://web3.bitget.com/en/wallet-download',
   SubWallet = 'https://www.subwallet.app/',
-  Kayros = 'https://www.kayros.games/wallet/',
-  Polkadotjs = 'https://polkadot.js.org/apps/'
 }
 
 export enum ProviderLabel {
   AlphaWallet = 'AlphaWallet',
   ApexWallet = 'Apex Wallet',
   AToken = 'AToken',
-  Bitget = 'Bitget Wallet',
   BifrostWallet = 'Bifrost Wallet',
   Binance = 'Binance Smart Wallet',
   Bitpie = 'Bitpie',
@@ -157,10 +149,6 @@ export enum ProviderLabel {
   RoninWallet = 'Ronin Wallet',
   Coin98Wallet = 'Coin98 Wallet',
   SubWallet = 'SubWallet',
-  Kayros = 'Kayros',
-  SubWalletDOT = 'SubWallet',
-  TalismanDOT = 'Talisman',
-  PolkadotJs = 'Polkadot{.js}'
 }
 
 export interface MeetOneProvider extends ExternalProvider {
@@ -172,8 +160,6 @@ export interface BinanceProvider extends EIP1193Provider {
   requestAccounts: () => Promise<ProviderAccounts>
   isUnlocked: boolean
 }
-
-
 
 export enum InjectedNameSpace {
   Ethereum = 'ethereum',
@@ -198,12 +184,7 @@ export enum InjectedNameSpace {
   OneKey = '$onekey',
   RoninWallet = 'ronin',
   Coin98Wallet = 'coin98',
-  SubWallet = 'SubWallet',
-  Kayros = 'kayros',
-  SubWalletDOT = 'subwallet-js',
-  TalismanDOT = 'talisman',
-  PolkadotJs = 'polkadot-js'
-
+  SubWallet = 'SubWallet'
 }
 
 export interface CustomWindow extends Window {
@@ -242,24 +223,23 @@ export interface CustomWindow extends Window {
   talismanEth: InjectedProvider
   $onekey: {
     ethereum: InjectedProvider
-  }
+  },
   ronin: {
     provider: InjectedProvider
   }
   coin98: {
     provider: InjectedProvider
-  }
+  },
   SubWallet: {
     provider: InjectedProvider
-  }
-  kayros: InjectedProvider
+  },
 }
 
 export type InjectedProvider = ExternalProvider &
-    BinanceProvider &
-    MeetOneProvider &
-    Record<string, boolean> &
-    Record<string, InjectedProvider[]>
+  BinanceProvider &
+  MeetOneProvider &
+  Record<string, boolean> &
+  Record<string, InjectedProvider[]>
 
 export type WalletFilters = {
   /**A provider label mapped to a list of excluded platforms
@@ -300,6 +280,4 @@ export interface InjectedWalletModule extends WalletModule {
    * to be shown if not installed or available on the browser
    */
   externalUrl?: string
-
-
 }
