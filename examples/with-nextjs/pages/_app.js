@@ -1,7 +1,6 @@
 import '../styles/globals.css'
 import { Web3OnboardProvider, init } from '@web3-onboard/react'
 import injectedModule from '@web3-onboard/injected-wallets'
-import { Analytics } from '@vercel/analytics/next'
 
 const INFURA_KEY = ''
 
@@ -54,7 +53,6 @@ function MyApp({ Component, pageProps }) {
   return (
     <Web3OnboardProvider web3Onboard={web3Onboard}>
       <Component {...pageProps} />
-      <Analytics />
     </Web3OnboardProvider>
   )
 }

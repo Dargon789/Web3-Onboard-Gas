@@ -1,6 +1,6 @@
 import type { Device, ProviderRpcErrorCode } from '@subwallet-connect/common'
 import type { InjectedProvider, InjectedWalletModule } from './types.js'
-import * as cheerio from 'cheerio'
+import DOMPurify from 'dompurify'
 
 export class ProviderRpcError extends Error {
   message: string
@@ -51,34 +51,13 @@ export
 function containsExecutableJavaScript(svgString: string): boolean {
   if (!svgString) return false
 
-  // Use a DOM parser to detect <script> elements robustly
-  try {
-    const $ = cheerio.load(svgString, { xmlMode: true })
+  // Use DOMPurify to detect whether any executable JavaScript or
+  // other dangerous content would be removed during sanitization.
+  // If DOMPurify removes anything, we treat the SVG as containing
+  // executable or otherwise unsafe content.
+  // Configure DOMPurify for SVG content.
+  DOMPurify.removed = []
+  DOMPurify.sanitize(svgString, { USE_PROFILES: { svg: true } })
 
-    // Check for any <script> elements
-    if ($('script').length > 0) {
-      return true
-    }
-  } catch {
-    // If parsing fails, fall back to regex-based checks below
-  }
-
-  // Regular expression to match event handler attributes (e.g., onclick, onload)
-  const eventHandlerRegex = /\bon[a-z]+\s*=\s*["']?(?:javascript:)?/gi
-
-  // Regular expression to match href or xlink:href attributes containing "javascript:"
-  const hrefJavaScriptRegex = /\b(href|xlink:href)\s*=\s*["']?\s*javascript:/gi
-
-  // Check for event handlers
-  if (eventHandlerRegex.test(svgString)) {
-    return true
-  }
-
-  // Check for "javascript:" in href or xlink:href
-  if (hrefJavaScriptRegex.test(svgString)) {
-    return true
-  }
-
-  // No executable JavaScript found
-  return false
+  return Array.isArray(DOMPurify.removed) && DOMPurify.removed.length > 0
 }
