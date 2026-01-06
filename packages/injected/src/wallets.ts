@@ -1111,7 +1111,7 @@ const polkadotjs: InjectedWalletModule = {
   type: 'substrate',
   injectedNamespace: InjectedNameSpace.PolkadotJs,
   checkProviderIdentity: ({provider}) => (
-    !!provider && !!provider?.injectedWeb3?.[ProviderIdentityFlag.TalismanDOT]
+    !!provider && !!provider?.injectedWeb3?.[ProviderIdentityFlag.PolkadotJs]
 
   ),
   getIcon: async () => (await import('./icons/polkadotjs')).default,
