@@ -864,6 +864,7 @@ const coin98wallet: InjectedWalletModule = {
 
 const subwallet: InjectedWalletModule = {
   label: ProviderLabel.SubWallet,
+  type: 'evm',
   injectedNamespace: InjectedNameSpace.SubWallet,
   checkProviderIdentity: ({ provider }) =>
     !!provider && !!provider[ProviderIdentityFlag.SubWallet],
