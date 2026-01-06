@@ -834,6 +834,7 @@ const fordefi: InjectedWalletModule = {
 
 const coin98wallet: InjectedWalletModule = {
   label: ProviderLabel.Coin98Wallet,
+  type: 'evm',
   injectedNamespace: InjectedNameSpace.Ethereum,
   checkProviderIdentity: ({ provider }) =>
     !!provider && !!provider[ProviderIdentityFlag.Coin98Wallet],
