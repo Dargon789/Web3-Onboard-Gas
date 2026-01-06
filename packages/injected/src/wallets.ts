@@ -805,6 +805,7 @@ const ronin: InjectedWalletModule = {
 
 const onekey: InjectedWalletModule = {
   label: ProviderLabel.OneKey,
+  type: 'evm',
   injectedNamespace: InjectedNameSpace.OneKey,
   checkProviderIdentity: ({ provider }) =>
     !!provider &&
