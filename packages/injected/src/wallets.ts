@@ -995,7 +995,7 @@ const subwalletDOT: InjectedWalletModule = {
             signer: rawExtension.signer as Signer,
             metadata: rawExtension.metadata as InjectedMetadata,
             address: accounts.map(
-              (account) => `${account.address}_${account.name}`
+              (account) => account.address
             )
           }
         } catch (e) {
