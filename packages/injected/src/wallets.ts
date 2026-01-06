@@ -80,6 +80,7 @@ const infinitywallet: InjectedWalletModule = {
 
 const exodus: InjectedWalletModule = {
   label: ProviderLabel.Exodus,
+  type: 'evm',
   injectedNamespace: InjectedNameSpace.Ethereum,
   checkProviderIdentity: ({ provider }) =>
     !!provider && !!provider[ProviderIdentityFlag.Exodus],
